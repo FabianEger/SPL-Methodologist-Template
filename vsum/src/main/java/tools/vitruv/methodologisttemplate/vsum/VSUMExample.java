@@ -1,11 +1,11 @@
 package tools.vitruv.methodologisttemplate.vsum;
 
 import tools.vitruv.framework.vsum.VirtualModelBuilder;
-import tools.vitruv.methodologisttemplate.model.model.ModelFactory;
+import UVLPackage.uvlFactory;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import mir.reactions.model2Model2.Model2Model2ChangePropagationSpecification;
+import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
 import tools.vitruv.change.testutils.TestUserInteraction;
 import tools.vitruv.framework.views.CommittableView;
 import tools.vitruv.framework.views.View;
@@ -20,7 +20,7 @@ public class VSUMExample {
     VirtualModel vsum = createDefaultVirtualModel();
     CommittableView view = getDefaultView(vsum).withChangeDerivingTrait();
     modifyView(view, (CommittableView v) -> {
-      v.getRootObjects().add(ModelFactory.eINSTANCE.createSystem());
+      v.getRootObjects().add(uvlFactory.eINSTANCE.createUVLModel());
     });
   }
 
@@ -28,7 +28,7 @@ public class VSUMExample {
     return new VirtualModelBuilder()
         .withStorageFolder(Path.of("vsumexample"))
         .withUserInteractorForResultProvider(new TestUserInteraction.ResultProvider(new TestUserInteraction()))
-        .withChangePropagationSpecifications(new Model2Model2ChangePropagationSpecification())
+        .withChangePropagationSpecifications(new Feature2configChangePropagationSpecification())
         .buildAndInitialize();
   }
 

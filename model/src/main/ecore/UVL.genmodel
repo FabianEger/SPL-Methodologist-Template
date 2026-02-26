@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore" creationIcons="false" 
+    modelPluginID="tools.vitruv.methodologisttemplate.uvl" modelName="uvl"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" codeFormatting="true"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>UVL.ecore</foreignModel>
+  <genPackages prefix="uvl" disposableProviderFactory="true" ecorePackage="UVL.ecore#/">
+    <genClasses ecoreClass="UVL.ecore#//UVLModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//UVLModel/tree"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//UVLModel/languagelevels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//UVLModel/imports"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//UVLModel/constraints"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//FeatureTree">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//FeatureTree/feature"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//Feature">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Feature/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Feature/lower"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Feature/upper"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Feature/attribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Feature/group"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//LanguageLevels"/>
+    <genClasses ecoreClass="UVL.ecore#//Imports"/>
+    <genClasses ecoreClass="UVL.ecore#//Constraints">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//Constraints/constraint"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="UVL.ecore#//Group">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Group/feature"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//Optional"/>
+    <genClasses ecoreClass="UVL.ecore#//Mandatory"/>
+    <genClasses ecoreClass="UVL.ecore#//Or"/>
+    <genClasses ecoreClass="UVL.ecore#//Alternative"/>
+    <genClasses ecoreClass="UVL.ecore#//Cardinality">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Cardinality/lower"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Cardinality/upper"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//Boolean"/>
+    <genClasses image="false" ecoreClass="UVL.ecore#//Attribute"/>
+    <genClasses ecoreClass="UVL.ecore#//Integer"/>
+    <genClasses ecoreClass="UVL.ecore#//Float"/>
+    <genClasses ecoreClass="UVL.ecore#//String"/>
+    <genClasses ecoreClass="UVL.ecore#//BinaryConst">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//BinaryConst/connects"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//BinaryConst/has"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="UVL.ecore#//Formula"/>
+    <genClasses ecoreClass="UVL.ecore#//Constraint">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//Constraint/formula"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//ParenthesisConst"/>
+    <genClasses ecoreClass="UVL.ecore#//Negation"/>
+    <genClasses ecoreClass="UVL.ecore#//Predicate">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Predicate/connects"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Predicate/has"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//Reference"/>
+    <genClasses image="false" ecoreClass="UVL.ecore#//LogicalOperator"/>
+    <genClasses ecoreClass="UVL.ecore#//And"/>
+    <genClasses ecoreClass="UVL.ecore#//LogicalOr"/>
+    <genClasses ecoreClass="UVL.ecore#//Implication"/>
+    <genClasses ecoreClass="UVL.ecore#//Equivalence"/>
+    <genClasses ecoreClass="UVL.ecore#//Term"/>
+    <genClasses ecoreClass="UVL.ecore#//ParenthesisExpression"/>
+    <genClasses ecoreClass="UVL.ecore#//Constant"/>
+    <genClasses ecoreClass="UVL.ecore#//Function"/>
+    <genClasses ecoreClass="UVL.ecore#//TermReference"/>
+    <genClasses ecoreClass="UVL.ecore#//BinaryExpression">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//BinaryExpression/has"/>
+    </genClasses>
+    <genClasses ecoreClass="UVL.ecore#//Operator"/>
+    <genClasses ecoreClass="UVL.ecore#//Equals"/>
+    <genClasses ecoreClass="UVL.ecore#//Greather"/>
+    <genClasses ecoreClass="UVL.ecore#//Lesser"/>
+    <genClasses ecoreClass="UVL.ecore#//Unequals"/>
+    <genClasses ecoreClass="UVL.ecore#//GreatherEquals"/>
+    <genClasses ecoreClass="UVL.ecore#//LesserEquals"/>
+    <genClasses ecoreClass="UVL.ecore#//Sum"/>
+    <genClasses ecoreClass="UVL.ecore#//Average"/>
+    <genClasses ecoreClass="UVL.ecore#//Length"/>
+    <genClasses ecoreClass="UVL.ecore#//TermOperator"/>
+    <genClasses ecoreClass="UVL.ecore#//Add"/>
+    <genClasses ecoreClass="UVL.ecore#//Subtract"/>
+    <genClasses ecoreClass="UVL.ecore#//Multiply"/>
+    <genClasses ecoreClass="UVL.ecore#//Division"/>
+  </genPackages>
+</genmodel:GenModel>

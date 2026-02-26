@@ -1,0 +1,60 @@
+
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/config" as config
+
+
+reactions: feature2config
+in reaction to changes in uvl
+execute actions in config
+
+reaction UVLModelInsertedAsRoot{
+	after element uvl::UVLModel inserted as root
+	call createConfigForUVLModel(newValue)
+}
+
+routine createConfigForUVLModel(uvl::UVLModel uvlModel) {
+	match{
+		require absence of config::ConfigurationModel corresponding to uvlModel
+	}
+	create{
+		val configModel = new config::ConfigurationModel
+	}
+	update{
+		persistProjectRelative(uvlModel, configModel, new File("").toString() + "config.config")
+		addCorrespondenceBetween(uvlModel, configModel)
+	}
+}
+
+
+reaction FeatureInsertedIntoUVLModel{
+	after element uvl::Feature inserted in uvl::Group[feature]
+	call createConfigForFeature(newValue)
+}
+
+
+routine createConfigForFeature(uvl::Feature feature) {
+	match{
+		require absence of config::Feature corresponding to feature
+		val configmodel = retrieve  config::ConfigurationModel corresponding to EcoreUtil.getRootContainer(feature)
+	}
+	update{
+	    
+		for (config : configmodel.getConfiguration()){
+			createFeatureinEveryConfig(feature,config)	
+		}
+	}
+}
+
+routine createFeatureinEveryConfig(uvl::Feature feature, config::Configuration config) {
+	create{
+		val configFeature = new config::Feature
+	}
+	update{
+		configFeature.setName(feature.getName())
+		config.getFeature().add(configFeature)
+		addCorrespondenceBetween(feature, configFeature)
+	}
+}

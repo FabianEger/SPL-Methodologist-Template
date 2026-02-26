@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="UVLPackage" nsURI="http://vitruv.tools/methodologisttemplate/uvl" nsPrefix="uvl">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UVLModel">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="The UVLModel contains all UVL Model Elements"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tree" lowerBound="1" eType="#//FeatureTree"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="languagelevels" eType="#//LanguageLevels"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="imports" eType="#//Imports"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" eType="#//Constraints"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeatureTree">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Builds up the Variability Model Tree"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feature" lowerBound="1"
+        eType="#//Feature" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Feature">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Represents one Feature of Variability Model in the Feature Tree. It has unique identifier the name (EString) a List of Attributes and a Feature Cardinality (lower and upper bound) which denotes that the feature can&#xA;be selected between lower and upper times"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lower" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upper" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" upperBound="-1"
+        eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//Group" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LanguageLevels">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="The idea is that users of&#xA;UVL can limit their models to specific language constructs. If a tool&#xA;only supports very simple constructs, higher language levels can be&#xA;forbidden. If more expressiveness is needed, additional language levels&#xA;can be enabled."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Imports">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Allows for Import of other UVL Models, to split a large model into Subparts but also allow for constraints between the artefacts"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Constraints">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" upperBound="-1"
+        eType="#//Constraint" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Group" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract class which represents the five different types of groups represented in UVL"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feature" lowerBound="1"
+        upperBound="-1" eType="#//Feature"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Optional" eSuperTypes="#//Group"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Mandatory" eSuperTypes="#//Group"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Or" eSuperTypes="#//Group"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Alternative" eSuperTypes="#//Group"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Cardinality" eSuperTypes="#//Group">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lower" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upper" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Boolean" eSuperTypes="#//Attribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Attribute" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Integer" eSuperTypes="#//Attribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Float" eSuperTypes="#//Attribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="String" eSuperTypes="#//Attribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BinaryConst" eSuperTypes="#//Formula">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connects" lowerBound="2"
+        upperBound="2" eType="#//Formula"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="has" lowerBound="1" eType="#//LogicalOperator"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Formula" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Constraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="formula" lowerBound="1"
+        eType="#//Formula" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParenthesisConst" eSuperTypes="#//Formula"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Negation" eSuperTypes="#//Formula"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Predicate" eSuperTypes="#//Formula">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="connects" lowerBound="2"
+        upperBound="2" eType="#//Term"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="has" lowerBound="1" eType="#//Operator"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="#//Formula"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LogicalOperator" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="And" eSuperTypes="#//LogicalOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LogicalOr" eSuperTypes="#//LogicalOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Implication" eSuperTypes="#//LogicalOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Equivalence" eSuperTypes="#//LogicalOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Term" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ParenthesisExpression" eSuperTypes="#//Term"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Constant" eSuperTypes="#//Term"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Function" abstract="true" eSuperTypes="#//Term"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TermReference" eSuperTypes="#//Term"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BinaryExpression" eSuperTypes="#//Term">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="has" lowerBound="1" eType="#//TermOperator"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operator" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Equals" eSuperTypes="#//Operator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Greather" eSuperTypes="#//Operator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Lesser" eSuperTypes="#//Operator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Unequals" eSuperTypes="#//Operator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GreatherEquals" eSuperTypes="#//Operator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LesserEquals" eSuperTypes="#//Operator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Sum" eSuperTypes="#//Function"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Average" eSuperTypes="#//Function"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Length" eSuperTypes="#//Function"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TermOperator" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Add" eSuperTypes="#//TermOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Subtract" eSuperTypes="#//TermOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Multiply" eSuperTypes="#//TermOperator"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Division" eSuperTypes="#//TermOperator"/>
+</ecore:EPackage>

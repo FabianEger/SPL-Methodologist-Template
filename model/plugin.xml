@@ -6,20 +6,22 @@
 
 <plugin>
 
+   
+
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated model -->
+      <!-- @generated ConfigurationsMM -->
       <package
-            uri="http://vitruv.tools/methodologisttemplate/model"
-            class="tools.vitruv.methodologisttemplate.model.model.ModelPackage"
-            genModel="src/main/ecore/model.genmodel"/>
+            uri="http://vitruv.tools/methodologisttemplate/config"
+            class="configurationPackage.configPackage"
+            genModel="src/main/ecore/ConfigurationsMM.genmodel"/>
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated model2 -->
+      <!-- @generated UVL -->
       <package
-            uri="http://vitruv.tools/methodologisttemplate/model2"
-            class="tools.vitruv.methodologisttemplate.model.model2.Model2Package"
-            genModel="src/main/ecore/model2.genmodel"/>
+            uri="http://vitruv.tools/methodologisttemplate/uvl"
+            class="UVLPackage.uvlPackage"
+            genModel="src/main/ecore/UVL.genmodel"/>
    </extension>
 
 </plugin>
