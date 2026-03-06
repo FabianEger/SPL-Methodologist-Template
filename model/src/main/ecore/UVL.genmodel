@@ -14,14 +14,15 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//UVLModel/constraints"/>
     </genClasses>
     <genClasses ecoreClass="UVL.ecore#//FeatureTree">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//FeatureTree/feature"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//FeatureTree/root"/>
     </genClasses>
     <genClasses ecoreClass="UVL.ecore#//Feature">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Feature/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Feature/lower"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute UVL.ecore#//Feature/upper"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Feature/attribute"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Feature/attribute"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Feature/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//Feature/children"/>
     </genClasses>
     <genClasses ecoreClass="UVL.ecore#//LanguageLevels"/>
     <genClasses ecoreClass="UVL.ecore#//Imports"/>
@@ -29,7 +30,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference UVL.ecore#//Constraints/constraint"/>
     </genClasses>
     <genClasses image="false" ecoreClass="UVL.ecore#//Group">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Group/feature"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference UVL.ecore#//Group/feature"/>
     </genClasses>
     <genClasses ecoreClass="UVL.ecore#//Optional"/>
     <genClasses ecoreClass="UVL.ecore#//Mandatory"/>

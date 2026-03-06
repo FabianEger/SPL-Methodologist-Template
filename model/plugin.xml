@@ -9,19 +9,35 @@
    
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated ConfigurationsMM -->
-      <package
-            uri="http://vitruv.tools/methodologisttemplate/config"
-            class="configurationPackage.configPackage"
-            genModel="src/main/ecore/ConfigurationsMM.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated UVL -->
       <package
             uri="http://vitruv.tools/methodologisttemplate/uvl"
             class="UVLPackage.uvlPackage"
             genModel="src/main/ecore/UVL.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated cad -->
+      <package
+            uri="http://www.example.org/cad"
+            class="edu.kit.ipd.sdq.metamodels.cad.CadPackage"
+            genModel="src/main/ecore/cad.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated ConfigurationsMM -->
+      <package
+            uri="http://vitruv.tools/methodologisttemplate/config"
+            class="configurationPackage.ConfigurationPackagePackage"
+            genModel="src/main/ecore/ConfigurationsMM.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated brakesystem -->
+      <package
+            uri="http://www.example.org/brakesystem"
+            class="brakesystem.BrakesystemPackage"
+            genModel="src/main/ecore/brakesystem.genmodel"/>
    </extension>
 
 </plugin>

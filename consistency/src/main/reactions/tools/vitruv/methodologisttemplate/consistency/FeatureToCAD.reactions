@@ -1,0 +1,30 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/config" as config
+import "http://www.example.org/cad" as cad
+
+
+reactions: feature2cad
+in reaction to changes in uvl
+execute actions in cad
+
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    call createCADForDomainRoot(newValue)
+}
+
+routine createCADForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of cad::CAD_Model corresponding to feature
+    }
+    create{
+        val namespace = new cad::Namespace
+    }
+    update{
+        namespace.setName(feature.getName())
+        addCorrespondenceBetween(feature, namespace)
+    }
+}

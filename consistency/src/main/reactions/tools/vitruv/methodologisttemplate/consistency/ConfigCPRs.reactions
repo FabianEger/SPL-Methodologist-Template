@@ -23,7 +23,7 @@ routine createConfigForUVLModel(uvl::UVLModel uvlModel) {
 		val configModel = new config::ConfigurationModel
 	}
 	update{
-		persistProjectRelative(uvlModel, configModel, new File("").toString() + "config.config")
+		persistProjectRelative(uvlModel, configModel, new File("").toString() + "brake.config")
 		addCorrespondenceBetween(uvlModel, configModel)
 	}
 }

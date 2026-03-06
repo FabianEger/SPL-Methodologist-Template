@@ -17,11 +17,11 @@ import UVLPackage.Group;
 import UVLPackage.Mandatory;
 import UVLPackage.UVLModel;
 import UVLPackage.uvlFactory;
-import configurationPackage.Configuration;
 import configurationPackage.ConfigurationModel;
 import configurationPackage.Feature;
-import configurationPackage.configFactory;
-import configurationPackage.configPackage;
+import configurationPackage.Configuration;
+import configurationPackage.ConfigurationPackageFactory;
+import configurationPackage.ConfigurationPackagePackage;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
 import tools.vitruv.change.propagation.ChangePropagationSpecification;
 import tools.vitruv.framework.views.CommittableView;
@@ -77,10 +77,12 @@ public class FeatureModelToConfigTest {
         FeatureTree featureTree = uvlFactory.eINSTANCE.createFeatureTree();
         UVLPackage.Feature root = uvlFactory.eINSTANCE.createFeature();
         root.setName("Root");
-        featureTree.setFeature(root);
-        Mandatory mandatoryGroupMandatory = uvlFactory.eINSTANCE.createMandatory();
-        mandatoryGroupMandatory.getFeature().add(root);
-        root.setGroup(mandatoryGroupMandatory);
+        
+        Mandatory Rootgroup = uvlFactory.eINSTANCE.createMandatory();
+        Rootgroup.getFeature().add(root);
+        root.setGroup(Rootgroup);
+
+        featureTree.setRoot(Rootgroup);
 
         return featureTree;
 
@@ -88,7 +90,7 @@ public class FeatureModelToConfigTest {
 
 
     private Configuration createDefaultConfig(){
-        Configuration config = configFactory.eINSTANCE.createConfiguration();
+        Configuration config = ConfigurationPackageFactory.eINSTANCE.createConfiguration();
         config.setPLVersion(0);
         return config;
     }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uvl:UVLModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uvl="http://vitruv.tools/methodologisttemplate/uvl">
+  <tree>
+    <root xsi:type="uvl:Mandatory">
+      <feature name="RootFeature"/>
+    </root>
+  </tree>
+</uvl:UVLModel>
