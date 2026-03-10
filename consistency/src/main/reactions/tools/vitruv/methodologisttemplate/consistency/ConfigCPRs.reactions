@@ -1,9 +1,11 @@
 
 import java.io.File;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import UVLPackage.Mandatory;
 
 import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
 import "http://vitruv.tools/methodologisttemplate/config" as config
+
 
 
 reactions: feature2config
@@ -53,6 +55,13 @@ routine createFeatureinEveryConfig(uvl::Feature feature, config::Configuration c
 		val configFeature = new config::Feature
 	}
 	update{
+
+		if(feature.eContainer() instanceof Mandatory){
+			// needs to be decided whether this is the right way or just mark is a unselected and the constraint than shows that the config need to be updated
+			configFeature.setIsSelected(true)
+		}else{
+			configFeature.setIsSelected(false)
+		}
 		configFeature.setName(feature.getName())
 		config.getFeature().add(configFeature)
 		addCorrespondenceBetween(feature, configFeature)
