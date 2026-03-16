@@ -56,12 +56,12 @@ routine createFeatureinEveryConfig(uvl::Feature feature, config::Configuration c
 	}
 	update{
 
-		if(feature.eContainer() instanceof Mandatory){
+		//if(feature.eContainer() instanceof Mandatory){
 			// needs to be decided whether this is the right way or just mark is a unselected and the constraint than shows that the config need to be updated
-			configFeature.setIsSelected(true)
-		}else{
-			configFeature.setIsSelected(false)
-		}
+			//configFeature.setIsSelected(true)
+		//}else{
+		configFeature.setIsSelected(false)
+		//}
 		configFeature.setName(feature.getName())
 		config.getFeature().add(configFeature)
 		addCorrespondenceBetween(feature, configFeature)

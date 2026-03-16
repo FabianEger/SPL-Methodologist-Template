@@ -33,7 +33,7 @@ routine createAndRegisterRoot(cad::CAD_Model model) {
         val mBrake = new brakesystem::Brakesystem
     }
     update {
-        persistProjectRelative(model, mBrake, new File("").toString() + "example.brakesystem")
+        persistProjectRelative(model, mBrake, new File("").toString() + "brake.bs")
         addCorrespondenceBetween(model, mBrake)
     }
 }

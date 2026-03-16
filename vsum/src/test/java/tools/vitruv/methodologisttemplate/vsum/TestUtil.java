@@ -4,9 +4,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 
+import UVLPackage.FeatureTree;
+import UVLPackage.Mandatory;
 import UVLPackage.UVLModel;
 import UVLPackage.uvlFactory;
 import brakesystem.Brakesystem;
@@ -120,5 +123,26 @@ public class TestUtil {
             .map(param -> (BooleanParameter) param)
             .anyMatch(param -> param.getName().equals(name) && param.isValue() == value);
     }
+
+
+     public static FeatureTree createDefaultFMTree(){
+        FeatureTree featureTree = uvlFactory.eINSTANCE.createFeatureTree();
+        UVLPackage.Feature root = uvlFactory.eINSTANCE.createFeature();
+        root.setName("Root");
+        
+        Mandatory Rootgroup = uvlFactory.eINSTANCE.createMandatory();
+        Rootgroup.getFeature().add(root);
+        root.setGroup(Rootgroup);
+
+        featureTree.setRoot(Rootgroup);
+
+        return featureTree;
+    }
+
+
+    public static boolean assertView(View view, Function<View, Boolean> viewAssertionFunction) {
+		return viewAssertionFunction.apply(view);
+	}
+
 
 }

@@ -59,7 +59,7 @@ public class Cad2BrakeDiskTest {
         });
 
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> !v.getRootObjects(Brakesystem.class).iterator().next()
                                 .getBrakeComponents().isEmpty() &&
                                 v.getRootObjects(Brakesystem.class).iterator().next()
@@ -112,7 +112,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the ABSSensor was created
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> !v.getRootObjects(Brakesystem.class).iterator().next()
                                 .getBrakeComponents().isEmpty() &&
                                 v.getRootObjects(Brakesystem.class).iterator().next()
@@ -120,7 +120,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the parameters were propagated correctly
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> {
                             ABSSensor sensor = (ABSSensor) v.getRootObjects(Brakesystem.class)
                                     .iterator().next().getBrakeComponents().get(0);
@@ -160,7 +160,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the ABSSensor was created
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> !v.getRootObjects(Brakesystem.class).iterator().next()
                                 .getBrakeComponents().isEmpty() &&
                                 v.getRootObjects(Brakesystem.class).iterator().next()
@@ -168,7 +168,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the parameters were propagated correctly
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> {
                             BrakeDisk disk = (BrakeDisk) v.getRootObjects(Brakesystem.class)
                                     .iterator().next().getBrakeComponents().get(0);
@@ -204,7 +204,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the ABSSensor was created
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> !v.getRootObjects(Brakesystem.class).iterator().next()
                                 .getBrakeComponents().isEmpty() &&
                                 v.getRootObjects(Brakesystem.class).iterator().next()
@@ -212,7 +212,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the parameters were propagated correctly
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> {
                             ABSSensor sensor = (ABSSensor) v.getRootObjects(Brakesystem.class)
                                     .iterator().next().getBrakeComponents().get(0);
@@ -231,7 +231,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the change was propagated back to the CAD model
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)),
                         (View v) -> {
                             Namespace namespace = v.getRootObjects(CAD_Model.class).iterator().next()
                                     .getNamespaces().stream()
@@ -265,7 +265,7 @@ public class Cad2BrakeDiskTest {
         });
 
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)),
                         (View v) -> !v.getRootObjects(Brakesystem.class).iterator().next()
                                 .getBrakeComponents().isEmpty() &&
                                 v.getRootObjects(Brakesystem.class).iterator().next()
@@ -284,7 +284,7 @@ public class Cad2BrakeDiskTest {
 
         // Assert that the changes were propagated back to the CAD model
         Assertions.assertTrue(
-                assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)),
+                TestUtil.assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)),
                         (View v) -> {
                             Namespace namespace = v.getRootObjects(CAD_Model.class).iterator().next()
                                     .getNamespaces().stream()
@@ -310,8 +310,6 @@ public class Cad2BrakeDiskTest {
         return namespace;
     }
 
-    private boolean assertView(View view, Function<View, Boolean> viewAssertionFunction) {
-        return viewAssertionFunction.apply(view);
-    }
+    
 
 }

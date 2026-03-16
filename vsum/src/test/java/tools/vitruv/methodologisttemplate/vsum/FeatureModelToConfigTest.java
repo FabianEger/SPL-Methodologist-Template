@@ -57,11 +57,11 @@ public class FeatureModelToConfigTest {
 
         util.modifyView(view, (CommittableView v) -> {
             UVLModel uvlModel = (UVLModel) v.getRootObjects(UVLModel.class).iterator().next();
-            FeatureTree featureTree = createDefaultFMTree();
+            FeatureTree featureTree = TestUtil.createDefaultFMTree();
             uvlModel.setTree(featureTree);
         });
 
-        Assertions.assertTrue(assertView(util.getDefaultView(vsum, List.of(ConfigurationModel.class)), (View v) -> {
+        Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(ConfigurationModel.class)), (View v) -> {
             ConfigurationModel configModel = (ConfigurationModel) v.getRootObjects(ConfigurationModel.class).iterator().next();
             return configModel.getConfiguration().size() == 1 && configModel.getConfiguration().get(0).getFeature().size() == 1 && configModel.getConfiguration().get(0).getFeature().get(0).getName().equals("Root");
         }));
@@ -69,24 +69,8 @@ public class FeatureModelToConfigTest {
 
     }
 
-    private boolean assertView(View view, Function<View, Boolean> viewAssertionFunction) {
-		return viewAssertionFunction.apply(view);
-	}
-
-    private FeatureTree createDefaultFMTree(){
-        FeatureTree featureTree = uvlFactory.eINSTANCE.createFeatureTree();
-        UVLPackage.Feature root = uvlFactory.eINSTANCE.createFeature();
-        root.setName("Root");
-        
-        Mandatory Rootgroup = uvlFactory.eINSTANCE.createMandatory();
-        Rootgroup.getFeature().add(root);
-        root.setGroup(Rootgroup);
-
-        featureTree.setRoot(Rootgroup);
-
-        return featureTree;
-
-    }
+    
+   
 
 
     private Configuration createDefaultConfig(){

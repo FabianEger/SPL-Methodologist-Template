@@ -1,5 +1,6 @@
 import java.io.File;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
 
 import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
 import "http://vitruv.tools/methodologisttemplate/config" as config
@@ -13,6 +14,7 @@ execute actions in cad
 
 reaction UVLDomainRootInserted{
     after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "DomainOneRoot"
     call createCADForDomainRoot(newValue)
 }
 
@@ -21,10 +23,39 @@ routine createCADForDomainRoot(uvl::Feature feature) {
         require absence of cad::CAD_Model corresponding to feature
     }
     create{
-        val namespace = new cad::Namespace
+        val cadModel = new cad::CAD_Model
     }
     update{
-        namespace.setName(feature.getName())
-        addCorrespondenceBetween(feature, namespace)
+        System.out.println("Adding CAD model for domain root feature " + feature.name)
+        persistProjectRelative(feature, cadModel, new File("").toString() + "brake.cad")
+        addCorrespondenceBetween(feature, cadModel)
     }
 }
+
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer())
+    call createCADNamespaceForFeature(newValue)
+}
+
+routine createCADNamespaceForFeature(uvl::Feature feature) {
+    match{
+        require absence of cad::Namespace corresponding to feature
+        val cadmodel = retrieve cad::CAD_Model corresponding to FeatureTreeUtil.getDomainRootFeature(feature)
+    }
+    create{
+        val cadNamespace = new cad::Namespace
+    }
+    update{
+        cadmodel.namespaces.add(cadNamespace);
+        addCorrespondenceBetween(feature, cadNamespace);
+    }
+}
+
+
+routine test(uvl::Feature feature) {
+    update{
+        System.out.println("Adding namespace for feature " + feature.name)
+    }
+}
+

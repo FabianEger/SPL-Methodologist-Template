@@ -19,6 +19,9 @@ import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.URI;
 
+import mir.reactions.brakesystem2cad.Brakesystem2cadChangePropagationSpecification;
+import mir.reactions.cad2brakesystem.Cad2brakesystemChangePropagationSpecification;
+import mir.reactions.feature2cad.Feature2cadChangePropagationSpecification;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
 import tools.vitruv.change.propagation.ChangePropagationMode;
 import tools.vitruv.change.testutils.TestUserInteraction;
@@ -65,6 +68,22 @@ public class VSUMExample {
       Rootgroup.getFeature().add(root);
       featureTree.setRoot(Rootgroup);
 
+      Feature domainOneRoot = uvlFactory.eINSTANCE.createFeature();
+      Mandatory domainOneRootGroup = uvlFactory.eINSTANCE.createMandatory();
+      domainOneRoot.setGroup(domainOneRootGroup);
+      domainOneRoot.setName("DomainOneRoot");
+      domainOneRootGroup.getFeature().add(domainOneRoot);
+
+      root.getChildren().add(domainOneRootGroup);
+
+      Feature firstDomainOneFeature = uvlFactory.eINSTANCE.createFeature();
+      firstDomainOneFeature.setName("FirstDomainOneFeature");
+      Mandatory firstDomainOneFeatureGroup = uvlFactory.eINSTANCE.createMandatory();
+      firstDomainOneFeature.setGroup(firstDomainOneFeatureGroup);
+      firstDomainOneFeatureGroup.getFeature().add(firstDomainOneFeature); 
+
+      domainOneRoot.getChildren().add(firstDomainOneFeatureGroup);
+
     });
 
     
@@ -88,7 +107,7 @@ public class VSUMExample {
     return new VirtualModelBuilder()
         .withStorageFolder(storagePath)
         .withUserInteractorForResultProvider(new TestUserInteraction.ResultProvider(new TestUserInteraction()))
-        .withChangePropagationSpecifications(new Feature2configChangePropagationSpecification())
+        .withChangePropagationSpecifications(new Feature2configChangePropagationSpecification(),new Feature2cadChangePropagationSpecification(),new Cad2brakesystemChangePropagationSpecification(),new Brakesystem2cadChangePropagationSpecification())
         .buildAndInitialize();
   }
 
