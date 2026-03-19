@@ -15,6 +15,8 @@ import UVLPackage.uvlFactory;
 import brakesystem.Brakesystem;
 import brakesystem.BrakesystemFactory;
 import edu.kit.ipd.sdq.metamodels.cad.BooleanParameter;
+import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
+import edu.kit.ipd.sdq.metamodels.cad.CadFactory;
 import edu.kit.ipd.sdq.metamodels.cad.Namespace;
 import edu.kit.ipd.sdq.metamodels.cad.NumericParameter;
 import edu.kit.ipd.sdq.metamodels.cad.StringParameter;
@@ -50,12 +52,12 @@ public class TestUtil {
         modifyView(view, (CommittableView v) -> {
             v.registerRoot(
                     uvlFactory.eINSTANCE.createUVLModel(),
-                    URI.createFileURI(filePath.toString() + "/uvl.model"));
+                    URI.createFileURI(filePath.toString() + "/brake.uvl"));
         });
 
     }
 
-     public void registerRootObjects(VirtualModel virtualModel, Path filePath) {
+     public void registerBSRootObjects(VirtualModel virtualModel, Path filePath) {
         CommittableView view = getDefaultView(virtualModel,
                 List.of(Brakesystem.class))
                 .withChangeRecordingTrait();
@@ -63,6 +65,18 @@ public class TestUtil {
             v.registerRoot(
                     BrakesystemFactory.eINSTANCE.createBrakesystem(),
                     URI.createFileURI(filePath.toString() + "/brakesystem.model"));
+        });
+
+    }
+
+    public void registerCADRootObjects(VirtualModel virtualModel, Path filePath) {
+        CommittableView view = getDefaultView(virtualModel,
+                List.of(CAD_Model.class))
+                .withChangeRecordingTrait();
+        modifyView(view, (CommittableView v) -> {
+            v.registerRoot(
+                    CadFactory.eINSTANCE.createCAD_Model(),
+                    URI.createFileURI(filePath.toString() + "/brake.cad"));
         });
 
     }

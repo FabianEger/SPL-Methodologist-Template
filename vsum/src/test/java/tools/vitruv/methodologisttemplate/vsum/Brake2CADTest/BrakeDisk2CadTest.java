@@ -48,7 +48,7 @@ public class BrakeDisk2CadTest {
 	void brakeDiskInsertionAndPropagationTest(@TempDir Path tempDir) {
 
 		VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-		util.registerRootObjects(vsum, tempDir);
+		util.registerBSRootObjects(vsum, tempDir);
 
 		// add brake disk with parameters
 		CommittableView view = util.getDefaultView(vsum,
@@ -90,7 +90,7 @@ public class BrakeDisk2CadTest {
 	@Test
 	void changeDiameterTest(@TempDir Path tempDir) {
 		VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-		util.registerRootObjects(vsum, tempDir);
+		util.registerBSRootObjects(vsum, tempDir);
 
 		// add brake disk with parameters
 		CommittableView view = util.getDefaultView(vsum,
@@ -135,7 +135,7 @@ public class BrakeDisk2CadTest {
 	@Test
 	void changeIdTest(@TempDir Path tempDir) {
 		VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-		util.registerRootObjects(vsum, tempDir);
+		util.registerBSRootObjects(vsum, tempDir);
 
 		// add brake disk with parameters
 		CommittableView view = util.getDefaultView(vsum,
@@ -179,7 +179,7 @@ public class BrakeDisk2CadTest {
 	@Test
 	void changeVentilatedTest(@TempDir Path tempDir) {
 		VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-		util.registerRootObjects(vsum, tempDir);
+		util.registerBSRootObjects(vsum, tempDir);
 
 		// add brake disk with parameters
 		CommittableView view = util.getDefaultView(vsum,
@@ -221,7 +221,7 @@ public class BrakeDisk2CadTest {
 	@Test
 	void changeOEMNumberTest(@TempDir Path tempDir) {
 		VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-		util.registerRootObjects(vsum, tempDir);
+		util.registerBSRootObjects(vsum, tempDir);
 
 		// add brake disk with parameters
 		CommittableView view = util.getDefaultView(vsum,

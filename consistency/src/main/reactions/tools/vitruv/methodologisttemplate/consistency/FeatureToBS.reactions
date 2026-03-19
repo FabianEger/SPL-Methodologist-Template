@@ -12,9 +12,7 @@ import brakesystem.BrakeHose;
 import brakesystem.BrakeDisk;
 
 
-
 import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
-import "http://vitruv.tools/methodologisttemplate/config" as config
 import "http://www.example.org/brakesystem" as brakesystem
 
 

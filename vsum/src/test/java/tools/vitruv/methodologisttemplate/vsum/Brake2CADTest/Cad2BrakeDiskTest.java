@@ -45,7 +45,7 @@ public class Cad2BrakeDiskTest {
     @Test
     void brakeDiskInsertionAndPropagationTest(@TempDir Path tempDir) {
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-        util.registerRootObjects(vsum, tempDir);
+        util.registerBSRootObjects(vsum, tempDir);
         // Setting the user interaction to 0, thus an ABSSensor should be created
         util.userInteraction.addNextSingleSelection(0);
         // add brake disk with parameters
@@ -69,7 +69,7 @@ public class Cad2BrakeDiskTest {
     @Test
     void nochoice(@TempDir Path tempDir) {
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-        util.registerRootObjects(vsum, tempDir);
+        util.registerBSRootObjects(vsum, tempDir);
         // add brake disk with parameters
         CommittableView view = util.getDefaultView(vsum,
                 List.of(CAD_Model.class))
@@ -86,7 +86,7 @@ public class Cad2BrakeDiskTest {
     @Test
     void parameterInsertionAndPropagationTestForABSSensor(@TempDir Path tempDir) {
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-        util.registerRootObjects(vsum, tempDir);
+        util.registerBSRootObjects(vsum, tempDir);
         // Setting the user interaction to 0, thus an ABSSensor should be created
         util.userInteraction.addNextSingleSelection(0);
         // add brake disk with parameters
@@ -133,7 +133,7 @@ public class Cad2BrakeDiskTest {
     @Test
     void parameterInsertionAndPropagationForBrakeDiskTest(@TempDir Path tempDir) {
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-        util.registerRootObjects(vsum, tempDir);
+        util.registerBSRootObjects(vsum, tempDir);
         // Setting the user interaction to 0, thus an ABSSensor should be created
         util.userInteraction.addNextSingleSelection(3);
         // add brake disk with parameters
@@ -184,7 +184,7 @@ public class Cad2BrakeDiskTest {
     void biDirectionalPropagationTest(@TempDir Path tempDir) {
         // Starting from the CAD model
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-        util.registerRootObjects(vsum, tempDir);
+        util.registerBSRootObjects(vsum, tempDir);
         // Setting the user interaction to 0, thus an ABSSensor should be created
         util.userInteraction.addNextSingleSelection(0);
         // add brake disk with parameters
@@ -251,7 +251,7 @@ public class Cad2BrakeDiskTest {
     @Test
     void absSensorAttributePropagationTest(@TempDir Path tempDir) {
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,necessaryCPS);
-        util.registerRootObjects(vsum, tempDir);
+        util.registerBSRootObjects(vsum, tempDir);
         // Setting the user interaction to 0, thus an ABSSensor should be created
         util.userInteraction.addNextSingleSelection(0);
         // add brake disk with parameters

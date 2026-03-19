@@ -1,0 +1,21 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+import UVLPackage.uvlPackage.Literals;
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+
+
+reactions: uvl2uvl
+in reaction to changes in uvl
+execute actions in uvl
+
+reaction UVLModelInsertedAsRoot{
+    after element uvl::UVLModel inserted as root
+    call setCorresponendenceForExistingDomainRoot(newValue)
+}
+
+routine setCorresponendenceForExistingDomainRoot(uvl::UVLModel uvlModel) {
+    update{
+        addCorrespondenceBetween(uvlModel, UVLPackage.uvlPackage.Literals.UVL_MODEL);
+    }
+}

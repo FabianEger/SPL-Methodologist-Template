@@ -1,4 +1,4 @@
-package tools.vitruv.methodologisttemplate.vsum;
+package tools.vitruv.methodologisttemplate.vsum.PropagationTestProblemSpaceDomainOneChanged;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -17,6 +17,8 @@ import UVLPackage.UVLModel;
 import UVLPackage.uvlFactory;
 import brakesystem.Brakesystem;
 import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
+import mir.reactions.brakesystem2cad.Brakesystem2cadChangePropagationSpecification;
+import mir.reactions.cad2brakesystem.Cad2brakesystemChangePropagationSpecification;
 import mir.reactions.feature2brakesystem.Feature2brakesystemChangePropagationSpecification;
 import mir.reactions.feature2cad.Feature2cadChangePropagationSpecification;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
@@ -24,12 +26,14 @@ import tools.vitruv.change.propagation.ChangePropagationSpecification;
 import tools.vitruv.framework.views.CommittableView;
 import tools.vitruv.framework.views.View;
 import tools.vitruv.framework.vsum.VirtualModel;
+import tools.vitruv.methodologisttemplate.vsum.TestUtil;
 
-public class FeatureToDomainTest {
+
+public class FeatureToDomainToDomainTest {
     
 
     TestUtil util = new TestUtil();
-    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new Feature2brakesystemChangePropagationSpecification());
+    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new Feature2brakesystemChangePropagationSpecification(),new Brakesystem2cadChangePropagationSpecification(), new Cad2brakesystemChangePropagationSpecification());
 
 
     @BeforeAll
@@ -39,8 +43,11 @@ public class FeatureToDomainTest {
 
 	}
     
+
+    //This test checks that if a feature is added to the problem space and then assigned to a domain, the change is propagated to the other domain as well.
     @Test
     public void testAddedFeatureToCADDomainFM(@TempDir Path tempDir) {
+        util.userInteraction.addNextSingleSelection(0);
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
         util.registerRootFMObjects(vsum, tempDir);
         CommittableView view = util.getDefaultView(vsum, List.of(UVLModel.class)).withChangeDerivingTrait();
@@ -77,16 +84,26 @@ public class FeatureToDomainTest {
             CAD_Model cadModel = v.getRootObjects(CAD_Model.class).iterator().next();
             return !cadModel.getNamespaces().isEmpty();
         }));
+        
+
+        Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)), (View v) -> {
+            Brakesystem brakesystem = v.getRootObjects(Brakesystem.class).iterator().next();
+            return !brakesystem.getBrakeComponents().isEmpty();
+        }));
 
 
     }
 
+
+
+    //This test checks that if a feature is added to the problem space and then assigned to a domain, the change is propagated to the other domain as well.
     @Test
     public void testAddedFeatureToBSDomainFM(@TempDir Path tempDir) {
+        util.userInteraction.addNextSingleSelection(0);
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
         util.registerRootFMObjects(vsum, tempDir);
         CommittableView view = util.getDefaultView(vsum, List.of(UVLModel.class)).withChangeDerivingTrait();
-        util.userInteraction.addNextSingleSelection(0);
+
 
         util.modifyView(view, (CommittableView v) -> {
            
@@ -116,11 +133,20 @@ public class FeatureToDomainTest {
         });
 
         Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)), (View v) -> {
-            Brakesystem brModel = v.getRootObjects(Brakesystem.class).iterator().next();
-            return !brModel.getBrakeComponents().isEmpty();
+            Brakesystem brakesystem = v.getRootObjects(Brakesystem.class).iterator().next();
+            return !brakesystem.getBrakeComponents().isEmpty();
         }));
+
+        Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)), (View v) -> {
+            CAD_Model cadModel = v.getRootObjects(CAD_Model.class).iterator().next();
+            return !cadModel.getNamespaces().isEmpty();
+        }));
+        
+
+        
 
 
     }
+    
 
 }

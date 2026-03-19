@@ -43,7 +43,6 @@ routine createConfigForFeature(uvl::Feature feature) {
 		val configmodel = retrieve  config::ConfigurationModel corresponding to EcoreUtil.getRootContainer(feature)
 	}
 	update{
-	    
 		for (config : configmodel.getConfiguration()){
 			createFeatureinEveryConfig(feature,config)	
 		}

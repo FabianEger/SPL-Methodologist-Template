@@ -1,0 +1,101 @@
+import UVLPackage.uvlPackage;
+import UVLPackage.Group;
+import java.io.File;
+import java.util.function.Predicate;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.uvlPackage.Literals;
+
+
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/cad" as cad
+
+
+reactions: cad2feature
+in reaction to changes in cad
+execute actions in uvl
+
+
+reaction CADModelInsertedAsRoot{
+    after element cad::CAD_Model inserted as root
+    call createFeatureForCADModel(newValue)
+}
+
+
+
+
+routine setCorresponendenceForExistingDomainRoot(cad::CAD_Model cadModel, uvl::Feature domainRoot) {
+    update{
+        System.out.println("Adding correspondence between existing domain root feature and CAD model " + cadModel.name)
+        addCorrespondenceBetween(cadModel, domainRoot)
+    }
+}
+
+
+routine createFeatureForCADModel(cad::CAD_Model cadModel) {
+    match{
+        require absence of uvl::Feature corresponding to cadModel
+        val uvlModel = retrieve optional uvl::UVLModel corresponding to uvlPackage.Literals.UVL_MODEL
+    }
+    update{
+        System.out.println(uvlModel.isPresent())
+        if(uvlModel.isPresent()){
+            detectOrCreateRootForCadDomain(cadModel)
+        }else{
+            createRootFM(cadModel)
+            detectOrCreateRootForCadDomain(cadModel)
+        }
+    }
+}
+
+
+routine createRootFM(cad::CAD_Model cadModel) {
+    create{
+       val uvlModel = new uvl::UVLModel
+       val featuretree = new uvl::FeatureTree
+       val rootgroup = new uvl::Mandatory
+       val rootFeature = new uvl::Feature
+    }
+    update{
+        System.out.println("Adding root feature for CAD model " + cadModel)
+        persistProjectRelative(cadModel, uvlModel, new File("").toString() + "brake.uvl")
+        addCorrespondenceBetween(uvlModel, UVLPackage.uvlPackage.Literals.UVL_MODEL)
+        uvlModel.setTree(featuretree)
+        featuretree.setRoot(rootgroup)
+        rootFeature.setName("Root")
+        rootgroup.getFeature().add(rootFeature)
+
+    }
+    
+}
+
+routine detectOrCreateRootForCadDomain(cad::CAD_Model cadModel) {
+    match{
+        require absence of uvl::Feature corresponding to cadModel
+        val uvlModel = retrieve uvl::UVLModel corresponding to uvlPackage.Literals.UVL_MODEL
+    }
+    update{
+        val rootFeature = uvlModel.tree.getRoot().getFeature().get(0)
+        if(FeatureTreeUtil.isRootFeatureWithoutDomainRoot(rootFeature, "DomainOneRoot")){
+            System.out.println("Adding domain root feature for CAD model " + cadModel)
+            createDomainRootForCADModel(rootFeature, uvlModel)
+            
+        }else{
+            System.out.println("Domain root feature already exists for CAD model " + cadModel)
+            addCorrespondenceBetween(cadModel, FeatureTreeUtil.getRootFeatureOfDomain(rootFeature, "DomainOneRoot"))
+        }
+    }
+}
+
+routine createDomainRootForCADModel(uvl::Feature rootFeature, uvl::UVLModel uvlModel) {
+    create{
+       val domainOneRoot = new uvl::Feature
+       val mandatory = new uvl::Mandatory
+    }
+    update{
+        domainOneRoot.setName("DomainOneRoot")
+        mandatory.getFeature().add(domainOneRoot)
+        rootFeature.getChildren().add(mandatory)
+        addCorrespondenceBetween(rootFeature, domainOneRoot)
+    }
+}
