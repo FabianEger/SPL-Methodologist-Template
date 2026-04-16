@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -15,8 +16,10 @@ import UVLPackage.FeatureTree;
 import UVLPackage.Mandatory;
 import UVLPackage.UVLModel;
 import UVLPackage.uvlFactory;
+import brakesystem.ABSSensor;
 import brakesystem.Brakesystem;
 import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
+import mir.reactions.combinedUVLToBS.CombinedUVLToBSChangePropagationSpecification;
 import mir.reactions.feature2brakesystem.Feature2brakesystemChangePropagationSpecification;
 import mir.reactions.feature2cad.Feature2cadChangePropagationSpecification;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
@@ -28,9 +31,12 @@ import tools.vitruv.methodologisttemplate.vsum.TestUtil;
 
 public class FeatureToDomainTest {
     
+    
+    private static final int SELECT_EXISTING = 0;
+    private static final int SELECT_NEW = 1;
 
     TestUtil util = new TestUtil();
-    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new Feature2brakesystemChangePropagationSpecification());
+    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new CombinedUVLToBSChangePropagationSpecification());
 
 
     @BeforeAll
@@ -39,9 +45,12 @@ public class FeatureToDomainTest {
 				new XMIResourceFactoryImpl());
 
 	}
+
     
     @Test
     public void testAddedFeatureToCADDomainFM(@TempDir Path tempDir) {
+
+        //util.userInteraction.addNextSingleSelection(0);
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
         util.registerRootFMObjects(vsum, tempDir);
         CommittableView view = util.getDefaultView(vsum, List.of(UVLModel.class)).withChangeDerivingTrait();
@@ -53,14 +62,19 @@ public class FeatureToDomainTest {
             FeatureTree featureTree = TestUtil.createDefaultFMTree();
             uvlModel.setTree(featureTree);
 
+
+
             Mandatory mandatoryFeature = uvlFactory.eINSTANCE.createMandatory();
+
+            featureTree.getRoot().getFeature().get(0).getChildren().add(mandatoryFeature);
+
             Feature newDomainFeature = uvlFactory.eINSTANCE.createFeature();
             newDomainFeature.setName("DomainOneRoot");
 
             mandatoryFeature.getFeature().add(newDomainFeature);
             newDomainFeature.setGroup(mandatoryFeature);
 
-            featureTree.getRoot().getFeature().get(0).getChildren().add(mandatoryFeature);
+            
 
 
             Mandatory mandatorySubFeature = uvlFactory.eINSTANCE.createMandatory();
@@ -82,8 +96,12 @@ public class FeatureToDomainTest {
 
     }
 
+
+
     @Test
     public void testAddedFeatureToBSDomainFM(@TempDir Path tempDir) {
+        //Userinteraction: First selects that the new feature should add a new component to the brake system 
+        util.userInteraction.addNextSingleSelection(SELECT_NEW);
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
         util.registerRootFMObjects(vsum, tempDir);
         CommittableView view = util.getDefaultView(vsum, List.of(UVLModel.class)).withChangeDerivingTrait();
@@ -116,9 +134,12 @@ public class FeatureToDomainTest {
 
         });
 
+
+
         Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(Brakesystem.class)), (View v) -> {
             Brakesystem brModel = v.getRootObjects(Brakesystem.class).iterator().next();
-            return !brModel.getBrakeComponents().isEmpty();
+            System.out.println(brModel.getBrakeComponents());
+            return !brModel.getBrakeComponents().isEmpty() && brModel.getBrakeComponents().get(0) instanceof ABSSensor;
         }));
 
 

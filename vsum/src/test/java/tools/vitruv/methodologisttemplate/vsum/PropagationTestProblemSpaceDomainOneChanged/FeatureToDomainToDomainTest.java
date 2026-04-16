@@ -19,6 +19,7 @@ import brakesystem.Brakesystem;
 import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
 import mir.reactions.brakesystem2cad.Brakesystem2cadChangePropagationSpecification;
 import mir.reactions.cad2brakesystem.Cad2brakesystemChangePropagationSpecification;
+import mir.reactions.combinedUVLToBS.CombinedUVLToBSChangePropagationSpecification;
 import mir.reactions.feature2brakesystem.Feature2brakesystemChangePropagationSpecification;
 import mir.reactions.feature2cad.Feature2cadChangePropagationSpecification;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
@@ -30,10 +31,10 @@ import tools.vitruv.methodologisttemplate.vsum.TestUtil;
 
 
 public class FeatureToDomainToDomainTest {
-    
+    private static final int SELECT_NEW = 1;
 
     TestUtil util = new TestUtil();
-    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new Feature2brakesystemChangePropagationSpecification(),new Brakesystem2cadChangePropagationSpecification(), new Cad2brakesystemChangePropagationSpecification());
+    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new CombinedUVLToBSChangePropagationSpecification(),new Brakesystem2cadChangePropagationSpecification(), new Cad2brakesystemChangePropagationSpecification());
 
 
     @BeforeAll
@@ -47,6 +48,7 @@ public class FeatureToDomainToDomainTest {
     //This test checks that if a feature is added to the problem space and then assigned to a domain, the change is propagated to the other domain as well.
     @Test
     public void testAddedFeatureToCADDomainFM(@TempDir Path tempDir) {
+        util.userInteraction.addNextSingleSelection(0);
         util.userInteraction.addNextSingleSelection(0);
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
         util.registerRootFMObjects(vsum, tempDir);
@@ -100,6 +102,8 @@ public class FeatureToDomainToDomainTest {
     @Test
     public void testAddedFeatureToBSDomainFM(@TempDir Path tempDir) {
         util.userInteraction.addNextSingleSelection(0);
+        util.userInteraction.addNextSingleSelection(0);
+         util.userInteraction.addNextSingleSelection(SELECT_NEW);
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
         util.registerRootFMObjects(vsum, tempDir);
         CommittableView view = util.getDefaultView(vsum, List.of(UVLModel.class)).withChangeDerivingTrait();

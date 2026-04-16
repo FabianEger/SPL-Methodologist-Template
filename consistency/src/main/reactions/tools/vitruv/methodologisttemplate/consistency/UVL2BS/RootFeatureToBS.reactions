@@ -1,0 +1,44 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.FeatureTree;
+import UVLPackage.Feature;
+import UVLPackage.UVLModel;
+import brakesystem.ABSSensor;
+import brakesystem.BrakeCaliper;
+import brakesystem.BrakeHose;
+import brakesystem.BrakeDisk;
+
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/brakesystem" as brakesystem
+
+
+reactions: featureRoot2brakesystem
+in reaction to changes in uvl
+execute actions in brakesystem
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "DomainTwoRoot"
+    call createBrakeSystemForDomainRoot(newValue)
+}
+
+
+
+routine createBrakeSystemForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of brakesystem::Brakesystem corresponding to feature
+    }
+    create{
+        val brakeSystem = new brakesystem::Brakesystem
+    }
+    update{
+        System.out.println("Created new brake system for new domain root feature " + feature.name)
+        persistProjectRelative(feature, brakeSystem, new File("").toString() + "brake.brakesystem")
+        addCorrespondenceBetween(feature, brakeSystem)
+    }
+}

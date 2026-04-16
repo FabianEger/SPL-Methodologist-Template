@@ -2,8 +2,10 @@ package tools.vitruv.methodologisttemplate.vsum.PropagationTestDomainOneChanged;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -114,6 +116,40 @@ public class CADToUVLTest {
            UVLModel uvlModel = v.getRootObjects(UVLModel.class).iterator().next();
            return !uvlModel.getTree().getRoot().getFeature().get(0).getChildren().isEmpty() && uvlModel.getTree().getRoot().getFeature().get(0).getChildren().get(0).getFeature().get(0).getName().equals("DomainOneRoot");
         }));
+    }
+
+
+    @Test
+    public void testRemoveCADModelandFeatureHasNoCorrespondence(@TempDir Path tempDir) {
+    VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
+    
+    util.registerCADRootObjects(vsum, tempDir);
+
+    Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(UVLModel.class)), (View v) -> {
+        UVLModel uvlModel = v.getRootObjects(UVLModel.class).iterator().next();
+        return !uvlModel.getTree().getRoot().getFeature().get(0).getChildren().isEmpty() && uvlModel.getTree().getRoot().getFeature().get(0).getChildren().get(0).getFeature().get(0).getName().equals("DomainOneRoot");
+    }));
+
+    CommittableView view = util.getDefaultView(vsum, List.of(CAD_Model.class)).withChangeDerivingTrait();
+
+    util.modifyView(view, (CommittableView v) -> {
+        CAD_Model cadModel = v.getRootObjects(CAD_Model.class).iterator().next();
+        EcoreUtil.delete(cadModel);
+    });
+    
+    Assertions.assertThrows(NoSuchElementException.class, () -> {
+        TestUtil.assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)), (View v) -> {
+            CAD_Model cad_Model = v.getRootObjects(CAD_Model.class).iterator().next();
+            return cad_Model == null;
+        });
+    });
+
+
+    Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(UVLModel.class)), (View v) -> {
+        UVLModel uvlModel = v.getRootObjects(UVLModel.class).iterator().next();
+        return uvlModel.getTree().getRoot().getFeature().get(0).getChildren().isEmpty();
+    }));
+    
     }
     
 }

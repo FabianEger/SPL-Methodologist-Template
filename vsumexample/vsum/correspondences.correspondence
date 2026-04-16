@@ -4,8 +4,4 @@
     <leftEObjects href="vsumexample/brake.uvl#/"/>
     <rightEObjects href="../brake.config#/"/>
   </correspondences>
-  <correspondences xsi:type="correspondence_1:ReactionsCorrespondence" tag="">
-    <leftEObjects href="vsumexample/brake.uvl#//@tree/@root/@feature.0"/>
-    <rightEObjects href="../brake.config#//@configuration.0/@feature.0"/>
-  </correspondences>
 </correspondence:Correspondences>

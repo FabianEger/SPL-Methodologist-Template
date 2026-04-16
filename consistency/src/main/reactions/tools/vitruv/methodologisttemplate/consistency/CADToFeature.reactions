@@ -3,6 +3,8 @@ import UVLPackage.Group;
 import java.io.File;
 import java.util.function.Predicate;
 import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+
 import UVLPackage.uvlPackage.Literals;
 
 
@@ -38,7 +40,6 @@ routine createFeatureForCADModel(cad::CAD_Model cadModel) {
         val uvlModel = retrieve optional uvl::UVLModel corresponding to uvlPackage.Literals.UVL_MODEL
     }
     update{
-        System.out.println(uvlModel.isPresent())
         if(uvlModel.isPresent()){
             detectOrCreateRootForCadDomain(cadModel)
         }else{
@@ -78,7 +79,7 @@ routine detectOrCreateRootForCadDomain(cad::CAD_Model cadModel) {
         val rootFeature = uvlModel.tree.getRoot().getFeature().get(0)
         if(FeatureTreeUtil.isRootFeatureWithoutDomainRoot(rootFeature, "DomainOneRoot")){
             System.out.println("Adding domain root feature for CAD model " + cadModel)
-            createDomainRootForCADModel(rootFeature, uvlModel)
+            createDomainRootForCADModel(rootFeature, cadModel)
             
         }else{
             System.out.println("Domain root feature already exists for CAD model " + cadModel)
@@ -87,7 +88,7 @@ routine detectOrCreateRootForCadDomain(cad::CAD_Model cadModel) {
     }
 }
 
-routine createDomainRootForCADModel(uvl::Feature rootFeature, uvl::UVLModel uvlModel) {
+routine createDomainRootForCADModel(uvl::Feature rootFeature, cad::CAD_Model cadModel) {
     create{
        val domainOneRoot = new uvl::Feature
        val mandatory = new uvl::Mandatory
@@ -96,6 +97,38 @@ routine createDomainRootForCADModel(uvl::Feature rootFeature, uvl::UVLModel uvlM
         domainOneRoot.setName("DomainOneRoot")
         mandatory.getFeature().add(domainOneRoot)
         rootFeature.getChildren().add(mandatory)
-        addCorrespondenceBetween(rootFeature, domainOneRoot)
+        addCorrespondenceBetween(domainOneRoot, cadModel)
     }
 }
+
+
+reaction CADModelDeletedAsRoot{
+    after element cad::CAD_Model deleted
+    call deleteCorrespondingFeature(affectedEObject)
+}
+
+
+routine deleteCorrespondingFeature(cad::CAD_Model cadModel) {
+    match{
+        val feature = retrieve uvl::Feature corresponding to cadModel
+    }
+    update{
+        System.out.println("Deleting feature corresponding to deleted CAD model " + cadModel)
+        removeCorrespondenceBetween(cadModel, feature)
+        deleteFeaturewithNoCorrespondence(feature)
+    }
+}
+
+routine deleteFeaturewithNoCorrespondence(uvl::Feature feature) {
+    match{
+        val object = retrieve optional EObject corresponding to feature
+    }
+    update{
+        if(!object.isPresent()){
+            System.out.println("No corresponding EObject found for feature " + feature.name)
+            System.out.println("Deleting feature and containing mandatory group ")
+            removeObject(feature.eContainer())
+        }
+    }
+}
+

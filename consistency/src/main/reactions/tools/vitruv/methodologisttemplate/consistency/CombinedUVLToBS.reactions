@@ -1,0 +1,14 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/brakesystem" as brakesystem
+
+
+reactions: combinedUVLToBS
+in reaction to changes in uvl
+execute actions in brakesystem
+
+
+
+
+import feature2brakesystem using qualified names
+
+import featureRoot2brakesystem using qualified names

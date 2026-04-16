@@ -1,6 +1,8 @@
 package tools.vitruv.methodologisttemplate.consistency;
+import java.util.List;
 import java.util.function.Predicate;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -16,35 +18,56 @@ import tools.vitruv.dsls.reactions.runtime.helper.PersistenceHelper;
 public class FeatureTreeUtil {
     
 
-    public static boolean isFeatureAddedtoThisDomain(Feature feature, EObject parent) {
-        return !isRootFeature(parent) && EcoreUtil.isAncestor(getDomainRootFeature(feature),feature);
+    public static boolean isFeatureAddedtoThisDomain(Feature feature, EObject parent, String domainRootName) {
+
+        if(isRootFeature(parent) || parent instanceof FeatureTree){
+            System.out.println("Parent is root feature, so feature is added directly under root and not under domain root");
+            return false;
+        }
+
+        Feature domainRootFeature = getDomainRootFeature(feature, domainRootName);
+        
+        if (domainRootFeature == null) {
+            System.out.println("Domain root feature not found for feature " + feature.getName() + " and domain root name " + domainRootName);
+            return false;
+        }
+        System.out.println("Domain root feature: " + domainRootFeature.getName());
+
+        return EcoreUtil.isAncestor(domainRootFeature,feature);
     }
 
 
 
-    public static Feature getDomainRootFeature(Feature feature) {
+    public static Feature getDomainRootFeature(Feature feature, String domainRootName) {
        
-        if (isRootFeature(feature)) {
+        if (isRootFeature(feature.eContainer().eContainer()) && feature.getName().equals(domainRootName)) {
             return feature;
+        } else if (isRootFeature(feature.eContainer().eContainer()) && !feature.getName().equals(domainRootName)) {
+            return null;
         } else {
-            return checkIFParentIsRootFeature((Feature) feature.eContainer().eContainer(), feature);
+            return checkIFParentIsRootFeature((Feature) feature.eContainer().eContainer(), feature, domainRootName);
         }
-       
     } 
 
     
 
 
-    private static Feature checkIFParentIsRootFeature(Feature feature, Feature child) {
-        if (isRootFeature(feature)) {
-            return child;
+    private static Feature checkIFParentIsRootFeature(Feature feature, Feature child, String domainRootName) {
+        System.out.println("Checking feature " + feature.getName() + " for being added under domain root " + domainRootName);
+        if (isRootFeature(feature.eContainer().eContainer()) && feature.getName().equals(domainRootName)) {
+            return feature;
+        } else if (isRootFeature(feature) && !feature.getName().equals(domainRootName)) {
+            return null;
         } else {
-            return checkIFParentIsRootFeature((Feature) feature.eContainer().eContainer(), feature);
+            return checkIFParentIsRootFeature((Feature) feature.eContainer().eContainer(), feature, domainRootName);
         }
     }
 
 
     public static boolean isRootFeature(EObject feature) {
+         if (feature == null) {
+            return false;
+        }
         if (feature instanceof FeatureTree) {
             return false;
         }
@@ -90,4 +113,5 @@ public class FeatureTreeUtil {
             return feature.getName().equals(domainRootName);}
         ).findFirst().orElse(null);
     }
+
 }

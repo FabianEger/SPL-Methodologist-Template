@@ -1,0 +1,192 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.FeatureTree;
+import UVLPackage.Feature;
+import UVLPackage.UVLModel;
+import brakesystem.ABSSensor;
+import brakesystem.BrakeCaliper;
+import brakesystem.BrakeHose;
+import brakesystem.BrakeDisk;
+import brakesystem.Brakesystem;
+import brakesystem.BrakesystemPackage;
+
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/brakesystem" as brakesystem
+
+
+reactions: feature2brakesystem
+in reaction to changes in uvl
+execute actions in brakesystem
+
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"DomainTwoRoot")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, BrakesystemPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the brake system: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature to an existing brake component or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, BrakesystemPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        } else if(containedClasses.size() > 1){
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            return
+        }
+
+        val correspondingClass = containedClasses.get(0)
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof Brakesystem && mapToExistingComponent == 1) {
+            System.out.println("Creating new brake component for feature " + feature.name)
+            createBrakeComponentForFeature(feature)
+        } 
+        else if (correspondingClass instanceof Brakesystem && mapToExistingComponent == 0) {
+            mapToExisitingBrakeComponent(feature)
+        }
+        else {
+            System.out.println("Corresponding element for parent feature " + feature.name + " is not a Brakesystem")
+            return
+        }
+
+    }
+}
+
+
+routine mapToExisitingBrakeComponent(uvl::Feature feature) {
+    match{
+        val mBrake = retrieve brakesystem::Brakesystem corresponding to feature.eContainer().eContainer()
+    }
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(mBrake)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing components to map to. Please create a new component.")
+            createBrakeComponentForFeature(feature)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing brake component do you want to map the new feature?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createBrakeComponentForFeature(uvl::Feature feature) {
+    match{
+        val mBrake = retrieve brakesystem::Brakesystem corresponding to feature.eContainer().eContainer()
+    }
+    update{
+
+        val containedClasses = EMFUtil.findContainedClasses(mBrake.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+        
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What brake component do you want to add to be correspondent to this feature?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected component type index: " + componentType)
+        
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "ABSSensor": 
+                createABSSensor(feature, mBrake)
+            case "BrakeCaliper":
+                createBrakeCaliper(feature, mBrake)
+            case "BrakeHose":
+                createBrakeHose(feature, mBrake)
+            case "BrakeDisk":
+                createBrakeDisk(feature, mBrake)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createABSSensor(uvl::Feature feature, brakesystem::Brakesystem mBrake) {
+    create {
+        val component = new brakesystem::ABSSensor
+    }
+    update {
+        addCorrespondenceBetween(feature, component);
+        System.out.println("Adding component " + component + " to brake system " + mBrake);
+        // we cannot use the BrakeComponents syntax because there is no setter I think, so we
+        // have to use the explicit getter syntax
+        mBrake.getBrakeComponents.add(component);
+    }
+}
+
+routine createBrakeCaliper(uvl::Feature feature, brakesystem::Brakesystem mBrake) {
+    create {
+        val component = new brakesystem::BrakeCaliper
+    }
+    update {
+        addCorrespondenceBetween(feature, component);
+        mBrake.getBrakeComponents.add(component);
+    }
+}
+
+routine createBrakeHose(uvl::Feature feature, brakesystem::Brakesystem mBrake) {
+    create {
+        val component = new brakesystem::BrakeHose
+    }
+    update {
+        addCorrespondenceBetween(feature, component);
+        mBrake.getBrakeComponents.add(component);
+    }
+}
+
+routine createBrakeDisk(uvl::Feature feature, brakesystem::Brakesystem mBrake) {
+    create {
+        val component = new brakesystem::BrakeDisk
+    }
+    update {
+        addCorrespondenceBetween(feature , component);
+        mBrake.getBrakeComponents.add(component);
+    }
+}

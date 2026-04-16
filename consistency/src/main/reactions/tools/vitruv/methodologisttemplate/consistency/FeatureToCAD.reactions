@@ -18,6 +18,9 @@ reaction UVLDomainRootInserted{
     call createCADForDomainRoot(newValue)
 }
 
+
+
+
 routine createCADForDomainRoot(uvl::Feature feature) {
     match{
         require absence of cad::CAD_Model corresponding to feature
@@ -34,28 +37,25 @@ routine createCADForDomainRoot(uvl::Feature feature) {
 
 reaction UVLFeatureInsertedIntoDomainRoot{
     after element uvl::Feature inserted in uvl::Group[feature]
-    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer())
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"DomainOneRoot")
     call createCADNamespaceForFeature(newValue)
 }
 
 routine createCADNamespaceForFeature(uvl::Feature feature) {
     match{
         require absence of cad::Namespace corresponding to feature
-        val cadmodel = retrieve cad::CAD_Model corresponding to FeatureTreeUtil.getDomainRootFeature(feature)
+        val cadmodel = retrieve cad::CAD_Model corresponding to FeatureTreeUtil.getDomainRootFeature(feature,"DomainOneRoot")
     }
     create{
         val cadNamespace = new cad::Namespace
     }
     update{
+        System.out.println("Adding CAD namespace for feature " + feature.name)
         cadmodel.namespaces.add(cadNamespace);
         addCorrespondenceBetween(feature, cadNamespace);
     }
 }
 
 
-routine test(uvl::Feature feature) {
-    update{
-        System.out.println("Adding namespace for feature " + feature.name)
-    }
-}
+
 
