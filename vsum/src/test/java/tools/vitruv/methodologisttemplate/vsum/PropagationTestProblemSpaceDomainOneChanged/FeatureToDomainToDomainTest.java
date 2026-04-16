@@ -20,6 +20,7 @@ import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
 import mir.reactions.brakesystem2cad.Brakesystem2cadChangePropagationSpecification;
 import mir.reactions.cad2brakesystem.Cad2brakesystemChangePropagationSpecification;
 import mir.reactions.combinedUVLToBS.CombinedUVLToBSChangePropagationSpecification;
+import mir.reactions.combinedUVLToCAD.CombinedUVLToCADChangePropagationSpecification;
 import mir.reactions.feature2brakesystem.Feature2brakesystemChangePropagationSpecification;
 import mir.reactions.feature2cad.Feature2cadChangePropagationSpecification;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
@@ -34,7 +35,7 @@ public class FeatureToDomainToDomainTest {
     private static final int SELECT_NEW = 1;
 
     TestUtil util = new TestUtil();
-    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new CombinedUVLToBSChangePropagationSpecification(),new Brakesystem2cadChangePropagationSpecification(), new Cad2brakesystemChangePropagationSpecification());
+    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new CombinedUVLToCADChangePropagationSpecification(),new CombinedUVLToBSChangePropagationSpecification(),new Brakesystem2cadChangePropagationSpecification(), new Cad2brakesystemChangePropagationSpecification());
 
 
     @BeforeAll

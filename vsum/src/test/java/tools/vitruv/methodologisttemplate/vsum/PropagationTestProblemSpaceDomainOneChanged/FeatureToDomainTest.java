@@ -20,6 +20,7 @@ import brakesystem.ABSSensor;
 import brakesystem.Brakesystem;
 import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
 import mir.reactions.combinedUVLToBS.CombinedUVLToBSChangePropagationSpecification;
+import mir.reactions.combinedUVLToCAD.CombinedUVLToCADChangePropagationSpecification;
 import mir.reactions.feature2brakesystem.Feature2brakesystemChangePropagationSpecification;
 import mir.reactions.feature2cad.Feature2cadChangePropagationSpecification;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
@@ -36,7 +37,7 @@ public class FeatureToDomainTest {
     private static final int SELECT_NEW = 1;
 
     TestUtil util = new TestUtil();
-    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new Feature2cadChangePropagationSpecification(),new CombinedUVLToBSChangePropagationSpecification());
+    Iterable<ChangePropagationSpecification> additionalCPS = List.of(new CombinedUVLToCADChangePropagationSpecification(),new CombinedUVLToBSChangePropagationSpecification());
 
 
     @BeforeAll
@@ -50,7 +51,7 @@ public class FeatureToDomainTest {
     @Test
     public void testAddedFeatureToCADDomainFM(@TempDir Path tempDir) {
 
-        //util.userInteraction.addNextSingleSelection(0);
+        util.userInteraction.addNextSingleSelection(SELECT_NEW);
         VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
         util.registerRootFMObjects(vsum, tempDir);
         CommittableView view = util.getDefaultView(vsum, List.of(UVLModel.class)).withChangeDerivingTrait();
@@ -91,6 +92,70 @@ public class FeatureToDomainTest {
         Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)), (View v) -> {
             CAD_Model cadModel = v.getRootObjects(CAD_Model.class).iterator().next();
             return !cadModel.getNamespaces().isEmpty();
+        }));
+
+
+    }
+
+
+     @Test
+    public void testAddedTwoFeatureToCADDomainFM(@TempDir Path tempDir) {
+
+        util.userInteraction.addNextSingleSelection(SELECT_NEW);
+
+        util.userInteraction.addNextSingleSelection(SELECT_NEW);
+         util.userInteraction.addNextSingleSelection(0);
+
+        VirtualModel vsum = util.createDefaultVirtualModel(tempDir,additionalCPS);
+        util.registerRootFMObjects(vsum, tempDir);
+        CommittableView view = util.getDefaultView(vsum, List.of(UVLModel.class)).withChangeDerivingTrait();
+
+
+        util.modifyView(view, (CommittableView v) -> {
+           
+            UVLModel uvlModel = (UVLModel) v.getRootObjects(UVLModel.class).iterator().next();
+            FeatureTree featureTree = TestUtil.createDefaultFMTree();
+            uvlModel.setTree(featureTree);
+
+
+
+            Mandatory mandatoryFeature = uvlFactory.eINSTANCE.createMandatory();
+
+            featureTree.getRoot().getFeature().get(0).getChildren().add(mandatoryFeature);
+
+            Feature newDomainFeature = uvlFactory.eINSTANCE.createFeature();
+            newDomainFeature.setName("DomainOneRoot");
+
+            mandatoryFeature.getFeature().add(newDomainFeature);
+            newDomainFeature.setGroup(mandatoryFeature);
+
+            
+
+
+            Mandatory mandatorySubFeature = uvlFactory.eINSTANCE.createMandatory();
+            Feature subFeature = uvlFactory.eINSTANCE.createFeature();
+            subFeature.setName("SubFeature");
+            mandatorySubFeature.getFeature().add(subFeature);
+            subFeature.setGroup(mandatorySubFeature);   
+
+            newDomainFeature.getChildren().add(mandatorySubFeature);
+
+            
+
+            Mandatory mandatorySubSubFeature = uvlFactory.eINSTANCE.createMandatory();
+            Feature subsubFeature = uvlFactory.eINSTANCE.createFeature();
+            subsubFeature.setName("SubSubFeature");
+            mandatorySubSubFeature.getFeature().add(subsubFeature);
+            subsubFeature.setGroup(mandatorySubSubFeature);
+
+            subFeature.getChildren().add(mandatorySubSubFeature);
+
+
+        });
+
+        Assertions.assertTrue(TestUtil.assertView(util.getDefaultView(vsum, List.of(CAD_Model.class)), (View v) -> {
+            CAD_Model cadModel = v.getRootObjects(CAD_Model.class).iterator().next();
+            return !cadModel.getNamespaces().isEmpty() && !cadModel.getNamespaces().get(0).getParameters().isEmpty();
         }));
 
 

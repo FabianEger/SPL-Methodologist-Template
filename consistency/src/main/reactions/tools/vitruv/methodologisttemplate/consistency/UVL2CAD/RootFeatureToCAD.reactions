@@ -3,14 +3,12 @@ import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
 import UVLPackage.Feature;
 
 import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
-import "http://vitruv.tools/methodologisttemplate/config" as config
 import "http://www.example.org/cad" as cad
 
 
-reactions: feature2cad
+reactions: featureRoot2cad
 in reaction to changes in uvl
 execute actions in cad
-
 
 reaction UVLDomainRootInserted{
     after element uvl::Feature inserted in uvl::Group[feature]
@@ -34,28 +32,6 @@ routine createCADForDomainRoot(uvl::Feature feature) {
         addCorrespondenceBetween(feature, cadModel)
     }
 }
-
-reaction UVLFeatureInsertedIntoDomainRoot{
-    after element uvl::Feature inserted in uvl::Group[feature]
-    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"DomainOneRoot")
-    call createCADNamespaceForFeature(newValue)
-}
-
-routine createCADNamespaceForFeature(uvl::Feature feature) {
-    match{
-        require absence of cad::Namespace corresponding to feature
-        val cadmodel = retrieve cad::CAD_Model corresponding to FeatureTreeUtil.getDomainRootFeature(feature,"DomainOneRoot")
-    }
-    create{
-        val cadNamespace = new cad::Namespace
-    }
-    update{
-        System.out.println("Adding CAD namespace for feature " + feature.name)
-        cadmodel.namespaces.add(cadNamespace);
-        addCorrespondenceBetween(feature, cadNamespace);
-    }
-}
-
 
 
 

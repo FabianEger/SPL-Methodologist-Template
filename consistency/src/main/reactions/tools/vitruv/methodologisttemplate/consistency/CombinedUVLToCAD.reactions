@@ -1,0 +1,15 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/cad" as cad
+
+
+
+reactions: combinedUVLToCAD
+in reaction to changes in uvl
+execute actions in cad
+
+
+
+
+import feature2cad using qualified names
+
+import featureRoot2cad using qualified names

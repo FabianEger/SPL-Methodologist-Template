@@ -1,0 +1,231 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.FeatureTree;
+import UVLPackage.Feature;
+import UVLPackage.UVLModel;
+import edu.kit.ipd.sdq.metamodels.cad.CadPackage;
+import UVLPackage.Feature;
+import edu.kit.ipd.sdq.metamodels.cad.Namespace;
+import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
+
+
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/cad" as cad
+
+
+reactions: feature2cad
+in reaction to changes in uvl
+execute actions in cad
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"DomainOneRoot")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, CadPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the brake system: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature to an existing brake component or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, CadPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        } else if(containedClasses.size() > 1){
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            return
+        }
+
+        val correspondingClass = containedClasses.get(0)
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof CAD_Model && mapToExistingComponent == 1) {
+            System.out.println("Creating new namespace for feature " + feature.name)
+            createNamespaceForFeature(feature)
+        } 
+        else if (correspondingClass instanceof CAD_Model && mapToExistingComponent == 0) {
+            mapToExistingNamespace(feature)
+        }
+        else if (correspondingClass instanceof Namespace && mapToExistingComponent == 1) {
+            createParameterForFeature(feature)
+        }
+        else if (correspondingClass instanceof Namespace && mapToExistingComponent == 0) {
+           mapToExistingParameter(feature)
+        }
+        
+
+    }
+}
+
+
+routine mapToExistingNamespace(uvl::Feature feature) {
+    match{
+        val mCADModel = retrieve cad::CAD_Model corresponding to feature.eContainer().eContainer()
+    }
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(mCADModel)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing namespaces to map to. Please create a new namespace.")
+            createNamespaceForFeature(feature)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing namespace do you want to map the new feature?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createNamespaceForFeature(uvl::Feature feature) {
+    match{
+        require absence of cad::Namespace corresponding to feature
+        val cadmodel = retrieve cad::CAD_Model corresponding to FeatureTreeUtil.getDomainRootFeature(feature,"DomainOneRoot")
+    }
+    create{
+        val cadNamespace = new cad::Namespace
+    }
+    update{
+        System.out.println("Adding CAD namespace for feature " + feature.name)
+        cadmodel.namespaces.add(cadNamespace);
+        addCorrespondenceBetween(feature, cadNamespace);
+    }
+}
+
+
+routine mapToExistingParameter(uvl::Feature feature) {
+    match{
+        val mNamespace = retrieve cad::Namespace corresponding to feature.eContainer().eContainer()
+    }
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(mNamespace)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing Parameter to map to. Please create a new parameter.")
+            createParameterForFeature(feature)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing parameter do you want to map the new feature?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createParameterForFeature(uvl::Feature feature) {
+    match{
+        require absence of cad::Parameter corresponding to feature
+        val namespace = retrieve cad::Namespace corresponding to feature.eContainer().eContainer()
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(namespace.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+        
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What parameter type do you want to add to be correspondent to this feature?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected parameter type index: " + componentType)
+        
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "NumericParameter": 
+                createNumericParameter(feature, namespace)
+            case "StringParameter":
+                createStringParameter(feature, namespace)
+            case "BooleanParameter":
+                createBooleanParameter(feature, namespace)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createNumericParameter(uvl::Feature feature, cad::Namespace namespace) {
+    create {
+        val parameter = new cad::NumericParameter
+    }
+    update {
+        System.out.println("Adding NumericParameter for feature " + feature.name)
+        namespace.parameters.add(parameter);
+        addCorrespondenceBetween(feature, parameter);
+    }
+}
+
+routine createStringParameter(uvl::Feature feature, cad::Namespace namespace) {
+    create {
+        val parameter = new cad::StringParameter
+    }
+    update {
+        System.out.println("Adding StringParameter for feature " + feature.name)
+        namespace.parameters.add(parameter);
+        addCorrespondenceBetween(feature, parameter);
+    }
+}
+
+routine createBooleanParameter(uvl::Feature feature, cad::Namespace namespace) {
+    create {
+        val parameter = new cad::BooleanParameter
+    }
+    update {
+        System.out.println("Adding BooleanParameter for feature " + feature.name)
+        namespace.parameters.add(parameter);
+        addCorrespondenceBetween(feature, parameter);
+    }
+}
+

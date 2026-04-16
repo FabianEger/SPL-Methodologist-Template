@@ -2,26 +2,18 @@ package tools.vitruv.methodologisttemplate.vsum;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Function;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.io.TempDir;
 
 import UVLPackage.FeatureTree;
-import UVLPackage.Group;
-import UVLPackage.Mandatory;
 import UVLPackage.UVLModel;
-import UVLPackage.uvlFactory;
 import configurationPackage.ConfigurationModel;
-import configurationPackage.Feature;
 import configurationPackage.Configuration;
 import configurationPackage.ConfigurationPackageFactory;
-import configurationPackage.ConfigurationPackagePackage;
 import mir.reactions.feature2config.Feature2configChangePropagationSpecification;
 import tools.vitruv.change.propagation.ChangePropagationSpecification;
 import tools.vitruv.framework.views.CommittableView;
