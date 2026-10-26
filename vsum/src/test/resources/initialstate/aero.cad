@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cad:CADDocument xmlns:xmi="http://www.omg.org/XMI" xmlns:cad="http://demonstrator.kit.edu/cad" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="AERO" xmi:version="2.0">
+  <materials name="Steel" density="7850.0"/>
+  <materials name="Aluminium" density="2700.0"/>
+  <materials name="CFRP" density="1600.0"/>
+  <objects xsi:type="cad:Assembly" name="AeroDevices" label="AeroDevices">
+    <children xsi:type="cad:Box" name="AeroDevicesPart" label="AeroDevicesPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="ActiveAirMovement" label="ActiveAirMovement">
+    <children xsi:type="cad:Assembly" name="PoweredUnderbodyFanBan" label="PoweredUnderbodyFanBan">
+      <children xsi:type="cad:Box" name="PoweredUnderbodyFanBanPart" label="PoweredUnderbodyFanBanPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="ActiveAirDevice" label="ActiveAirDevice">
+      <children xsi:type="cad:Box" name="ActiveAirDevicePart" label="ActiveAirDevicePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Sketch" name="FrontWingMountStrength" label="FrontWingMountStrength (design parameter)">
+    <geometries xsi:type="cad:LineSegment">
+      <start/>
+      <end x="0.1"/>
+    </geometries>
+    <constraints name="FrontWingMountStrength" value="120.0" first="//@objects.2/@geometries.0"/>
+  </objects>
+  <objects xsi:type="cad:Sketch" name="AeroBalance" label="AeroBalance (design parameter)">
+    <geometries xsi:type="cad:LineSegment">
+      <start/>
+      <end x="0.1"/>
+    </geometries>
+    <constraints name="AeroBalance" value="55.0" first="//@objects.3/@geometries.0"/>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="WheelAndBrakeFlowRegion" label="WheelAndBrakeFlowRegion"/>
+</cad:CADDocument>

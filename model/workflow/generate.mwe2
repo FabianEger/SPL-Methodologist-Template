@@ -24,18 +24,66 @@ Workflow {
         generateCustomClasses = false
     }
 
+    // legacy parameter-based CAD metamodel (http://www.example.org/cad) of the brake-system demo
+    component = EcoreGenerator {
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/legacycad.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
+    }
 
+    // CAD metamodel (http://demonstrator.kit.edu/cad) used by the KA-RaceIng roles DES, CRASH, KIN, AERO
     component = EcoreGenerator {
         genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/cad.genmodel"
         srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
         generateCustomClasses = false
     }
 
-
     component = EcoreGenerator {
-    genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/brakesystem.genmodel"
-    srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
-    generateCustomClasses = false
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/brakesystem.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
+    }
+
+    // KA-RaceIng: bill of materials
+    component = EcoreGenerator {
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/bom.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
+    }
+
+    // KA-RaceIng: Simulation Engineer (SIM)
+    component = EcoreGenerator {
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/simuLink.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
+    }
+
+    // KA-RaceIng: Project Manager / Requirements Engineer (PRJ)
+    component = EcoreGenerator {
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/requirements.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
+    }
+
+    // KA-RaceIng: Thermodynamics Engineer (THERMO)
+    component = EcoreGenerator {
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/thermal.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
+    }
+
+    // KA-RaceIng: Validation Engineer (VAL)
+    component = EcoreGenerator {
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/testbench.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
+    }
+
+    // KA-RaceIng: Electrical Engineer (ELEC)
+    component = EcoreGenerator {
+        genModel = "platform:/resource/tools.vitruv.methodologisttemplate.model/src/main/ecore/electrical.genmodel"
+        srcPath = "platform:/resource/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+        generateCustomClasses = false
     }
 
 }

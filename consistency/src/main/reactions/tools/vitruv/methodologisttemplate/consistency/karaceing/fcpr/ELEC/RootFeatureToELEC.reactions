@@ -1,0 +1,35 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/electrical" as elec
+
+// Root Feature CPR of the stakeholder role ELEC (copy of UVL2CAD/RootFeatureToCAD.reactions):
+// when the domain root feature ElectricalEngineering is inserted below the root feature, the ELEC electrical design model is created.
+
+reactions: rootFeatureToELEC
+in reaction to changes in uvl
+execute actions in elec
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "ElectricalEngineering"
+    call createElectricalDesignForDomainRoot(newValue)
+}
+
+
+routine createElectricalDesignForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of elec::ElectricalDesign corresponding to feature
+    }
+    create{
+        val model = new elec::ElectricalDesign
+    }
+    update{
+        System.out.println("Adding ELEC electrical design model for domain root feature " + feature.name)
+        model.name = "ELEC"
+        persistProjectRelative(feature, model, new File("").toString() + "elec.electrical")
+        addCorrespondenceBetween(feature, model)
+    }
+}

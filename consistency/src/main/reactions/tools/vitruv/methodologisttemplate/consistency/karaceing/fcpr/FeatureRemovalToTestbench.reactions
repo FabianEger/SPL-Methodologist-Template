@@ -1,0 +1,80 @@
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import tools.vitruv.methodologisttemplate.model.testbench.TestbenchPackage;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/testbench" as tb
+
+// Feature CPR for removed features (testbench models): the artefacts that realise a removed feature (and the
+// features below it) are deleted or kept and mapped to the parent feature; an artefact that still realises
+// another feature keeps that one. There is no artefact without a feature.
+// A feature is only treated as removed if it is not contained anywhere any more (a move is no removal).
+
+reactions: featureRemovalToTestbench
+in reaction to changes in uvl
+execute actions in tb
+
+reaction UVLFeatureRemoved{
+    after element uvl::Feature removed from uvl::Group[feature]
+    with oldValue.eContainer() === null
+    call handleRemovedFeatureSubtree(oldValue, affectedEObject)
+}
+
+
+routine handleRemovedFeatureSubtree(uvl::Feature feature, uvl::Group group) {
+    update{
+        for (removedFeature : KARaceIngUtil.featureAndDescendants(feature)) {
+            handleArtefactsOfRemovedFeature(removedFeature, group)
+        }
+    }
+}
+
+
+routine handleArtefactsOfRemovedFeature(uvl::Feature feature, uvl::Group group) {
+    match{
+        val realisations = retrieve many EObject corresponding to feature
+    }
+    update{
+        val artefacts = EMFUtil.filterByMetamodel(realisations, TestbenchPackage.eINSTANCE)
+        for (artefact : artefacts) {
+            removeCorrespondenceBetween(feature, artefact)
+            if (KARaceIngUtil.isAlive(artefact)) {
+                decideOnRealisationOfRemovedFeature(feature, artefact, group)
+            }
+        }
+    }
+}
+
+
+// Every artefact corresponds to a feature: an artefact that still realises another feature keeps it; otherwise it
+// is deleted or mapped to the parent feature (there is no "keep artefact without feature").
+routine decideOnRealisationOfRemovedFeature(uvl::Feature feature, EObject artefact, uvl::Group group) {
+    match{
+        val otherFeatures = retrieve many uvl::Feature corresponding to artefact
+    }
+    update{
+        if (!KARaceIngUtil.alive(otherFeatures).isEmpty()) {
+            System.out.println(KARaceIngUtil.nameOf(artefact) + " still corresponds to " + KARaceIngUtil.featureNames(KARaceIngUtil.alive(otherFeatures)))
+            return
+        }
+        val parentFeature = if (group.eContainer() instanceof Feature) group.eContainer() as Feature else null
+        if (parentFeature === null) {
+            System.out.println("Deleting " + KARaceIngUtil.nameOf(artefact) + " realising the removed feature " + feature.name + " (no parent feature)")
+            removeObject(artefact)
+            return
+        }
+        val choice = userInteractor.singleSelectionDialogBuilder.message("[FCPR] The feature " + feature.name + " was removed. What should happen with its realisation " + KARaceIngUtil.nameOf(artefact) + " in the " + KARaceIngUtil.domainOf(artefact) + " model?").
+                        choices(Arrays.asList("Delete artefact", "Keep artefact and map it to " + parentFeature.name)).windowModality(WindowModality.MODAL).startInteraction
+        if (choice == 0) {
+            System.out.println("Deleting " + KARaceIngUtil.nameOf(artefact) + " realising the removed feature " + feature.name)
+            removeObject(artefact)
+        } else {
+            System.out.println("Mapping " + KARaceIngUtil.nameOf(artefact) + " to the parent feature " + parentFeature.name)
+            addCorrespondenceBetween(parentFeature, artefact)
+        }
+    }
+}

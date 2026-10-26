@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cad:CADDocument xmlns:xmi="http://www.omg.org/XMI" xmlns:cad="http://demonstrator.kit.edu/cad" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="KIN" xmi:version="2.0">
+  <materials name="Steel" density="7850.0"/>
+  <materials name="Aluminium" density="2700.0"/>
+  <materials name="CFRP" density="1600.0"/>
+  <objects xsi:type="cad:Assembly" name="Suspension" label="Suspension">
+    <children xsi:type="cad:Sketch" name="UprightMassReduction" label="UprightMassReduction (design parameter)">
+      <geometries xsi:type="cad:LineSegment">
+        <start/>
+        <end x="0.1"/>
+      </geometries>
+      <constraints name="UprightMassReduction" value="10.0" first="//@objects.0/@children.0/@geometries.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="SuspensionAdaptationForTankMass" label="SuspensionAdaptationForTankMass">
+      <children xsi:type="cad:Box" name="SuspensionAdaptationForTankMassPart" label="SuspensionAdaptationForTankMassPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Sketch" name="KinematicsTables">
+      <geometries xsi:type="cad:LineSegment">
+        <start/>
+        <end x="0.2"/>
+      </geometries>
+      <constraints name="KinematicsTablesLength" value="0.2" first="//@objects.0/@children.2/@geometries.0"/>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="Wheels" label="Wheels">
+    <children xsi:type="cad:Assembly" name="DryTyres" label="DryTyres">
+      <children xsi:type="cad:Box" name="DryTyresPart" label="DryTyresPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="WetTyres" label="WetTyres">
+      <children xsi:type="cad:Box" name="WetTyresPart" label="WetTyresPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="Steering" label="Steering">
+    <children xsi:type="cad:Assembly" name="RearWheelSteering" label="RearWheelSteering">
+      <children xsi:type="cad:Box" name="RearWheelSteeringPart" label="RearWheelSteeringPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+  </objects>
+</cad:CADDocument>

@@ -1,0 +1,231 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import tools.vitruv.methodologisttemplate.model.simulink.SimuLinkPackage;
+import tools.vitruv.methodologisttemplate.model.simulink.SimulinkModel;
+import tools.vitruv.methodologisttemplate.model.simulink.SubSystem;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/simulink" as sim
+
+// Feature CPR of the stakeholder role SIM (copy of the pattern in UVL2CAD/FeatureToCAD.reactions):
+// a feature added below the domain root Simulation is mapped to an existing element of the SIM Simulink model
+// or a new element is created below the element that corresponds to the parent feature.
+
+reactions: featureToSIM
+in reaction to changes in uvl
+execute actions in sim
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"Simulation")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, SimuLinkPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the SIM Simulink model: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature " + feature.name + " to an existing element of the SIM Simulink model or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, SimuLinkPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        }
+
+        var correspondingClass = containedClasses.get(0)
+        if(containedClasses.size() > 1){
+            // Every artefact corresponds to a feature, so the parent feature can be realised by several elements (its
+            // main element and the details inside it): use the outermost one that can contain elements; ask if ambiguous.
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            correspondingClass = KARaceIngUtil.outermost(containedClasses)
+            if(correspondingClass === null){
+                val index = userInteractor.singleSelectionDialogBuilder.message("The parent feature of " + feature.name + " is realised by several elements of the SIM Simulink model. Below which one should the new feature be realised?").
+                            choices(EMFUtil.getAllNamesOfEObjects(containedClasses)).windowModality(WindowModality.MODAL).startInteraction
+                correspondingClass = containedClasses.get(index)
+            }
+        }
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof SimulinkModel && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the SimulinkModel for feature " + feature.name)
+            createElementInSimulinkModel(feature, correspondingClass as SimulinkModel)
+        }
+        else if (correspondingClass instanceof SimulinkModel && mapToExistingComponent == 0) {
+            mapToExistingInSimulinkModel(feature, correspondingClass as SimulinkModel)
+        }
+        else if (correspondingClass instanceof SubSystem && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the SubSystem for feature " + feature.name)
+            createElementInSubSystem(feature, correspondingClass as SubSystem)
+        }
+        else if (correspondingClass instanceof SubSystem && mapToExistingComponent == 0) {
+            mapToExistingInSubSystem(feature, correspondingClass as SubSystem)
+        }
+        else {
+            System.out.println("Corresponding element for parent feature of " + feature.name + " cannot contain new elements: " + correspondingClass)
+            return
+        }
+    }
+}
+
+
+routine mapToExistingInSimulinkModel(uvl::Feature feature, sim::SimulinkModel container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInSimulinkModel(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the SIM Simulink model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInSimulinkModel(uvl::Feature feature, sim::SimulinkModel container) {
+    match{
+        require absence of sim::Block corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the SIM Simulink model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Block":
+                createBlockInSimulinkModel(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createBlockInSimulinkModel(uvl::Feature feature, sim::SimulinkModel container) {
+    create {
+        val newElement = new sim::Block
+    }
+    update {
+        System.out.println("Adding Block for feature " + feature.name + " to the SIM Simulink model")
+        newElement.name = feature.name
+        container.contains.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInSubSystem(uvl::Feature feature, sim::SubSystem container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInSubSystem(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the SIM Simulink model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInSubSystem(uvl::Feature feature, sim::SubSystem container) {
+    match{
+        require absence of sim::Block corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the SIM Simulink model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Block":
+                createBlockInSubSystem(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createBlockInSubSystem(uvl::Feature feature, sim::SubSystem container) {
+    create {
+        val newElement = new sim::Block
+    }
+    update {
+        System.out.println("Adding Block for feature " + feature.name + " to the SIM Simulink model")
+        newElement.name = feature.name
+        container.subBlocks.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}

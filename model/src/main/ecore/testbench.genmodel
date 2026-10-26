@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+    creationIcons="false" modelPluginID="tools.vitruv.methodologisttemplate.model" modelName="Testbench"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" codeFormatting="true"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="17.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>testbench.ecore</foreignModel>
+  <genPackages prefix="Testbench" basePackage="tools.vitruv.methodologisttemplate.model" disposableProviderFactory="true" ecorePackage="testbench.ecore#/">
+    <genClasses ecoreClass="testbench.ecore#//TestBenchConfiguration">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestBenchConfiguration/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference testbench.ecore#//TestBenchConfiguration/elements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference testbench.ecore#//TestBenchConfiguration/instruments"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="testbench.ecore#//TestElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestElement/description"/>
+    </genClasses>
+    <genClasses ecoreClass="testbench.ecore#//TestSuite">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference testbench.ecore#//TestSuite/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="testbench.ecore#//TestCase">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestCase/procedure"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestCase/passCriterion"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference testbench.ecore#//TestCase/steps"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference testbench.ecore#//TestCase/instruments"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestCase/verifiedRequirements"/>
+    </genClasses>
+    <genClasses ecoreClass="testbench.ecore#//TestStep">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestStep/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestStep/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//TestStep/expectedResult"/>
+    </genClasses>
+    <genClasses ecoreClass="testbench.ecore#//Instrument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//Instrument/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//Instrument/measuredQuantity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//Instrument/unit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute testbench.ecore#//Instrument/range"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

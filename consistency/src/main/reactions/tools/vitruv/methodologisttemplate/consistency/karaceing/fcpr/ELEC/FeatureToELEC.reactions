@@ -1,0 +1,391 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import tools.vitruv.methodologisttemplate.model.electrical.ElectricalPackage;
+import tools.vitruv.methodologisttemplate.model.electrical.ElectricalDesign;
+import tools.vitruv.methodologisttemplate.model.electrical.Circuit;
+import tools.vitruv.methodologisttemplate.model.electrical.Device;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/electrical" as elec
+
+// Feature CPR of the stakeholder role ELEC (copy of the pattern in UVL2CAD/FeatureToCAD.reactions):
+// a feature added below the domain root ElectricalEngineering is mapped to an existing element of the ELEC electrical design model
+// or a new element is created below the element that corresponds to the parent feature.
+
+reactions: featureToELEC
+in reaction to changes in uvl
+execute actions in elec
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"ElectricalEngineering")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, ElectricalPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the ELEC electrical design model: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature " + feature.name + " to an existing element of the ELEC electrical design model or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, ElectricalPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        }
+
+        var correspondingClass = containedClasses.get(0)
+        if(containedClasses.size() > 1){
+            // Every artefact corresponds to a feature, so the parent feature can be realised by several elements (its
+            // main element and the details inside it): use the outermost one that can contain elements; ask if ambiguous.
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            correspondingClass = KARaceIngUtil.outermost(containedClasses)
+            if(correspondingClass === null){
+                val index = userInteractor.singleSelectionDialogBuilder.message("The parent feature of " + feature.name + " is realised by several elements of the ELEC electrical design model. Below which one should the new feature be realised?").
+                            choices(EMFUtil.getAllNamesOfEObjects(containedClasses)).windowModality(WindowModality.MODAL).startInteraction
+                correspondingClass = containedClasses.get(index)
+            }
+        }
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof ElectricalDesign && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the ElectricalDesign for feature " + feature.name)
+            createElementInElectricalDesign(feature, correspondingClass as ElectricalDesign)
+        }
+        else if (correspondingClass instanceof ElectricalDesign && mapToExistingComponent == 0) {
+            mapToExistingInElectricalDesign(feature, correspondingClass as ElectricalDesign)
+        }
+        else if (correspondingClass instanceof Circuit && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the Circuit for feature " + feature.name)
+            createElementInCircuit(feature, correspondingClass as Circuit)
+        }
+        else if (correspondingClass instanceof Circuit && mapToExistingComponent == 0) {
+            mapToExistingInCircuit(feature, correspondingClass as Circuit)
+        }
+        else if (correspondingClass instanceof Device && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the Device for feature " + feature.name)
+            createElementInDevice(feature, correspondingClass as Device)
+        }
+        else if (correspondingClass instanceof Device && mapToExistingComponent == 0) {
+            mapToExistingInDevice(feature, correspondingClass as Device)
+        }
+        else {
+            System.out.println("Corresponding element for parent feature of " + feature.name + " cannot contain new elements: " + correspondingClass)
+            return
+        }
+    }
+}
+
+
+routine mapToExistingInElectricalDesign(uvl::Feature feature, elec::ElectricalDesign container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInElectricalDesign(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the ELEC electrical design model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInElectricalDesign(uvl::Feature feature, elec::ElectricalDesign container) {
+    match{
+        require absence of elec::ElectricalElement corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the ELEC electrical design model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Circuit":
+                createCircuitInElectricalDesign(feature, container)
+            case "Device":
+                createDeviceInElectricalDesign(feature, container)
+            case "Wire":
+                createWireInElectricalDesign(feature, container)
+            case "Bus":
+                createBusInElectricalDesign(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createCircuitInElectricalDesign(uvl::Feature feature, elec::ElectricalDesign container) {
+    create {
+        val newElement = new elec::Circuit
+    }
+    update {
+        System.out.println("Adding Circuit for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createDeviceInElectricalDesign(uvl::Feature feature, elec::ElectricalDesign container) {
+    create {
+        val newElement = new elec::Device
+    }
+    update {
+        System.out.println("Adding Device for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createWireInElectricalDesign(uvl::Feature feature, elec::ElectricalDesign container) {
+    create {
+        val newElement = new elec::Wire
+    }
+    update {
+        System.out.println("Adding Wire for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createBusInElectricalDesign(uvl::Feature feature, elec::ElectricalDesign container) {
+    create {
+        val newElement = new elec::Bus
+    }
+    update {
+        System.out.println("Adding Bus for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInCircuit(uvl::Feature feature, elec::Circuit container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInCircuit(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the ELEC electrical design model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInCircuit(uvl::Feature feature, elec::Circuit container) {
+    match{
+        require absence of elec::ElectricalElement corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the ELEC electrical design model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Circuit":
+                createCircuitInCircuit(feature, container)
+            case "Device":
+                createDeviceInCircuit(feature, container)
+            case "Wire":
+                createWireInCircuit(feature, container)
+            case "Bus":
+                createBusInCircuit(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createCircuitInCircuit(uvl::Feature feature, elec::Circuit container) {
+    create {
+        val newElement = new elec::Circuit
+    }
+    update {
+        System.out.println("Adding Circuit for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createDeviceInCircuit(uvl::Feature feature, elec::Circuit container) {
+    create {
+        val newElement = new elec::Device
+    }
+    update {
+        System.out.println("Adding Device for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createWireInCircuit(uvl::Feature feature, elec::Circuit container) {
+    create {
+        val newElement = new elec::Wire
+    }
+    update {
+        System.out.println("Adding Wire for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createBusInCircuit(uvl::Feature feature, elec::Circuit container) {
+    create {
+        val newElement = new elec::Bus
+    }
+    update {
+        System.out.println("Adding Bus for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInDevice(uvl::Feature feature, elec::Device container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInDevice(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the ELEC electrical design model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInDevice(uvl::Feature feature, elec::Device container) {
+    match{
+        require absence of elec::Pin corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the ELEC electrical design model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Pin":
+                createPinInDevice(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createPinInDevice(uvl::Feature feature, elec::Device container) {
+    create {
+        val newElement = new elec::Pin
+    }
+    update {
+        System.out.println("Adding Pin for feature " + feature.name + " to the ELEC electrical design model")
+        newElement.name = feature.name
+        container.pins.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}

@@ -1,0 +1,761 @@
+<meta charset="utf-8">
+<title>KA-RaceIng Initial State</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a model map on top (what each model contains, how models are linked), below it a
+   browser (all instances, by model) next to the correspondence diagram of the selected instance. */
+:root {
+  --bg: #f4f6f8; --surface: #ffffff; --ink: #172130; --muted: #5a6677; --line: #d4dae2; --focus: #0e7490;
+  --t0: #2b3646; --t1: #c2600a; --t2: #2563eb;
+  --m-uvl: #e9ecfb; --m-cfg: #f1ecfa; --m-prj: #e7f0fd; --m-cad: #e5f5ec; --m-elec: #fbf6dc; --m-sim: #e2f4f6;
+  --m-th: #fbe9e6; --m-val: #efe9fa; --m-bom: #fdf0e1; --m-br: #eceff2; --m-lit: #f7f8fa;
+  --hl: #d8f0f4; --tree: #a9b4c2;
+  --add: #15803d; --del: #b91c1c; --chg: #7c3aed; --mov: #0369a1; --ctx: #94a3b8;
+  --add-bg: #dcfce7; --del-bg: #fee2e2; --chg-bg: #ede9fe; --mov-bg: #e0f2fe;
+  --lnk: #0f766e; --lnk-bg: #ccfbf1;
+  --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141a; --surface: #161e28; --ink: #e5eaf1; --muted: #93a0b2; --line: #2b3645; --focus: #5ec8dc;
+  --t0: #c3cddb; --t1: #f59e3b; --t2: #6f9dff;
+  --m-uvl: #1d2340; --m-cfg: #251e3a; --m-prj: #182a42; --m-cad: #15301f; --m-elec: #332d12; --m-sim: #11303a;
+  --m-th: #3a1f1c; --m-val: #281f3d; --m-bom: #36250f; --m-br: #222a33; --m-lit: #1a212b; --hl: #12404a; --tree: #4a5668;
+  --add: #4ade80; --del: #f87171; --chg: #c4b5fd; --mov: #7dd3fc; --ctx: #5b6677;
+  --add-bg: #12351f; --del-bg: #3b1414; --chg-bg: #2a2143; --mov-bg: #0c2a3d;
+  --lnk: #5eead4; --lnk-bg: #0d3530;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f141a; --surface: #161e28; --ink: #e5eaf1; --muted: #93a0b2; --line: #2b3645; --focus: #5ec8dc;
+  --t0: #c3cddb; --t1: #f59e3b; --t2: #6f9dff;
+  --m-uvl: #1d2340; --m-cfg: #251e3a; --m-prj: #182a42; --m-cad: #15301f; --m-elec: #332d12; --m-sim: #11303a;
+  --m-th: #3a1f1c; --m-val: #281f3d; --m-bom: #36250f; --m-br: #222a33; --m-lit: #1a212b; --hl: #12404a; --tree: #4a5668;
+  --add: #4ade80; --del: #f87171; --chg: #c4b5fd; --mov: #7dd3fc; --ctx: #5b6677;
+  --add-bg: #12351f; --del-bg: #3b1414; --chg-bg: #2a2143; --mov-bg: #0c2a3d;
+  --lnk: #5eead4; --lnk-bg: #0d3530;
+  color-scheme: dark }
+
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--sans); font-size: 14px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px; }
+.wrap { max-width: 1440px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 6px; }
+h1 { font-size: 22px; font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h2 { font-size: 13px; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.lede { margin: 0; color: var(--muted); max-width: 75ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 18px; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); }
+.facts b { color: var(--ink); font-weight: 600; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; min-width: 0; display: grid; gap: 10px; align-content: start; }
+.panel-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.scroll-x { overflow-x: auto; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--muted); align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 30px; height: 0; border-top: 2px solid; display: inline-block; }
+.rel { display: inline-flex; align-items: center; gap: 6px; }
+.rel svg { flex: none; }
+.sw.t0 { border-color: var(--t0); } .sw.t1 { border-color: var(--t1); border-top-style: dashed; } .sw.t2 { border-color: var(--t2); border-top-style: dotted; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12px var(--sans); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 3px 10px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.chip[aria-pressed="false"] { color: var(--muted); opacity: 0.6; }
+.chip:focus-visible, button:focus-visible, input:focus-visible, .row:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.main { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .main { grid-template-columns: minmax(0, 1fr); } }
+.models { display: flex; flex-wrap: wrap; gap: 4px; }
+.models button { font: 500 12px var(--mono); border: 1px solid var(--line); border-radius: 6px; padding: 3px 7px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.models button[aria-current="true"] { border-color: var(--focus); background: var(--hl); }
+input[type=search] { font: 14px var(--sans); width: 100%; box-sizing: border-box; padding: 7px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); }
+.tree { font: 12.5px var(--mono); max-height: 560px; overflow: auto; border-top: 1px solid var(--line); padding-top: 6px; }
+.row { display: flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+.row:hover { background: var(--bg); }
+.row.sel { background: var(--hl); }
+.tog { width: 14px; flex: none; color: var(--muted); text-align: center; user-select: none; }
+.cls { color: var(--muted); }
+.dim { color: var(--muted); font-style: italic; }
+.dots { display: inline-flex; gap: 2px; margin-left: 4px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.dot.t0 { background: var(--t0); } .dot.t1 { background: var(--t1); } .dot.t2 { background: var(--t2); }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+.crumbs { font: 12.5px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.crumbs b { color: var(--ink); font-weight: 500; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; }
+td.mono { font-family: var(--mono); overflow-wrap: anywhere; }
+td a { color: var(--focus); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.tag { font: 500 11px var(--mono); padding: 1px 7px; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+.tag.t0 { color: var(--t0); } .tag.t1 { color: var(--t1); } .tag.t2 { color: var(--t2); }
+svg text { font-family: var(--sans); }
+#map, #focus { display: block; max-width: 100%; height: auto; }
+@media (max-width: 860px) { #map { min-width: 820px; } #focus { min-width: 640px; } }
+td.nw { white-space: nowrap; }
+.scen { display: grid; grid-template-columns: minmax(230px, 290px) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .scen { grid-template-columns: minmax(0, 1fr); } }
+.slist { max-height: 760px; overflow: auto; display: grid; gap: 2px; align-content: start; }
+.slist h3 { font: 600 11.5px var(--sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 10px 0 2px; }
+.slist h3:first-child { margin-top: 0; }
+.sbtn { display: flex; gap: 8px; align-items: baseline; text-align: left; width: 100%; border: 0; background: transparent; padding: 5px 8px; border-radius: 6px; font: 13px var(--sans); color: var(--ink); cursor: pointer; }
+.sbtn:hover { background: var(--bg); }
+.sbtn[aria-current="true"] { background: var(--hl); }
+.sbtn .sid { font: 500 12px var(--mono); min-width: 46px; color: var(--muted); }
+.sbtn.off { color: var(--muted); }
+.sdetail { display: grid; gap: 12px; min-width: 0; }
+.sdetail h3 { font-size: 18px; margin: 0; text-wrap: balance; }
+.sdetail p { margin: 0; max-width: 90ch; }
+.deltas { display: flex; flex-wrap: wrap; gap: 6px; font-variant-numeric: tabular-nums; }
+.dl { font: 500 12px var(--mono); padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; }
+.dl.add { color: var(--add); background: var(--add-bg); } .dl.del { color: var(--del); background: var(--del-bg); }
+.dl.chg { color: var(--chg); background: var(--chg-bg); } .dl.mov { color: var(--mov); background: var(--mov-bg); }
+.dl.lnk { color: var(--lnk); background: var(--lnk-bg); }
+.endst { font: 500 10.5px var(--mono); padding: 0 6px; border-radius: 999px; border: 1px solid currentColor; margin-left: 4px; white-space: nowrap; }
+.endst.add { color: var(--add); } .endst.del { color: var(--del); } .endst.ex { color: var(--lnk); }
+.k-cadd { color: var(--add); } .k-cdel { color: var(--del); }
+.status { font: 500 12px var(--sans); padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.steps { margin: 0; padding-left: 20px; display: grid; gap: 10px; font-size: 13px; }
+.steps ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 2px; }
+.steps .mono { font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
+.steps ul.notes { gap: 6px; }
+.steps ul.notes li { overflow-wrap: anywhere; }
+.role { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; margin-right: 4px;
+  background: color-mix(in srgb, var(--t1) 16%, transparent); color: var(--fg); border: 1px solid color-mix(in srgb, var(--t1) 45%, transparent); }
+.k-add { color: var(--add); } .k-del { color: var(--del); } .k-set, .k-ref { color: var(--chg); }
+.dlg { color: var(--muted); }
+.dlg b { color: var(--ink); font-weight: 600; }
+.sub { font-size: 12px; color: var(--muted); }
+#sdiff { display: block; max-width: 100%; height: auto; }
+@media (max-width: 860px) { #sdiff { min-width: 640px; } }
+svg .mono { font-family: var(--mono); }
+svg .node { cursor: pointer; }
+svg .node:hover rect.box { stroke: var(--focus); }
+svg .r, svg .rowg { cursor: pointer; }
+svg .rowg:focus { outline: none; }
+svg.hovering g.corr:not(.on) { opacity: 0.05; }
+svg.hovering .rowg:not(.on) text { opacity: 0.35; }
+svg.hovering .tree-lines { opacity: 0.45; }
+svg .rowg.on > rect:first-child { stroke: var(--focus); stroke-width: 1.2px; }
+svg .rowg.pin > rect:first-child { stroke-width: 2.2px; }
+@media (prefers-reduced-motion: no-preference) { svg g.corr, svg .rowg text { transition: opacity .12s; } }
+svg .r:hover rect { fill: var(--hl); }
+@media (prefers-reduced-motion: no-preference) { svg path.edge { transition: opacity .15s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>KA-RaceIng Initial State</h1>
+    <p class="lede">The persisted VSUM in <code>vsum/src/test/resources/initialstate</code>: every instance of every model and every
+      stored correspondence. Click an instance in the browser or in a diagram to see its correspondences.</p>
+    <div class="facts" id="facts"></div>
+  </header>
+
+  <section class="panel" aria-labelledby="map-h">
+    <div class="panel-head">
+      <h2 id="map-h">Models and their correspondences</h2>
+      <div class="chips" id="tagChips"></div>
+    </div>
+    <p class="note">Each box is one model file with the instances it contains, by class. Arrows aggregate the stored correspondences between two
+      models (number = correspondences). Click a model to browse it.</p>
+    <div class="scroll-x"><svg id="map" role="img" aria-label="Models of the initial state and the correspondences between them"></svg></div>
+  </section>
+
+  <div class="main">
+    <section class="panel" aria-labelledby="br-h">
+      <h2 id="br-h">Instances</h2>
+      <div class="models" id="modelBtns" role="toolbar" aria-label="Model"></div>
+      <input type="search" id="q" placeholder="Search all instances by name, e.g. HydrogenTank or ANF-1001" aria-label="Search instances">
+      <div class="tree" id="tree" role="tree"></div>
+      <div class="legend"><span><i class="dot t0"></i> tag ""</span><span><i class="dot t1"></i> overlap</span><span><i class="dot t2"></i> requirement</span><span class="dim">grey: no correspondence</span></div>
+    </section>
+
+    <section class="panel" aria-labelledby="fx-h">
+      <div class="panel-head">
+        <h2 id="fx-h">Correspondences of the selected instance</h2>
+        <div class="legend">
+          <span class="rel"><svg width="22" height="14" aria-hidden="true"><path d="M4 0 V9 H20" fill="none" stroke="var(--tree)" stroke-width="1.2"/></svg>containment (inside one model)</span>
+          <span class="rel"><svg width="40" height="14" aria-hidden="true"><path d="M5 7 H33" stroke="var(--surface)" stroke-width="5"/><path d="M5 7 H31" stroke="var(--ink)" stroke-width="2"/><circle cx="5" cy="7" r="3.5" fill="var(--ink)"/><path d="M29 2 L38 7 L29 12 z" fill="var(--ink)"/></svg>correspondence (VSUM correspondence model, left object ● → right object)</span>
+          <span>tag: <i class="sw t0"></i> "" <i class="sw t1"></i> overlap <i class="sw t2"></i> requirement</span>
+          <span>hover an instance: only its correspondences · click: pin · double-click: open in the explorer</span>
+        </div>
+      </div>
+      <div class="crumbs" id="crumbs"></div>
+      <div class="scroll-x"><svg id="focus" role="img" aria-label="Correspondence diagram of the selected instance"></svg></div>
+      <p class="note" id="fnote"></p>
+      <div class="scroll-x"><table id="ctable"></table></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="sc-h">
+    <div class="panel-head">
+      <h2 id="sc-h">Evolution scenarios: how they change the state</h2>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--add)"></i>added</span><span><i class="dot" style="background:var(--del)"></i>removed</span>
+        <span><i class="dot" style="background:var(--chg)"></i>changed</span><span><i class="dot" style="background:var(--mov)"></i>moved</span>
+        <span><i class="dot" style="background:var(--lnk)"></i>existing, correspondence added or removed</span>
+        <span class="rel"><svg width="22" height="14" aria-hidden="true"><path d="M4 0 V9 H20" fill="none" stroke="var(--tree)" stroke-width="1.2"/></svg>containment (inside one model)</span>
+        <span class="rel"><svg width="40" height="14" aria-hidden="true"><path d="M5 7 H33" stroke="var(--surface)" stroke-width="5"/><path d="M5 7 H31" stroke="var(--add)" stroke-width="2"/><circle cx="5" cy="7" r="3.5" fill="var(--add)"/><path d="M29 2 L38 7 L29 12 z" fill="var(--add)"/></svg>correspondence (VSUM correspondence model, left object ● → right object)</span>
+        <span>line style = tag: <i class="sw t0"></i> "" <i class="sw t1"></i> overlap <i class="sw t2"></i> requirement</span>
+      </div>
+    </div>
+    <p class="note">Recorded from the scenario tests: each test starts from the initial state, makes the modeller's change in one model and
+      answers the dialogs of the reactions. The diagram compares the state after the test with the initial state (instances matched by their
+      Vitruvius UUID); the log lists what the modeller changed, what the reactions changed in which model, the dialogs answered and the
+      notifications sent to the stakeholder roles. Family R contains the KA-RaceIng scenarios of the Inconsistency Scenarios TechReport,
+      which exercise the attribute-level overlap rules (see REPORT_SCENARIOS.md). In the correspondence table of the explorer above,
+      every overlap shows its kind (K1–K11, hover for the description).</p>
+    <div class="scen">
+      <nav class="slist" id="slist" aria-label="Scenarios"></nav>
+      <div class="sdetail" id="sdetail"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const LIT = -1;
+const TAGN = ['tag ""', 'overlap', 'requirement'];
+const FILL = ['--m-uvl', '--m-cfg', '--m-prj', '--m-cad', '--m-cad', '--m-cad', '--m-cad', '--m-elec', '--m-sim', '--m-th', '--m-val', '--m-bom', '--m-br'];
+const E = D.e, C = D.c, F = D.files, N = E.length;
+const mOf = i => E[i][0], par = i => E[i][1], cls = i => D.classes[E[i][2]], nm = i => (E[i][3] === 0 ? null : E[i][3]);
+const kids = Array.from({length: N}, () => []);
+const roots = [];
+for (let i = 0; i < N; i++) { if (par(i) < 0) roots[mOf(i)] = i; else kids[par(i)].push(i); }
+const cor = Array.from({length: N}, () => []);
+const litCor = [];
+C.forEach(([a, b, t], k) => { if (a >= 0) cor[a].push(k); if (b >= 0) cor[b].push(k); if (a < 0 || b < 0) litCor.push(k); });
+const tagOn = [true, true, true];
+const confName = i => ['EV3', 'CV2', 'CV1'][kids[par(i)].indexOf(i)];
+
+function label(i) {
+  if (i === LIT) return 'UVL_MODEL : EClass';
+  const c = cls(i);
+  if (c === 'Configuration') return `[${confName(i)}] : Configuration`;
+  let s = (nm(i) ?? '') + ' : ' + c;
+  if (E[i].length > 4) s += '  isSelected=' + (E[i][4] ? 'true' : 'false');
+  return s;
+}
+function anc(i) { const out = []; while (i >= 0) { out.push(i); i = par(i); } return out.reverse(); }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+// ---------------------------------------------------------------- facts
+(function facts() {
+  const t = [0, 0, 0]; C.forEach(c => t[c[2]]++);
+  document.getElementById('facts').innerHTML =
+    `<span><b>${F.length}</b> models</span><span><b>${N.toLocaleString('en')}</b> instances</span>` +
+    `<span><b>${C.length.toLocaleString('en')}</b> correspondences</span>` +
+    `<span><b>${t[0].toLocaleString('en')}</b> tag ""</span><span><b>${t[1]}</b> overlap</span><span><b>${t[2].toLocaleString('en')}</b> requirement</span>`;
+})();
+
+// ---------------------------------------------------------------- model map
+const classCount = F.map(() => new Map());
+for (let i = 0; i < N; i++) { const m = classCount[mOf(i)]; m.set(cls(i), (m.get(cls(i)) || 0) + 1); }
+const agg = new Map();   // key "a|b|t" with a<=b (model index, LIT model = 13)
+C.forEach(([a, b, t]) => {
+  let ma = a < 0 ? 13 : mOf(a), mb = b < 0 ? 13 : mOf(b);
+  if (t === 1 && ma > mb) [ma, mb] = [mb, ma];          // overlaps: one undirected arc per pair of models
+  const k = ma + '|' + mb + '|' + t; agg.set(k, (agg.get(k) || 0) + 1);
+});
+const NW = 112, NH = 132;
+const POS = {};   // model -> [x, y, w, h]
+(function layout() {
+  const row = [2, 3, 4, 5, 6, 9, 7, 8, 10, 11, 12];
+  row.forEach((m, k) => POS[m] = [10 + k * (NW + 10), 250, NW, NH]);
+  POS[0] = [520, 10, 200, 120]; POS[1] = [860, 10, 190, 120]; POS[13] = [210, 40, 170, 60];
+})();
+function shortFile(m) { return m === 13 ? 'UVL_MODEL' : F[m]; }
+function drawMap() {
+  const svg = document.getElementById('map');
+  const W = 10 + 11 * (NW + 10), H = 640;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
+  let s = defs('m');
+  const edges = [];
+  for (const [k, n] of agg) {
+    const [a, b, t] = k.split('|').map(Number);
+    if (!tagOn[t] || a === b) continue;
+    edges.push({a, b, t, n});
+  }
+  const sw = n => Math.max(1.2, Math.min(4.5, 1 + Math.log10(n) * 1.3));
+  // arcs below the row for links between models in the row; straight fan from the UVL model
+  const arcLevel = {};
+  edges.sort((p, q) => Math.abs(POS[p.a][0] - POS[p.b][0]) - Math.abs(POS[q.a][0] - POS[q.b][0]));
+  for (const e of edges) {
+    const [ax, ay, aw, ah] = POS[e.a], [bx, by, bw, bh] = POS[e.b];
+    let d, lx, ly;
+    if (ay === by && ay === 250 && e.t === 2) {
+      const x1 = ax + aw / 2 + 22, x2 = bx + bw / 2 + 22, y = ay;
+      const span = Math.abs(x2 - x1); const h = 14 + span * 0.055;
+      d = `M${x1} ${y} C${x1} ${y - h} ${x2} ${y - h} ${x2} ${y - 2}`;
+      lx = x2 + 14; ly = y - 5;
+    } else if (ay === by && ay === 250) {
+      const x1 = ax + aw / 2, x2 = bx + bw / 2, y = ay + ah;
+      const span = Math.abs(x2 - x1); const h = 18 + span * 0.17;
+      d = `M${x1} ${y} C${x1} ${y + h} ${x2} ${y + h} ${x2} ${y + 2}`;
+      lx = (x1 + x2) / 2; ly = y + h * 0.75 + 4;
+    } else if (e.a === 0 && by === 250) {
+      const x1 = ax + aw / 2, y1 = ay + ah, x2 = bx + bw / 2, y2 = by;
+      d = `M${x1} ${y1} C${x1} ${y1 + 50} ${x2} ${y2 - 60} ${x2} ${y2 - 2}`;
+      lx = x2 - 16; ly = y2 - 10;
+    } else {
+      const left = ax < bx; const x1 = left ? ax + aw : ax, x2 = left ? bx - 2 : bx + bw + 2, y1 = ay + ah / 2, y2 = by + bh / 2;
+      d = `M${x1} ${y1} C${(x1 + x2) / 2} ${y1} ${(x1 + x2) / 2} ${y2} ${x2} ${y2}`;
+      lx = (x1 + x2) / 2; ly = (y1 + y2) / 2 - 6;
+    }
+    s += `<path class="edge" d="${d}" fill="none" stroke="var(--t${e.t})" stroke-width="${sw(e.n)}" ${dash(e.t)} marker-end="url(#m${e.t})" ${e.t === 1 ? 'marker-start="url(#m1)"' : ''} opacity="0.85"><title>${esc(shortFile(e.a))} ${e.t === 1 ? '↔' : '→'} ${esc(shortFile(e.b))}: ${e.n} × ${TAGN[e.t]}</title></path>`;
+    s += `<text x="${lx}" y="${ly}" font-size="10.5" text-anchor="middle" fill="var(--t${e.t})" paint-order="stroke" stroke="var(--surface)" stroke-width="3">${e.n}</text>`;
+  }
+  for (const m of Object.keys(POS).map(Number)) {
+    const [x, y, w, h] = POS[m];
+    if (m === 13) {
+      s += `<g><rect class="box" x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="var(--m-lit)" stroke="var(--line)" stroke-dasharray="4 3"/>` +
+        `<text x="${x + 10}" y="${y + 22}" font-size="12" font-weight="600" fill="var(--ink)">uvlPackage.Literals</text>` +
+        `<text x="${x + 10}" y="${y + 40}" font-size="11" fill="var(--muted)" class="mono">UVL_MODEL : EClass</text></g>`;
+      continue;
+    }
+    const cc = [...classCount[m].entries()].sort((p, q) => q[1] - p[1]);
+    const total = [...classCount[m].values()].reduce((p, q) => p + q, 0);
+    const L = m <= 1 ? 3 : 4;
+    const cut = t => t.length > 18 ? t.slice(0, 17) + '…' : t;
+    const lines = cc.slice(0, L).map(([c, n]) => cut(`${n} ${c}`));
+    if (cc.length > L) lines.push(`+${cc.length - L} more classes`);
+    s += `<g class="node" data-m="${m}" tabindex="0" role="button" aria-label="Browse ${esc(F[m])}"><rect class="box" x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="var(${FILL[m]})" stroke="var(--line)"/>` +
+      `<title>${esc(F[m])}: ${cc.map(([c, n]) => n + ' ' + c).join(', ')}</title>` +
+      `<text x="${x + 8}" y="${y + 16}" font-size="10.5" font-weight="700" fill="var(--ink)" class="mono">${esc(F[m])}</text>` +
+      `<text x="${x + 8}" y="${y + 29}" font-size="9.5" fill="var(--muted)">${esc(D.meta[m])}</text>` +
+      `<text x="${x + 8}" y="${y + 41}" font-size="9.5" fill="var(--muted)">${m <= 1 ? 'problem space' : m >= 11 ? esc(D.role[m]) : 'role ' + esc(D.role[m])}</text>` +
+      `<text x="${x + 8}" y="${y + 57}" font-size="10.5" fill="var(--ink)" font-weight="600">${total.toLocaleString('en')} instances</text>` +
+      lines.map((l, k) => `<text x="${x + 8}" y="${y + 71 + k * 12}" font-size="9.5" fill="var(--muted)" class="mono">${esc(l)}</text>`).join('') + `</g>`;
+  }
+  svg.innerHTML = s;
+  svg.querySelectorAll('.node').forEach(g => {
+    const go = () => { showModel(+g.dataset.m); document.getElementById('br-h').scrollIntoView({behavior: 'smooth', block: 'start'}); };
+    g.addEventListener('click', go);
+    g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); go(); } });
+  });
+}
+/** Containment inside a model: elbow lines from each container to its contained instances (rows: {d, cy, tx}). */
+function treeLines(rows) {
+  const last = []; let out = '';
+  rows.forEach(r => {
+    if (r.d > 0 && last[r.d - 1]) {
+      const p = last[r.d - 1];
+      out += `<path d="M${p.tx + 3} ${p.cy + 6} V${r.cy} H${r.tx - 3}" fill="none" stroke="var(--tree)" stroke-width="1"/>`;
+    }
+    last[r.d] = r; last.length = r.d + 1;
+  });
+  return `<g class="tree-lines" aria-hidden="true">${out}</g>`;
+}
+/** A correspondence: halo, coloured line with a dot at the left object and an arrowhead at the right object. */
+function corrPath(d, color, width, dashAttr, endMarker, startMarker, opacity, title, a, b) {
+  return `<g class="corr" data-a="${a}" data-b="${b}" opacity="${opacity}"><path d="${d}" fill="none" stroke="var(--surface)" stroke-width="${width + 3.5}" stroke-linecap="round"/>` +
+    `<path d="${d}" fill="none" stroke="${color}" stroke-width="${width}" ${dashAttr} marker-start="url(#${startMarker})" marker-end="url(#${endMarker})"><title>${title}</title></path></g>`;
+}
+/**
+ * Hover (or keyboard focus) on an instance shows only its correspondences and outlines the instances at
+ * their other ends; a click pins this view (click again to release), a double-click or Enter opens the
+ * instance in the correspondence explorer.
+ */
+function connectHover(svg, open) {
+  let pinned = null;
+  const rows = [...svg.querySelectorAll('.rowg')];
+  const corrs = [...svg.querySelectorAll('g.corr')];
+  const show = k => {
+    if (k === null) {
+      svg.classList.remove('hovering');
+      rows.forEach(r => r.classList.remove('on', 'pin')); corrs.forEach(c => c.classList.remove('on'));
+      return;
+    }
+    svg.classList.add('hovering');
+    const ends = new Set([k]);
+    corrs.forEach(c => {
+      const on = c.dataset.a === k || c.dataset.b === k;
+      c.classList.toggle('on', on);
+      if (on) { ends.add(c.dataset.a); ends.add(c.dataset.b); }
+    });
+    rows.forEach(r => { r.classList.toggle('on', ends.has(r.dataset.key)); r.classList.toggle('pin', r.dataset.key === k); });
+  };
+  const toggle = k => { pinned = pinned === k ? null : k; show(pinned); };
+  rows.forEach(r => {
+    const k = r.dataset.key;
+    r.addEventListener('mouseenter', () => show(k));
+    r.addEventListener('mouseleave', () => show(pinned));
+    r.addEventListener('focus', () => show(k));
+    r.addEventListener('blur', () => show(pinned));
+    r.addEventListener('click', () => toggle(k));
+    r.addEventListener('dblclick', () => open(k));
+    r.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter') { ev.preventDefault(); open(k); }
+      if (ev.key === ' ') { ev.preventDefault(); toggle(k); }
+    });
+  });
+}
+function dash(t) { return t === 1 ? 'stroke-dasharray="7 4"' : t === 2 ? 'stroke-dasharray="2 3"' : ''; }
+function defs(p) {
+  return '<defs>' + [0, 1, 2].map(t => `<marker id="${p}${t}" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--t${t})"/></marker>` +
+    `<marker id="${p}s${t}" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="7" markerHeight="7"><circle cx="5" cy="5" r="4" fill="var(--t${t})"/></marker>`).join('') + '</defs>';
+}
+(function chips() {
+  const el = document.getElementById('tagChips');
+  el.innerHTML = [0, 1, 2].map(t => `<button class="chip" aria-pressed="true" data-t="${t}"><i class="dot t${t}"></i>${TAGN[t]}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+    const t = +b.dataset.t; tagOn[t] = !tagOn[t]; b.setAttribute('aria-pressed', tagOn[t]); drawMap();
+  }));
+})();
+
+// ---------------------------------------------------------------- instance browser
+let curModel = 3, selected = null;
+const open = new Set();
+function showModel(m) {
+  curModel = m; document.getElementById('q').value = '';
+  document.querySelectorAll('#modelBtns button').forEach(b => b.setAttribute('aria-current', +b.dataset.m === m));
+  open.add(roots[m]); renderTree();
+}
+(function modelButtons() {
+  const el = document.getElementById('modelBtns');
+  el.innerHTML = F.map((f, m) => `<button data-m="${m}" aria-current="false">${esc(f)}</button>`).join('');
+  el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => showModel(+b.dataset.m)));
+})();
+function dotsOf(i) {
+  const t = [0, 0, 0]; cor[i].forEach(k => t[C[k][2]]++);
+  return '<span class="dots">' + [0, 1, 2].filter(x => t[x]).map(x => `<i class="dot t${x}" title="${t[x]} × ${TAGN[x]}"></i>`).join('') + '</span>';
+}
+function rowHtml(i, depth, hasTog) {
+  const k = kids[i].length;
+  const tog = k ? (open.has(i) ? '▾' : '▸') : '';
+  const dim = cor[i].length ? '' : ' dim';
+  const n = nm(i);
+  const name = cls(i) === 'Configuration' ? `[${confName(i)}]` : (n ?? '');
+  const sel = selected === i ? ' sel' : '';
+  return `<div class="row${sel}" role="treeitem" tabindex="0" data-i="${i}" style="padding-left:${4 + depth * 14}px"${k ? ` aria-expanded="${open.has(i)}"` : ''}>` +
+    `<span class="tog" data-tog="${i}">${tog}</span><span class="${dim.trim()}">${esc(name)}</span><span class="cls"> : ${esc(cls(i))}${E[i].length > 4 ? ' isSelected=' + (E[i][4] ? 'true' : 'false') : ''}</span>${dotsOf(i)}${k ? `<span class="cls">&nbsp;(${k})</span>` : ''}</div>`;
+}
+function renderTree() {
+  const out = [];
+  (function walk(i, d) {
+    out.push(rowHtml(i, d));
+    if (open.has(i)) { const ks = kids[i]; const lim = Math.min(ks.length, 400); for (let k = 0; k < lim; k++) walk(ks[k], d + 1);
+      if (ks.length > lim) out.push(`<div class="note" style="padding-left:${18 + (d + 1) * 14}px">… ${ks.length - lim} more (use search)</div>`); }
+  })(roots[curModel], 0);
+  const tree = document.getElementById('tree'); tree.innerHTML = out.join('');
+}
+document.getElementById('tree').addEventListener('click', ev => {
+  const tg = ev.target.closest('[data-tog]');
+  const row = ev.target.closest('.row'); if (!row) return;
+  const i = +row.dataset.i;
+  if (tg && kids[i].length) { open.has(i) ? open.delete(i) : open.add(i); renderTree(); return; }
+  focusOn(i);
+});
+document.getElementById('tree').addEventListener('keydown', ev => {
+  const row = ev.target.closest('.row'); if (!row) return; const i = +row.dataset.i;
+  if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); focusOn(i); }
+  if (ev.key === 'ArrowRight' && kids[i].length && !open.has(i)) { open.add(i); renderTree(); }
+  if (ev.key === 'ArrowLeft' && open.has(i)) { open.delete(i); renderTree(); }
+});
+document.getElementById('q').addEventListener('input', ev => {
+  const q = ev.target.value.trim().toLowerCase();
+  if (!q) { renderTree(); return; }
+  const hits = [];
+  for (let i = 0; i < N && hits.length < 200; i++) { const n = nm(i); if (n && String(n).toLowerCase().includes(q)) hits.push(i); }
+  document.getElementById('tree').innerHTML = hits.length
+    ? hits.map(i => rowHtml(i, 0).replace('</div>', `<span class="cls">&nbsp;· ${esc(F[mOf(i)])}</span></div>`)).join('') + (hits.length === 200 ? '<p class="note">First 200 matches.</p>' : '')
+    : '<p class="note">No instance with this name.</p>';
+});
+
+// ---------------------------------------------------------------- focus diagram
+const ORDER = [13, 1, 0, 2, 3, 4, 5, 6, 9, 7, 8, 10, 11, 12];
+function focusOn(i) {
+  selected = i;
+  const m = mOf(i);
+  if (m !== curModel) { curModel = m; document.querySelectorAll('#modelBtns button').forEach(b => b.setAttribute('aria-current', +b.dataset.m === m)); }
+  anc(i).slice(0, -1).forEach(a => open.add(a));
+  if (!document.getElementById('q').value) renderTree();
+  const row = document.querySelector(`#tree .row[data-i="${i}"]`); if (row) row.scrollIntoView({block: 'nearest'});
+  drawFocus(i);
+}
+function drawFocus(f) {
+  const LIMIT = 40;
+  const ks = cor[f];
+  const partners = [];
+  ks.forEach(k => { const [a, b, t] = C[k]; partners.push(a === f ? b : a); });
+  const shownP = partners.slice(0, LIMIT);
+  // instances to show: focus, partners and their containers up to the model root
+  const show = new Set(anc(f)); let lit = false;
+  shownP.forEach(p => { if (p === LIT) lit = true; else anc(p).forEach(x => show.add(x)); });
+  const byModel = new Map();
+  show.forEach(x => { const m = mOf(x); if (!byModel.has(m)) byModel.set(m, []); });
+  if (lit) byModel.set(13, []);
+  const fm = mOf(f), fo = ORDER.indexOf(fm);
+  const cols = [[], [fm], []];
+  [...byModel.keys()].filter(m => m !== fm).sort((p, q) => ORDER.indexOf(p) - ORDER.indexOf(q))
+    .forEach(m => (ORDER.indexOf(m) < fo ? cols[0] : cols[2]).push(m));
+  if (!cols[0].length && cols[2].length > 1) cols[0].push(cols[2].shift());
+  // rows per model (DFS order over the shown instances)
+  const rows = new Map();
+  for (const m of byModel.keys()) {
+    if (m === 13) { rows.set(m, [[LIT, 0]]); continue; }
+    const r = []; (function walk(x, d) { r.push([x, d]); kids[x].forEach(k => { if (show.has(k)) walk(k, d + 1); }); })(roots[m], 0);
+    rows.set(m, r);
+  }
+  const RH = 21, HD = 36, PAD = 10, GAPY = 14, GAPX = 84;
+  const width = m => Math.min(400, Math.max(200, ...rows.get(m).map(([x, d]) => 40 + d * 13 + label(x).length * 6.6)));
+  const colW = cols.map(c => c.length ? Math.max(...c.map(width)) : 0);
+  const colX = []; let x = 10; cols.forEach((c, k) => { colX[k] = x; if (c.length) x += colW[k] + GAPX; });
+  const W = x - GAPX + 30;
+  const pos = new Map(); let s = defs('f'); let H = 0;
+  const boxes = [];
+  cols.forEach((c, k) => {
+    let y = 10;
+    c.forEach(m => {
+      const r = rows.get(m), h = HD + r.length * RH + 8, w = colW[k], bx = colX[k];
+      boxes.push(`<rect x="${bx}" y="${y}" width="${w}" height="${h}" rx="8" fill="var(${m === 13 ? '--m-lit' : FILL[m]})" stroke="var(--line)"${m === 13 ? ' stroke-dasharray="4 3"' : ''}/>` +
+        `<text x="${bx + PAD}" y="${y + 16}" font-size="12" font-weight="700" fill="var(--ink)" class="mono">${esc(m === 13 ? 'uvlPackage.Literals' : F[m])}</text>` +
+        `<text x="${bx + PAD}" y="${y + 29}" font-size="10" fill="var(--muted)">${m === 13 ? 'EClass of UVL.ecore' : 'instance of ' + esc(D.meta[m]) + ' · ' + esc(D.role[m])}</text>`);
+      const tl = [];
+      r.forEach(([xi, d], j) => {
+        const cy = y + HD + j * RH + RH / 2;
+        tl.push({d, cy, tx: bx + PAD + d * 13});
+        pos.set(xi, [bx, bx + w, cy, k]);
+        const isF = xi === f, noCor = xi !== LIT && !cor[xi].length;
+        const hidden = xi === LIT ? 0 : cor[xi].filter(kk => { const [a, b] = C[kk]; const o = a === xi ? b : a; return !(show.has(o) || (o === LIT && lit)); }).length;
+        boxes.push(`<g class="r rowg" data-key="${xi}" data-i="${xi}" tabindex="0" role="button" aria-label="${esc(label(xi))}"><rect x="${bx + 3}" y="${cy - RH / 2 + 1}" width="${w - 6}" height="${RH - 2}" rx="4" fill="${isF ? 'var(--hl)' : 'transparent'}" ${isF ? 'stroke="var(--focus)"' : ''}/>` +
+          `<text x="${bx + PAD + d * 13}" y="${cy + 4}" font-size="11.5" fill="${noCor ? 'var(--muted)' : 'var(--ink)'}" ${noCor ? 'font-style="italic"' : ''} ${isF ? 'font-weight="600"' : ''}>${esc(label(xi))}</text>` +
+          (hidden ? `<text x="${bx + w - 8}" y="${cy + 4}" font-size="9.5" fill="var(--muted)" text-anchor="end">+${hidden}</text>` : '') + `</g>`);
+      });
+      boxes.push(treeLines(tl));
+      y += h + GAPY;
+    });
+    H = Math.max(H, y);
+  });
+  // edges between all shown instances
+  const loops = {}; let edges = '';
+  const seen = new Set();
+  const consider = new Set([...show]); if (lit) consider.add(LIT);
+  const ckeys = new Set(); consider.forEach(xi => (xi === LIT ? litCor : cor[xi]).forEach(k => ckeys.add(k)));
+  [...ckeys].forEach(k => {
+    const [a, b, t] = C[k];
+    if (!(consider.has(a) && consider.has(b)) || !tagOn[t]) return;
+    const pa = pos.get(a), pb = pos.get(b); if (!pa || !pb) return;
+    let d;
+    if (pa[3] === pb[3]) {
+      const n = loops[pa[3]] = (loops[pa[3]] || 0) + 1; const off = 26 + 12 * n;
+      d = `M${pa[1]} ${pa[2]} C${pa[1] + off} ${pa[2]} ${pb[1] + off} ${pb[2]} ${pb[1] + 2} ${pb[2]}`;
+    } else if (pa[3] < pb[3]) {
+      const mx = (pa[1] + pb[0]) / 2; d = `M${pa[1]} ${pa[2]} C${mx} ${pa[2]} ${mx} ${pb[2]} ${pb[0] - 2} ${pb[2]}`;
+    } else {
+      const mx = (pa[0] + pb[1]) / 2; d = `M${pa[0]} ${pa[2]} C${mx} ${pa[2]} ${mx} ${pb[2]} ${pb[1] + 2} ${pb[2]}`;
+    }
+    const hot = a === f || b === f;
+    edges += corrPath(d, `var(--t${t})`, hot ? 2 : 1.4, dash(t), `f${t}`, `fs${t}`, hot ? 1 : 0.6, `correspondence (${TAGN[t]}): ${esc(label(a))} → ${esc(label(b))}`, a, b);
+  });
+  const svg = document.getElementById('focus');
+  const WW = W + 60;
+  svg.setAttribute('viewBox', `0 0 ${WW} ${H}`); svg.setAttribute('width', WW); svg.setAttribute('height', H);
+  svg.innerHTML = s + boxes.join('') + edges;
+  connectHover(svg, k => { const i = +k; if (i !== LIT) focusOn(i); });
+  document.getElementById('crumbs').innerHTML = `<span>${esc(F[mOf(f)])}</span> / ` + anc(f).map((x, k, arr) => k === arr.length - 1 ? `<b>${esc(label(x))}</b>` : esc(label(x))).join(' / ');
+  const t = [0, 0, 0]; ks.forEach(k => t[C[k][2]]++);
+  document.getElementById('fnote').textContent = ks.length
+    ? `${ks.length} correspondence${ks.length > 1 ? 's' : ''} (${t[0]} tag "", ${t[1]} overlap, ${t[2]} requirement).` + (partners.length > LIMIT ? ` The diagram shows the first ${LIMIT}; the table lists all.` : '') + ' The diagram also draws every stored correspondence between the other instances shown.'
+    : 'This instance has no correspondence: a group or a value object (every artefact corresponds to a feature).';
+  const tb = ks.map(k => { const [a, b, tt] = C[k]; const o = a === f ? b : a;
+    const kind = tt === 1 && D.ok && D.ok[k] ? D.ok[k] : null;
+    const kindTag = kind ? ` <span class="sub" title="${esc(D.kinds[kind][0] + ' — ' + D.kinds[kind][1])}">${kind}</span>` : '';
+    return `<tr><td><span class="tag t${tt}">${TAGN[tt]}</span>${kindTag}</td><td>${a === f ? 'left object' : 'right object'}</td><td class="mono nw">${o === LIT ? 'uvlPackage.Literals' : esc(F[mOf(o)])}</td>` +
+      `<td class="mono">${o === LIT ? 'UVL_MODEL : EClass' : `<a data-i="${o}">${esc(label(o))}</a><br><span class="cls">${anc(o).slice(0, -1).map(x => esc(label(x))).join(' / ')}</span>`}</td></tr>`; });
+  const tbl = document.getElementById('ctable');
+  tbl.innerHTML = ks.length ? `<thead><tr><th>Tag</th><th>Selected is</th><th>Model</th><th>Corresponding instance</th></tr></thead><tbody>${tb.join('')}</tbody>` : '';
+  tbl.querySelectorAll('a[data-i]').forEach(a => a.addEventListener('click', () => focusOn(+a.dataset.i)));
+}
+
+// ---------------------------------------------------------------- scenarios
+const SC = D.sc;
+const FAMILY = {1: 'S1 · feature added', 2: 'S2 · constraint added', 3: 'S3 · artefact added', 4: 'S4 · feature removed',
+  5: 'S5 · constraint removed', 6: 'S6 · artefact removed', 7: 'R · TechReport KA-RaceIng scenarios (overlap rules)'};
+const STATE_SYM = {add: '+', del: '−', chg: '~', mov: '↷', lnk: '⇄', ctx: ''};
+let curScen = null;
+(function scenarioList() {
+  if (!SC) return;
+  const el = document.getElementById('slist');
+  let h = '', fam = 0;
+  SC.scenarios.forEach((sc, k) => {
+    if (sc.family !== fam) { fam = sc.family; h += `<h3>${esc(FAMILY[fam])}</h3>`; }
+    const off = sc.status !== 'executed';
+    h += `<button class="sbtn${off ? ' off' : ''}" data-k="${k}" aria-current="false"><span class="sid">${esc(sc.id)}</span><span>${esc(sc.title)}${off ? ` <span class="sub">(${/^Out of scope/.test(sc.disabled || '') ? 'out of scope' : 'not executable'})</span>` : ''}</span></button>`;
+  });
+  el.innerHTML = h;
+  el.querySelectorAll('.sbtn').forEach(b => b.addEventListener('click', () => showScenario(+b.dataset.k)));
+})();
+function nodeLabel(n) {
+  if (n.k === 'L') return 'UVL_MODEL : EClass';
+  let s;
+  if (typeof n.k === 'number') s = label(n.k);
+  else s = (n.n ?? '') + ' : ' + n.c + (n.sel !== undefined ? '  isSelected=' + n.sel : '');
+  if (n.a) s += '   [' + Object.entries(n.a).map(([k, [b, a]]) => `${k}: ${b ?? '–'} → ${a ?? '–'}`).join('; ') + ']';
+  return s;
+}
+function showScenario(k) {
+  if (!SC) return;
+  curScen = k;
+  const sc = SC.scenarios[k];
+  document.querySelectorAll('#slist .sbtn').forEach(b => b.setAttribute('aria-current', +b.dataset.k === k));
+  const det = document.getElementById('sdetail');
+  let h = `<div class="panel-head"><h3>${esc(sc.id)} ${esc(sc.title)}</h3><span class="status">${sc.status === 'executed' ? 'recorded from ' + esc(sc.method) : /^Out of scope/.test(sc.disabled || '') ? 'out of scope' : 'not executable yet'}</span></div>`;
+  h += `<p>${esc(sc.text)}</p>`;
+  if (sc.status !== 'executed') {
+    h += `<p class="note">${esc(sc.disabled || 'No snapshot recorded.')}. The test documents the instance; the state is not changed.</p>`;
+    det.innerHTML = h; return;
+  }
+  const c = sc.counts;
+  const chips = [['add', `+${c.added} instances`], ['del', `−${c.removed} instances`], ['chg', `~${c.changed} changed`], ['mov', `${c.moved} moved`],
+    ['add', `+${c.corr_added} correspondences`], ['del', `−${c.corr_removed} correspondences`],
+    ['lnk', `⇄ ${c.relinked || 0} existing instances re-linked`]].filter(([_, t]) => !/^[+−~⇄]? ?0 /.test(t));
+  h += `<div class="deltas">${chips.map(([k2, t]) => `<span class="dl ${k2}">${esc(t)}</span>`).join('')}</div>`;
+  h += `<div class="scroll-x"><svg id="sdiff" role="img" aria-label="Changes of scenario ${esc(sc.id)}"></svg></div>`;
+  h += `<p class="note">Grey rows are unchanged containers shown for orientation. Badges at the right end count the correspondences an instance gained (+) or lost (−). <b>Hover an instance to show only its correspondences</b>, click to pin that view, double-click an instance of the initial state to open it in the correspondence explorer above.</p>`;
+  h += corrTable(sc);
+  h += '<h2>Propagation log</h2><ol class="steps">';
+  sc.steps.forEach((commit, ci) => {
+    const hopsOf = commit.hops || commit;
+    const first = hopsOf[0] || {original: [], consequential: [], dialogs: []};
+    const files = [...new Set(first.original.map(l => l[2]).filter(Boolean))].join(', ');
+    h += `<li><b>Change ${ci + 1}</b> by the modeller${files ? ' in ' + esc(files) : ''}<ul>` + first.original.map(l => `<li class="mono k-${l[0]}">${esc(l[1])}</li>`).join('') + '</ul>';
+    const hops = hopsOf.filter(hp => hp.consequential && hp.consequential.length);
+    if (hops.length) {
+      h += '<div class="sub" style="margin-top:6px">Propagated by the reactions:</div><ul>';
+      hops.forEach(hp => {
+        const src = [...new Set(hp.original.map(l => l[2]).filter(Boolean))].join(', ');
+        const byFile = new Map(); hp.consequential.forEach(l => { const f = l[2] || 'instances no longer in a model'; if (!byFile.has(f)) byFile.set(f, []); byFile.get(f).push(l); });
+        byFile.forEach((ls, f) => {
+          h += `<li><span class="sub">${esc(src)} → <b>${esc(f)}</b></span><ul>` + ls.map(l => `<li class="mono k-${l[0]}">${esc(l[1])}</li>`).join('') + '</ul></li>';
+        });
+      });
+      h += '</ul>';
+    } else h += '<div class="sub" style="margin-top:6px">No model changed by the reactions.</div>';
+    const ca = commit.corr_added || [], cr = commit.corr_removed || [];
+    if (ca.length || cr.length) {
+      h += '<div class="sub" style="margin-top:6px">Correspondences changed by this propagation:</div><ul>' +
+        ca.map(([t, l, r]) => `<li class="mono k-cadd">+ ${esc(TAGN[t === '' ? 0 : t === 'overlap' ? 1 : 2])}: ${esc(l)} → ${esc(r)}</li>`).join('') +
+        cr.map(([t, l, r]) => `<li class="mono k-cdel">− ${esc(TAGN[t === '' ? 0 : t === 'overlap' ? 1 : 2])}: ${esc(l)} → ${esc(r)}</li>`).join('') + '</ul>';
+    }
+    const nt = commit.notes || [];
+    if (nt.length) h += '<div class="sub" style="margin-top:6px">Notifications to the stakeholders:</div><ul class="notes">' +
+      nt.map(([r, m]) => `<li><span class="role">${esc(r)}</span> ${esc(m)}</li>`).join('') + '</ul>';
+    const dl = (commit.hops || commit).flatMap(hp => hp.dialogs || []);
+    if (dl.length) h += '<div class="sub" style="margin-top:6px">Dialogs answered:</div><ul>' + dl.map(x => `<li class="dlg">${esc(x.q)} <b>→ ${esc(x.a)}</b></li>`).join('') + '</ul>';
+    h += '</li>';
+  });
+  h += '</ol>';
+  det.innerHTML = h;
+  det.querySelectorAll('.ctab a[data-i]').forEach(a => a.addEventListener('click', () => { focusOn(+a.dataset.i); document.getElementById('fx-h').scrollIntoView({behavior: 'smooth', block: 'start'}); }));
+  drawDiff(sc);
+}
+function corrTable(sc) {
+  const byK = new Map(sc.nodes.map(n => [String(n.k), n]));
+  const rows = sc.edges.filter(e => e[3] !== 'ctx');
+  if (!rows.length) return '<p class="note">No correspondence was added or removed.</p>';
+  const end = k => {
+    if (k === 'L') return '<span class="cls">uvlPackage.Literals</span> UVL_MODEL : EClass';
+    const n = byK.get(String(k)); if (!n) return esc(String(k));
+    const st = n.s === 'add' ? '<span class="endst add">new</span>' : n.s === 'del' ? '<span class="endst del">removed</span>' : '<span class="endst ex">existing</span>';
+    const txt = `<span class="cls">${esc(F[n.f])}</span> ${esc(nodeLabel(n).split('   [')[0])}`;
+    return (typeof n.k === 'number' ? `<a data-i="${n.k}">${txt}</a>` : txt) + st;
+  };
+  const tagIx = t => t === '' ? 0 : t === 'overlap' ? 1 : 2;
+  return '<div class="scroll-x"><table class="ctab"><thead><tr><th>Correspondence</th><th>Tag</th><th>Left object</th><th>Right object</th></tr></thead><tbody>' +
+    rows.map(([a, b, t, st]) => `<tr><td><span class="dl ${st}">${st === 'add' ? 'added' : 'removed'}</span></td><td><span class="tag t${tagIx(t)}">${TAGN[tagIx(t)]}</span></td><td class="mono">${end(a)}</td><td class="mono">${end(b)}</td></tr>`).join('') +
+    '</tbody></table></div>';
+}
+function drawDiff(sc) {
+  const byK = new Map(sc.nodes.map(n => [String(n.k), n]));
+  const kidsOf = new Map();
+  sc.nodes.forEach(n => { const p = n.p === null ? null : String(n.p); if (p !== null) { if (!kidsOf.has(p)) kidsOf.set(p, []); kidsOf.get(p).push(n); } });
+  kidsOf.forEach(ks => ks.sort((a, b) => a.i - b.i || (a.s === 'del') - (b.s === 'del')));
+  const models = new Map();
+  sc.nodes.filter(n => n.p === null).forEach(n => models.set(n.f, n));
+  const hasLit = sc.edges.some(e => e[0] === 'L' || e[1] === 'L');
+  const colOf = f => f <= 1 || f === 13 ? 0 : f <= 10 ? 1 : 2;
+  const cols = [[], [], []];
+  [...models.keys()].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)).forEach(f => cols[colOf(f)].push(f));
+  if (hasLit) cols[0].unshift(13);
+  const rows = new Map();
+  for (const f of [...models.keys()]) {
+    const r = []; (function walk(n, d) { r.push([n, d]); (kidsOf.get(String(n.k)) || []).forEach(c => walk(c, d + 1)); })(models.get(f), 0);
+    rows.set(f, r);
+  }
+  if (hasLit) rows.set(13, [[{k: 'L', s: 'ctx', c: 'EClass'}, 0]]);
+  const RH = 21, HD = 36, PAD = 10, GAPY = 14, GAPX = 90;
+  const width = f => Math.min(560, Math.max(220, ...rows.get(f).map(([n, d]) => 44 + d * 13 + nodeLabel(n).length * 6.5 + (n.cc ? 44 : 0))));
+  const used = cols.map((c, i) => [c, i]).filter(([c]) => c.length);
+  const colW = used.map(([c]) => Math.max(...c.map(width)));
+  const colX = []; let x = 10; used.forEach((_, i) => { colX[i] = x; x += colW[i] + GAPX; });
+  const W = x - GAPX + 60;
+  const pos = new Map(); const parts = []; let H = 0;
+  const SCOL = {add: 'var(--add)', del: 'var(--del)', chg: 'var(--chg)', mov: 'var(--mov)', lnk: 'var(--lnk)'};
+  const SBG = {add: 'var(--add-bg)', del: 'var(--del-bg)', chg: 'var(--chg-bg)', mov: 'var(--mov-bg)', lnk: 'var(--lnk-bg)'};
+  used.forEach(([c], ci) => {
+    let y = 10;
+    c.forEach(f => {
+      const r = rows.get(f), h = HD + r.length * RH + 8, w = colW[ci], bx = colX[ci];
+      parts.push(`<rect x="${bx}" y="${y}" width="${w}" height="${h}" rx="8" fill="var(${f === 13 ? '--m-lit' : FILL[f]})" stroke="var(--line)"/>` +
+        `<text x="${bx + PAD}" y="${y + 16}" font-size="12" font-weight="700" fill="var(--ink)" class="mono">${esc(f === 13 ? 'uvlPackage.Literals' : F[f])}</text>` +
+        `<text x="${bx + PAD}" y="${y + 29}" font-size="10" fill="var(--muted)">${f === 13 ? 'EClass of UVL.ecore' : 'instance of ' + esc(D.meta[f]) + ' · ' + esc(D.role[f])}</text>`);
+      const tl = [];
+      r.forEach(([n, d], j) => {
+        const cy = y + HD + j * RH + RH / 2;
+        tl.push({d, cy, tx: bx + PAD + d * 13});
+        pos.set(String(n.k), [bx, bx + w, cy, ci]);
+        const col = SCOL[n.s] || 'var(--muted)';
+        const bg = SBG[n.s];
+        const lbl = nodeLabel(n) + (n.s === 'mov' && n.op !== undefined && byK.get(String(n.op)) ? `   (moved from ${nodeLabel(byK.get(String(n.op))).split(' : ')[0]})` : '');
+        const click = typeof n.k === 'number';
+        parts.push(`<g class="rowg${click ? ' r' : ''}" data-key="${n.k}" tabindex="0" role="button" aria-label="${esc(nodeLabel(n))}">` +
+          `<rect x="${bx + 3}" y="${cy - RH / 2 + 1}" width="${w - 6}" height="${RH - 2}" rx="4" fill="${bg || 'transparent'}"/>` +
+          `<text x="${bx + PAD + d * 13}" y="${cy + 4}" font-size="11.5" fill="${col}" ${n.s === 'del' ? 'text-decoration="line-through"' : ''} ${n.s !== 'ctx' ? 'font-weight="600"' : ''}>${esc((STATE_SYM[n.s] ? STATE_SYM[n.s] + ' ' : '') + lbl)}</text>` +
+          (n.cc ? `<text x="${bx + w - 8}" y="${cy + 4}" font-size="10" text-anchor="end" font-weight="600">` +
+            (n.cc[0] ? `<tspan fill="var(--add)">+${n.cc[0]}</tspan>` : '') + (n.cc[0] && n.cc[1] ? ' ' : '') + (n.cc[1] ? `<tspan fill="var(--del)">−${n.cc[1]}</tspan>` : '') + `<tspan fill="var(--muted)"> ⇄</tspan></text>` : '') + `</g>`);
+      });
+      parts.push(treeLines(tl));
+      y += h + GAPY;
+    });
+    H = Math.max(H, y);
+  });
+  const loops = {}; let edges = '';
+  const ECOL = {add: 'var(--add)', del: 'var(--del)', ctx: 'var(--ctx)'};
+  sc.edges.forEach(([a, b, tag, st]) => {
+    const t = tag === '' ? 0 : tag === 'overlap' ? 1 : 2;
+    const pa = pos.get(String(a)), pb = pos.get(String(b)); if (!pa || !pb) return;
+    let d;
+    if (pa[3] === pb[3]) { const n = loops[pa[3]] = (loops[pa[3]] || 0) + 1; const off = 26 + 12 * n;
+      d = `M${pa[1]} ${pa[2]} C${pa[1] + off} ${pa[2]} ${pb[1] + off} ${pb[2]} ${pb[1] + 2} ${pb[2]}`; }
+    else if (pa[3] < pb[3]) { const mx = (pa[1] + pb[0]) / 2; d = `M${pa[1]} ${pa[2]} C${mx} ${pa[2]} ${mx} ${pb[2]} ${pb[0] - 2} ${pb[2]}`; }
+    else { const mx = (pa[0] + pb[1]) / 2; d = `M${pa[0]} ${pa[2]} C${mx} ${pa[2]} ${mx} ${pb[2]} ${pb[1] + 2} ${pb[2]}`; }
+    edges += corrPath(d, ECOL[st], st === 'ctx' ? 1.4 : 2, dash(t), `d${st}`, `ds${st}`, st === 'ctx' ? 0.7 : 1, `${st === 'add' ? 'added' : st === 'del' ? 'removed' : 'unchanged'} correspondence (${TAGN[t]})`, a, b);
+  });
+  const dm = '<defs>' + ['add', 'del', 'ctx'].map(st => `<marker id="d${st}" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="${ECOL[st]}"/></marker>` +
+    `<marker id="ds${st}" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="7" markerHeight="7"><circle cx="5" cy="5" r="4" fill="${ECOL[st]}"/></marker>`).join('') + '</defs>';
+  const svg = document.getElementById('sdiff');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H);
+  svg.innerHTML = dm + parts.join('') + edges;
+  connectHover(svg, k => {
+    if (!/^\d+$/.test(k)) return;                 // only instances of the initial state exist in the explorer
+    focusOn(+k); document.getElementById('fx-h').scrollIntoView({behavior: 'smooth', block: 'start'});
+  });
+}
+
+// ---------------------------------------------------------------- start: the hydrogen tank of DES
+drawMap();
+showModel(3);
+const start = (() => { for (let i = 0; i < N; i++) if (mOf(i) === 3 && nm(i) === 'HydrogenTank') return i; return roots[3]; })();
+focusOn(start);
+if (SC) {
+  const want = decodeURIComponent((location.hash || '').slice(1));
+  let k = SC.scenarios.findIndex(sc => sc.id === want);
+  if (k < 0) k = SC.scenarios.findIndex(sc => sc.id === '1.1-B');
+  showScenario(Math.max(0, k));
+  window.addEventListener('hashchange', () => {
+    const j = SC.scenarios.findIndex(sc => sc.id === decodeURIComponent(location.hash.slice(1)));
+    if (j >= 0) showScenario(j);
+  });
+}
+</script>

@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cad:CADDocument xmlns:xmi="http://www.omg.org/XMI" xmlns:cad="http://demonstrator.kit.edu/cad" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="CRASH" xmi:version="2.0">
+  <materials name="Steel" density="7850.0"/>
+  <materials name="Aluminium" density="2700.0"/>
+  <materials name="CFRP" density="1600.0"/>
+  <objects xsi:type="cad:Assembly" name="PrimaryStructure" label="PrimaryStructure">
+    <children xsi:type="cad:Assembly" name="CompositeStructures" label="CompositeStructures">
+      <children xsi:type="cad:Assembly" name="AsymmetricLaminate" label="AsymmetricLaminate">
+        <children xsi:type="cad:Box" name="AsymmetricLaminatePart" label="AsymmetricLaminatePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="RollHoops" label="RollHoops">
+      <children xsi:type="cad:Assembly" name="MainHoop" label="MainHoop">
+        <children xsi:type="cad:Box" name="MainHoopPart" label="MainHoopPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        <children xsi:type="cad:Box" name="LidarBracket" length="0.05" width="0.05" height="0.01" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="FrontHoop" label="FrontHoop">
+        <children xsi:type="cad:Assembly" name="FrontHoopAttachmentEquivalence" label="FrontHoopAttachmentEquivalence">
+          <children xsi:type="cad:Box" name="FrontHoopAttachmentEquivalencePart" label="FrontHoopAttachmentEquivalencePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="MainHoopBracing" label="MainHoopBracing">
+        <children xsi:type="cad:Box" name="MainHoopBracingPart" label="MainHoopBracingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="FrontHoopBracing" label="FrontHoopBracing">
+        <children xsi:type="cad:Box" name="FrontHoopBracingPart" label="FrontHoopBracingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="MechanicallyAttachedBracing" label="MechanicallyAttachedBracing">
+        <children xsi:type="cad:Box" name="LugJoints" label="LugJoints" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        <children xsi:type="cad:Box" name="SleeveJoints" label="SleeveJoints" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="FrontBulkhead" label="FrontBulkhead">
+      <children xsi:type="cad:Box" name="FrontBulkheadPart" label="FrontBulkheadPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="FrontBulkheadSupport" label="FrontBulkheadSupport">
+      <children xsi:type="cad:Box" name="FrontBulkheadSupportPart" label="FrontBulkheadSupportPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="ImpactStructures" label="ImpactStructures">
+      <children xsi:type="cad:Assembly" name="SideImpactStructure" label="SideImpactStructure">
+        <children xsi:type="cad:Assembly" name="OtherImpactStructures" label="OtherImpactStructures">
+          <children xsi:type="cad:Box" name="OtherImpactStructuresPart" label="OtherImpactStructuresPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="RearImpactClearance" label="RearImpactClearance">
+        <children xsi:type="cad:Box" name="RearImpactClearancePart" label="RearImpactClearancePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="ImpactAttenuator" label="ImpactAttenuator">
+      <children xsi:type="cad:Assembly" name="AntiIntrusionPlate" label="AntiIntrusionPlate">
+        <children xsi:type="cad:Assembly" name="SteelAIP" label="SteelAIP">
+          <children xsi:type="cad:Box" name="SteelAIPPart" label="SteelAIPPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="AluminiumAIP" label="AluminiumAIP">
+          <children xsi:type="cad:Box" name="AluminiumAIPPart" label="AluminiumAIPPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="AttenuatorHeightAndBonding" label="AttenuatorHeightAndBonding">
+        <children xsi:type="cad:Box" name="AttenuatorHeightAndBondingPart" label="AttenuatorHeightAndBondingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="AdhesiveJoints" label="AdhesiveJoints">
+      <children xsi:type="cad:Box" name="AdhesiveJointsPart" label="AdhesiveJointsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="BoltedJointDetailing" label="BoltedJointDetailing">
+      <children xsi:type="cad:Box" name="BoltedJointDetailingPart" label="BoltedJointDetailingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="DriverRestraint" label="DriverRestraint">
+    <children xsi:type="cad:Assembly" name="HarnessAttachment" label="HarnessAttachment">
+      <children xsi:type="cad:Assembly" name="HarnessMountBolting" label="HarnessMountBolting">
+        <children xsi:type="cad:Box" name="HarnessMountBoltingPart" label="HarnessMountBoltingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="HarnessBracketDesign" label="HarnessBracketDesign">
+        <children xsi:type="cad:Box" name="HarnessBracketDesignPart" label="HarnessBracketDesignPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="LapBelt" label="LapBelt">
+      <children xsi:type="cad:Assembly" name="LapBeltSeatOpening" label="LapBeltSeatOpening">
+        <children xsi:type="cad:Box" name="LapBeltSeatOpeningPart" label="LapBeltSeatOpeningPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="ShoulderBelt" label="ShoulderBelt">
+      <children xsi:type="cad:Box" name="ShoulderBeltPart" label="ShoulderBeltPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="AntiSubmarineBelt" label="AntiSubmarineBelt">
+      <children xsi:type="cad:Box" name="AntiSubmarineBeltPart" label="AntiSubmarineBeltPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="SixPointHarness" label="SixPointHarness">
+      <children xsi:type="cad:Box" name="SixPointHarnessPart" label="SixPointHarnessPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="SevenPointHarness" label="SevenPointHarness">
+      <children xsi:type="cad:Box" name="SevenPointHarnessPart" label="SevenPointHarnessPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+  </objects>
+</cad:CADDocument>

@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simulink:SimulinkModel xmlns:xmi="http://www.omg.org/XMI" xmlns:simulink="http://www.example.org/simulink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="SIM" version="R2024b" file="karaceing_control.slx" xmi:version="2.0">
+  <contains xsi:type="simulink:SubSystem" name="ControlFunctions" tag="ControlFunctions">
+    <subBlocks xsi:type="simulink:SubSystem" name="PedalPlausibility" tag="PedalPlausibility">
+      <subBlocks xsi:type="simulink:SubSystem" name="ZeroTorqueAtPedalRelease" tag="ZeroTorqueAtPedalRelease">
+        <subBlocks name="ZeroTorqueAtPedalReleaseLogic">
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+      </subBlocks>
+    </subBlocks>
+    <subBlocks xsi:type="simulink:SubSystem" name="SafeStateHandling" tag="SafeStateHandling">
+      <subBlocks xsi:type="simulink:SubSystem" name="DigitalSignalLatency" tag="DigitalSignalLatency">
+        <subBlocks name="DigitalSignalLatencyLogic">
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+      </subBlocks>
+    </subBlocks>
+    <subBlocks xsi:type="simulink:SubSystem" name="TractionSystemControl" tag="TractionSystemControl">
+      <subBlocks xsi:type="simulink:SubSystem" name="Regeneration" tag="Regeneration">
+        <subBlocks name="RegenerationLogic">
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+        <subBlocks name="OldInverterRegenInterface"/>
+      </subBlocks>
+      <subBlocks xsi:type="simulink:SubSystem" name="PowerLimitation" tag="PowerLimitation">
+        <subBlocks name="PowerLimitationLogic">
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+        <subBlocks name="OldInverterInterface"/>
+        <subBlocks xsi:type="simulink:SubSystem" name="CellTemperatureDerating"/>
+      </subBlocks>
+      <subBlocks xsi:type="simulink:SubSystem" name="ReverseDrivePrevention" tag="ReverseDrivePrevention">
+        <subBlocks name="ReverseDrivePreventionLogic">
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+      </subBlocks>
+      <subBlocks xsi:type="simulink:SubSystem" name="TSActivationAndReadyToDrive" tag="TSActivationAndReadyToDrive">
+        <subBlocks name="TSActivationAndReadyToDriveLogic">
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+        <subBlocks name="PlugDetectionSignal"/>
+      </subBlocks>
+    </subBlocks>
+    <subBlocks xsi:type="simulink:SubSystem" name="ElectronicThrottleControl" tag="ElectronicThrottleControl">
+      <subBlocks name="ElectronicThrottleControlLogic">
+        <parameters name="SampleTime" type="double" value="0.001"/>
+      </subBlocks>
+    </subBlocks>
+    <subBlocks xsi:type="simulink:SubSystem" name="VehicleDynamicsControl" tag="VehicleDynamicsControl">
+      <subBlocks name="VDCSimulinkModel"/>
+      <subBlocks name="VDCParameterSet"/>
+      <subBlocks xsi:type="simulink:SubSystem" name="BrakeSystemModel" tag="BrakeSystemModel">
+        <subBlocks name="FrontBrakeDiscModel">
+          <parameters name="mass" type="double" value="1.1936"/>
+          <parameters name="inertia" type="double" value="0.0072214"/>
+          <parameters name="heatCapacity" type="double" value="549.06"/>
+          <parameters name="ventilated" type="boolean" value="false"/>
+          <parameters name="discThickness" type="double" value="4"/>
+        </subBlocks>
+        <subBlocks name="FrontBrakePadModel">
+          <parameters name="padThickness" type="double" value="8"/>
+          <parameters name="wearWarning" type="boolean" value="false"/>
+        </subBlocks>
+        <subBlocks name="RearBrakeDiscModel">
+          <parameters name="mass" type="double" value="0.98646"/>
+          <parameters name="inertia" type="double" value="0.0049323"/>
+          <parameters name="heatCapacity" type="double" value="453.77"/>
+          <parameters name="ventilated" type="boolean" value="false"/>
+          <parameters name="discThickness" type="double" value="4"/>
+        </subBlocks>
+        <subBlocks name="RearBrakePadModel">
+          <parameters name="padThickness" type="double" value="8"/>
+          <parameters name="wearWarning" type="boolean" value="false"/>
+        </subBlocks>
+        <subBlocks name="ABSControl">
+          <parameters name="signal:WheelSpeedFront" type="string" value="front_wheel_speed"/>
+          <parameters name="signal:WheelSpeedRear" type="string" value="rear_wheel_speed"/>
+          <parameters name="signal:ValveCommand" type="string" value="abs_valve_command"/>
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+        <subBlocks name="BOTSSwitchLogic">
+          <parameters name="signal:BOTSState" type="string" value="bots_sdc_open"/>
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+      </subBlocks>
+      <subBlocks xsi:type="simulink:SubSystem" name="TyreModel" tag="TyreModel">
+        <subBlocks name="DryTyreParameterSet">
+          <parameters name="grip" type="double" value="1.6"/>
+          <parameters name="verticalStiffness" type="double" value="120000.0"/>
+          <parameters name="rollingResistance" type="double" value="0.015"/>
+          <parameters name="mass" type="double" value="3.2"/>
+          <parameters name="inertia" type="double" value="0.35"/>
+        </subBlocks>
+        <subBlocks name="WetTyreParameterSet">
+          <parameters name="grip" type="double" value="1.2"/>
+          <parameters name="verticalStiffness" type="double" value="125000.0"/>
+          <parameters name="rollingResistance" type="double" value="0.02"/>
+          <parameters name="mass" type="double" value="3.6"/>
+          <parameters name="inertia" type="double" value="0.38"/>
+        </subBlocks>
+      </subBlocks>
+    </subBlocks>
+  </contains>
+  <contains xsi:type="simulink:SubSystem" name="AutonomousFunctions" tag="AutonomousFunctions">
+    <subBlocks xsi:type="simulink:SubSystem" name="AutonomousSteering" tag="AutonomousSteering">
+      <subBlocks name="AutonomousSteeringLogic">
+        <parameters name="SampleTime" type="double" value="0.001"/>
+      </subBlocks>
+    </subBlocks>
+    <subBlocks xsi:type="simulink:SubSystem" name="ASStateMachine" tag="ASStateMachine">
+      <subBlocks xsi:type="simulink:SubSystem" name="StatusIndication" tag="StatusIndication">
+        <subBlocks name="StatusIndicationLogic">
+          <parameters name="SampleTime" type="double" value="0.001"/>
+        </subBlocks>
+        <subBlocks name="ROS1StatusNode"/>
+      </subBlocks>
+      <subBlocks name="ROS1StateMachineNode"/>
+    </subBlocks>
+    <subBlocks xsi:type="simulink:SubSystem" name="ASFunctionalSafety" tag="ASFunctionalSafety">
+      <subBlocks name="ASFunctionalSafetyLogic">
+        <parameters name="SampleTime" type="double" value="0.001"/>
+      </subBlocks>
+    </subBlocks>
+    <subBlocks name="LidarPoseMainHoop"/>
+  </contains>
+</simulink:SimulinkModel>

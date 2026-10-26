@@ -1,0 +1,30 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://demonstrator.kit.edu/cad" as cad
+
+// Vitruvius allows only one change propagation specification per pair of metamodels (uvl -> cad), so the
+// Feature CPRs of all roles whose artefacts are cad models (DES, CRASH, KIN, AERO) and the feature removal are combined
+// here, like CombinedUVLToCAD combines feature2cad and featureRoot2cad.
+
+reactions: featureCPRsToCad
+in reaction to changes in uvl
+execute actions in cad
+
+
+import featureToDES using qualified names
+
+import rootFeatureToDES using qualified names
+
+import featureToCRASH using qualified names
+
+import rootFeatureToCRASH using qualified names
+
+import featureToKIN using qualified names
+
+import rootFeatureToKIN using qualified names
+
+import featureToAERO using qualified names
+
+import rootFeatureToAERO using qualified names
+
+import featureRemovalToCad using qualified names
+

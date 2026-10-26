@@ -60,3 +60,7 @@ Details about the build process and configurations can be found in the readmes o
 
 - <https://github.com/vitruv-tools/Maven-Build-Parent/blob/main/readme.md>
 - <https://github.com/vitruv-tools/EMF-Template/blob/main/readme.md>
+
+## KA-RaceIng case study
+
+The KA-RaceIng product line (initial state, Feature CPRs per stakeholder role, overlap and configuration reactions, and the 51 evolution-scenario tests) is described in [KARACEING.md](KARACEING.md).

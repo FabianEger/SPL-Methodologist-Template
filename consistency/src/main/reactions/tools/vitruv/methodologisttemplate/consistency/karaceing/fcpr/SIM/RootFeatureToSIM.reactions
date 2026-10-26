@@ -1,0 +1,35 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/simulink" as sim
+
+// Root Feature CPR of the stakeholder role SIM (copy of UVL2CAD/RootFeatureToCAD.reactions):
+// when the domain root feature Simulation is inserted below the root feature, the SIM Simulink model is created.
+
+reactions: rootFeatureToSIM
+in reaction to changes in uvl
+execute actions in sim
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "Simulation"
+    call createSimulinkModelForDomainRoot(newValue)
+}
+
+
+routine createSimulinkModelForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of sim::SimulinkModel corresponding to feature
+    }
+    create{
+        val model = new sim::SimulinkModel
+    }
+    update{
+        System.out.println("Adding SIM Simulink model for domain root feature " + feature.name)
+        model.name = "SIM"
+        persistProjectRelative(feature, model, new File("").toString() + "sim.simulink")
+        addCorrespondenceBetween(feature, model)
+    }
+}

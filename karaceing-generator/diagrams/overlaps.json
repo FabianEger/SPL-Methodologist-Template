@@ -1,0 +1,2030 @@
+{
+ "kinds": {
+  "K1": [
+   "CAD geometry / mass -> SIM parameters",
+   "R1 (mass, inertia, heat capacity of the vented disc), R7",
+   "AR2: mass, inertia, heat capacity and venting are derived from the CAD geometry and written to the block parameters"
+  ],
+  "K2": [
+   "CAD <-> THERMO thermal model",
+   "R1 (cooling of the vented disc), R3 (piston)",
+   "AR2/AR6: material and geometry changes update the thermal model or notify the thermodynamics engineer"
+  ],
+  "K3": [
+   "CAD <-> ELEC mounting / packaging",
+   "R2 (mounting interfaces of the two-piece caliper), R9",
+   "AR4: Device.mountingPosition names the CAD element; renames are propagated, moves are notified"
+  ],
+  "K4": [
+   "CAD part <-> BOM item",
+   "R1, R2, R4 (the ordered part is the designed part)",
+   "AR2: mass, material and specification of the item are derived from the CAD part"
+  ],
+  "K5": [
+   "Brake specification <-> CAD / BOM / SIM / ELEC",
+   "R1 (ventilated), R2 (monobloc / two-piece), R6, R7 (wear)",
+   "AR1/AR3/AR12: specification attributes are propagated to BOM and SIM, CAD mismatches are notified"
+  ],
+  "K6": [
+   "BOM supplier / material data <-> THERMO",
+   "R3 (supplier change of the caliper pistons)",
+   "AR6: supplier and material of the item update the thermal component (material table), analyses become outdated"
+  ],
+  "K7": [
+   "Artefact <-> validation (test cases, limits)",
+   "R2 (assembly build), R3 (temperature limit), R4, R5 (compliance)",
+   "AR7/AR8/AR10: limits and pass criteria are updated, the validation engineer is notified"
+  ],
+  "K8": [
+   "ELEC signals <-> SIM control model",
+   "R6 (integrated ABS/BOTS unit), R9 (new BOTS sensor)",
+   "AR11: pins and signals of the device are the signal parameters of the block; new devices get a block"
+  ],
+  "K9": [
+   "CAD <-> CAD across roles (shared space, mass)",
+   "R1 (FT-08 aerodynamics, FT-09 kinematics), constraints",
+   "AR2: the other CAD role is notified (mass difference for KIN; notification only for AERO)"
+  ],
+  "K10": [
+   "KIN tyres <-> SIM tyre parameter sets",
+   "R8 (intermediate tyre)",
+   "AR13: a new tyre set gets a parameter set initialised from the existing sets"
+  ],
+  "K11": [
+   "ELEC component <-> BOM item",
+   "R2 (step 7), R6",
+   "AR5: the part number of the device is the part number of the item"
+  ]
+ },
+ "overlaps": [
+  {
+   "kind": "K1",
+   "a": "sim.simulink:ElectronicThrottleControl",
+   "b": "des.cad:ElectronicThrottleBody",
+   "source": "interface constraint",
+   "why": "interface constraint C054: sim.ElectronicThrottleControl <=> des.ElectronicThrottleBody",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:ETCSafetyDemonstration",
+   "b": "des.cad:ElectronicThrottleBody",
+   "source": "interface constraint",
+   "why": "interface constraint C057: val.ETCSafetyDemonstration <=> des.ElectronicThrottleBody",
+   "scenarios": []
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:Accumulator",
+   "b": "des.cad:AccumulatorContainer",
+   "source": "interface constraint",
+   "why": "interface constraint C073: elec.Accumulator => des.AccumulatorContainer",
+   "scenarios": [
+    "1.1-C",
+    "3.3-A"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:HubMotorWiring",
+   "b": "des.cad:TractionMotor",
+   "source": "interface constraint",
+   "why": "interface constraint C074: elec.HubMotorWiring => des.TractionMotor",
+   "scenarios": []
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:HighVoltage",
+   "b": "des.cad:TractionMotor",
+   "source": "interface constraint",
+   "why": "interface constraint C075: elec.HighVoltage => des.TractionMotor",
+   "scenarios": [
+    "3.1-A"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:SDCCombustion",
+   "b": "des.cad:CombustionEngine",
+   "source": "interface constraint",
+   "why": "interface constraint C076: elec.SDCCombustion => des.CombustionEngine",
+   "scenarios": [
+    "4.3-A"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:SDCHydrogen",
+   "b": "des.cad:HydrogenTank",
+   "source": "interface constraint",
+   "why": "interface constraint C077: elec.SDCHydrogen => des.HydrogenTank",
+   "scenarios": [
+    "1.1-B",
+    "1.2-A",
+    "1.3-A",
+    "1.4-A",
+    "3.1-D",
+    "3.4-B",
+    "6.1-B"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "des.cad:BrakeOverTravelSwitch",
+   "b": "elec.electrical:SDCTractionSystem",
+   "source": "interface constraint",
+   "why": "interface constraint C078: des.BrakeOverTravelSwitch => elec.SDCTractionSystem | elec.SDCCombustion | elec.SDCHydrogen",
+   "scenarios": [
+    "R6",
+    "R9"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "des.cad:BrakeOverTravelSwitch",
+   "b": "elec.electrical:SDCCombustion",
+   "source": "interface constraint",
+   "why": "interface constraint C078: des.BrakeOverTravelSwitch => elec.SDCTractionSystem | elec.SDCCombustion | elec.SDCHydrogen",
+   "scenarios": [
+    "R6",
+    "R9"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "des.cad:BrakeOverTravelSwitch",
+   "b": "elec.electrical:SDCHydrogen",
+   "source": "interface constraint",
+   "why": "interface constraint C078: des.BrakeOverTravelSwitch => elec.SDCTractionSystem | elec.SDCCombustion | elec.SDCHydrogen",
+   "scenarios": [
+    "R6",
+    "R9",
+    "1.2-A",
+    "1.3-A",
+    "1.4-A",
+    "6.1-B"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:APPSSensors",
+   "b": "des.cad:AcceleratorPedal",
+   "source": "interface constraint",
+   "why": "interface constraint C079: elec.APPSSensors => des.AcceleratorPedal",
+   "scenarios": []
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:ASMasterSwitch",
+   "b": "des.cad:AutonomousBrakeHardware",
+   "source": "interface constraint",
+   "why": "interface constraint C080: elec.ASMasterSwitch => des.AutonomousBrakeHardware",
+   "scenarios": []
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:AutonomousSystemElectrics",
+   "b": "des.cad:EmergencyBrakeSystem",
+   "source": "interface constraint",
+   "why": "interface constraint C081: elec.AutonomousSystemElectrics => des.EmergencyBrakeSystem",
+   "scenarios": [
+    "3.4-A"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:PedalPlausibility",
+   "b": "elec.electrical:APPSSensors",
+   "source": "interface constraint",
+   "why": "interface constraint C082: sim.PedalPlausibility => elec.APPSSensors",
+   "scenarios": []
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:TractionSystemControl",
+   "b": "elec.electrical:HighVoltage",
+   "source": "interface constraint",
+   "why": "interface constraint C083: sim.TractionSystemControl => elec.HighVoltage",
+   "scenarios": [
+    "3.1-A",
+    "3.2-A"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:TSActivationAndReadyToDrive",
+   "b": "elec.electrical:ReadyToDriveSound",
+   "source": "interface constraint",
+   "why": "interface constraint C084: sim.TSActivationAndReadyToDrive => elec.ReadyToDriveSound & elec.SDCTractionSystem",
+   "scenarios": []
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:TSActivationAndReadyToDrive",
+   "b": "elec.electrical:SDCTractionSystem",
+   "source": "interface constraint",
+   "why": "interface constraint C084: sim.TSActivationAndReadyToDrive => elec.ReadyToDriveSound & elec.SDCTractionSystem",
+   "scenarios": []
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:Regeneration",
+   "b": "elec.electrical:BrakeLight",
+   "source": "interface constraint",
+   "why": "interface constraint C085: sim.Regeneration => elec.BrakeLight",
+   "scenarios": []
+  },
+  {
+   "kind": "K1",
+   "a": "sim.simulink:Regeneration",
+   "b": "des.cad:HydraulicBrakes",
+   "source": "interface constraint",
+   "why": "interface constraint C086: sim.Regeneration => des.HydraulicBrakes",
+   "scenarios": [
+    "R1",
+    "R2"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "sim.simulink:PowerLimitation",
+   "b": "des.cad:TractionMotor",
+   "source": "interface constraint",
+   "why": "interface constraint C087: sim.PowerLimitation => des.TractionMotor",
+   "scenarios": [
+    "6.2-B"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:StatusIndication",
+   "b": "elec.electrical:AutonomousSystemElectrics",
+   "source": "interface constraint",
+   "why": "interface constraint C088: sim.StatusIndication => elec.AutonomousSystemElectrics",
+   "scenarios": [
+    "3.4-A"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "sim.simulink:ASFunctionalSafety",
+   "b": "des.cad:EmergencyBrakeSystem",
+   "source": "interface constraint",
+   "why": "interface constraint C089: sim.ASFunctionalSafety => des.EmergencyBrakeSystem & des.AutonomousBrakeHardware",
+   "scenarios": [
+    "3.1-C"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "sim.simulink:ASFunctionalSafety",
+   "b": "des.cad:AutonomousBrakeHardware",
+   "source": "interface constraint",
+   "why": "interface constraint C089: sim.ASFunctionalSafety => des.EmergencyBrakeSystem & des.AutonomousBrakeHardware",
+   "scenarios": [
+    "3.1-C"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:EBSBrakingPerformance",
+   "b": "des.cad:AutonomousBrakeHardware",
+   "source": "interface constraint",
+   "why": "interface constraint C090: val.EBSBrakingPerformance => des.AutonomousBrakeHardware",
+   "scenarios": []
+  },
+  {
+   "kind": "K1",
+   "a": "sim.simulink:AutonomousSteering",
+   "b": "kin.cad:Steering",
+   "source": "interface constraint",
+   "why": "interface constraint C091: sim.AutonomousSteering => kin.Steering",
+   "scenarios": []
+  },
+  {
+   "kind": "K2",
+   "a": "des.cad:PetrolRestrictor",
+   "b": "thermo.thermal:Gasoline98RON",
+   "source": "interface constraint",
+   "why": "interface constraint C093: des.PetrolRestrictor <=> thermo.Gasoline98RON",
+   "scenarios": []
+  },
+  {
+   "kind": "K2",
+   "a": "des.cad:E85Restrictor",
+   "b": "thermo.thermal:E85Fuel",
+   "source": "interface constraint",
+   "why": "interface constraint C094: des.E85Restrictor <=> thermo.E85Fuel",
+   "scenarios": []
+  },
+  {
+   "kind": "K2",
+   "a": "thermo.thermal:DriverHeatProtection",
+   "b": "des.cad:Seat",
+   "source": "interface constraint",
+   "why": "interface constraint C096: thermo.DriverHeatProtection => des.Seat",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:ETCSafetyDemonstration",
+   "b": "sim.simulink:ElectronicThrottleControl",
+   "source": "interface constraint",
+   "why": "interface constraint C097: val.ETCSafetyDemonstration => sim.ElectronicThrottleControl",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:PositiveLockingDemonstration",
+   "b": "elec.electrical:TSWiring",
+   "source": "interface constraint",
+   "why": "interface constraint C098: val.PositiveLockingDemonstration => elec.TSWiring",
+   "scenarios": [
+    "6.1-D"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:RainTest",
+   "b": "elec.electrical:IsolationMonitoring",
+   "source": "interface constraint",
+   "why": "interface constraint C099: val.RainTest => elec.IsolationMonitoring",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:NoiseTest",
+   "b": "thermo.thermal:ExhaustSystem",
+   "source": "interface constraint",
+   "why": "interface constraint C100: val.NoiseTest => thermo.ExhaustSystem",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:DriverEgressTest",
+   "b": "crash.cad:DriverRestraint",
+   "source": "interface constraint",
+   "why": "interface constraint C101: val.DriverEgressTest => crash.DriverRestraint",
+   "scenarios": []
+  },
+  {
+   "kind": "K9",
+   "a": "kin.cad:SuspensionAdaptationForTankMass",
+   "b": "des.cad:HydrogenTank",
+   "source": "interface constraint",
+   "why": "interface constraint C102: kin.SuspensionAdaptationForTankMass => des.HydrogenTank",
+   "scenarios": [
+    "1.1-B",
+    "1.2-A",
+    "1.4-A",
+    "3.1-D",
+    "3.2-B",
+    "3.4-B"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "thermo.thermal:HydrogenVentilation",
+   "b": "des.cad:HydrogenStorageSystem",
+   "source": "interface constraint",
+   "why": "interface constraint C103: thermo.HydrogenVentilation => des.HydrogenStorageSystem",
+   "scenarios": [
+    "1.2-B",
+    "1.3-A",
+    "1.3-B",
+    "1.3-C",
+    "3.2-B",
+    "3.4-B",
+    "4.1-B"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "thermo.thermal:HydrogenCombustion",
+   "b": "des.cad:CombustionEngine",
+   "source": "interface constraint",
+   "why": "interface constraint C104: thermo.HydrogenCombustion => des.CombustionEngine",
+   "scenarios": [
+    "4.3-A"
+   ]
+  },
+  {
+   "kind": "K9",
+   "a": "des.cad:HydrogenStorageSystem",
+   "b": "crash.cad:PrimaryStructure",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "1.2-B",
+    "1.3-A",
+    "1.3-B",
+    "1.3-C",
+    "3.2-B",
+    "3.4-B",
+    "4.1-B"
+   ]
+  },
+  {
+   "kind": "K9",
+   "a": "crash.cad:AntiIntrusionPlate",
+   "b": "aero.cad:AeroDevices",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "3.1-B"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "elec.electrical:CellTemperatureMonitoring",
+   "b": "sim.simulink:CellTemperatureDerating",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "1.2-C"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "thermo.thermal:WaterInjection",
+   "b": "des.cad:IntakeSystem",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "3.2-C"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:ASStateMachine",
+   "b": "elec.electrical:AutonomousSystemElectrics",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "3.1-C",
+    "3.4-A"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "thermo.thermal:BackfireReliefAnalysis",
+   "b": "des.cad:ReliefValveAndFlameArrestor",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "4.2-A",
+    "6.3-A"
+   ]
+  },
+  {
+   "kind": "K9",
+   "a": "crash.cad:MechanicallyAttachedBracing",
+   "b": "des.cad:CriticalBracingBolts",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "4.2-B",
+    "4.4-B"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "thermo.thermal:EngineConversionAnalysis",
+   "b": "des.cad:HydrogenConversionParts",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "4.3-A",
+    "6.4-A"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "thermo.thermal:EngineConversionAnalysis",
+   "b": "des.cad:CV1ChassisAdapterFrame",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "4.1-B",
+    "4.3-A",
+    "4.4-A",
+    "6.4-A"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:OverPressureRelayChain",
+   "b": "des.cad:RelayContacts",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.1-B"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "crash.cad:LidarBracket",
+   "b": "sim.simulink:LidarPoseMainHoop",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.1-A"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:ROS1StateMachineNode",
+   "b": "elec.electrical:ROS1BridgePort",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.1-C"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "sim.simulink:ROS1StatusNode",
+   "b": "elec.electrical:ROS1BridgePort",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.1-C"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "elec.electrical:PlugDetectionCircuit",
+   "b": "sim.simulink:PlugDetectionSignal",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.1-D"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "sim.simulink:VDCParameterSet",
+   "b": "kin.cad:KinematicsTables",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.2-A"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "elec.electrical:OldInverter",
+   "b": "sim.simulink:OldInverterInterface",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.2-B"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "elec.electrical:OldInverter",
+   "b": "sim.simulink:OldInverterRegenInterface",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.2-B"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "val.testbench:BSPDSignalInjectionTest",
+   "b": "elec.electrical:BSPDTestConnector",
+   "source": "evolution scenario",
+   "why": "needed by an evolution scenario (EXTRA_OVERLAP)",
+   "scenarios": [
+    "6.2-C"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "des.cad:FrontBrakeDisc",
+   "b": "sim.simulink:FrontBrakeDiscModel",
+   "source": "report scenario",
+   "why": "R1: mass, inertia, heat capacity and venting of the disc are simulation parameters",
+   "scenarios": [
+    "R1",
+    "R7"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "des.cad:FrontBrakePads",
+   "b": "sim.simulink:FrontBrakePadModel",
+   "source": "report scenario",
+   "why": "R7: pad geometry is the nominal pad of the brake model",
+   "scenarios": [
+    "R7"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "des.cad:FrontBrakeDisc",
+   "b": "thermo.thermal:FrontBrakeDiscHeatSource",
+   "source": "report scenario",
+   "why": "R1: the vented disc stores less heat and dissipates more",
+   "scenarios": [
+    "R1"
+   ]
+  },
+  {
+   "kind": "K2",
+   "a": "des.cad:FrontCaliperPiston",
+   "b": "thermo.thermal:FrontCaliperPistonThermalModel",
+   "source": "report scenario",
+   "why": "R3: piston geometry and material feed the thermal model",
+   "scenarios": [
+    "R3"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "des.cad:FrontCaliperMountingBracket",
+   "b": "elec.electrical:FrontCaliperTemperatureSensor",
+   "source": "report scenario",
+   "why": "R2: the temperature sensor is mounted on the caliper bracket",
+   "scenarios": [
+    "R2"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "des.cad:FrontBrakeDisc",
+   "b": "elec.electrical:FrontWheelSpeedSensor",
+   "source": "report scenario",
+   "why": "R2/R6: the wheel speed sensor reads the disc (mounting interface)",
+   "scenarios": [
+    "R1"
+   ]
+  },
+  {
+   "kind": "K9",
+   "a": "des.cad:FrontBrakeDisc",
+   "b": "kin.cad:Wheels",
+   "source": "report scenario",
+   "why": "R1 (FT-09): the disc is unsprung rotating mass of the wheel",
+   "scenarios": [
+    "R1",
+    "R8"
+   ]
+  },
+  {
+   "kind": "K9",
+   "a": "des.cad:FrontBrakeDisc",
+   "b": "aero.cad:WheelAndBrakeFlowRegion",
+   "source": "report scenario",
+   "why": "R1 (FT-08): venting holes change the airflow around wheel and brake",
+   "scenarios": [
+    "R1"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "des.cad:FrontBrakeCaliper",
+   "b": "val.testbench:BrakeAssemblyBuild",
+   "source": "report scenario",
+   "why": "R2: the validation engineer builds the brake assembly from the ordered parts",
+   "scenarios": [
+    "R2",
+    "R3"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "des.cad:FrontBrakeDisc",
+   "b": "val.testbench:BrakeDiscSimulationCorrelation",
+   "source": "report scenario",
+   "why": "R1: test bench results are compared with the simulation of the disc",
+   "scenarios": [
+    "R1"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:FrontBrakeDisk",
+   "b": "des.cad:FrontBrakeDisc",
+   "source": "report scenario",
+   "why": "R1: specification and CAD describe the same disc (ventilated, thickness)",
+   "scenarios": [
+    "R1",
+    "R7"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:FrontBrakeDisk",
+   "b": "sim.simulink:FrontBrakeDiscModel",
+   "source": "report scenario",
+   "why": "R7: worn disc thickness is a simulation parameter",
+   "scenarios": [
+    "R1",
+    "R7"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:FrontBrakeCaliper",
+   "b": "des.cad:FrontBrakeCaliper",
+   "source": "report scenario",
+   "why": "R2: specification type monobloc / two-piece",
+   "scenarios": [
+    "R2"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:FrontBrakePads",
+   "b": "des.cad:FrontBrakePads",
+   "source": "report scenario",
+   "why": "R7: specified and designed pad",
+   "scenarios": [
+    "R7"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:FrontBrakePads",
+   "b": "sim.simulink:FrontBrakePadModel",
+   "source": "report scenario",
+   "why": "R7: pad wear (thickness, wear warning) is a simulation parameter",
+   "scenarios": [
+    "R7"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:FrontWheelSpeedSensor",
+   "b": "elec.electrical:FrontWheelSpeedSensor",
+   "source": "report scenario",
+   "why": "R6: ABS sensor of the specification is the electrical wheel speed sensor",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "thermo.thermal:FrontCaliperPistonThermalModel",
+   "b": "val.testbench:CaliperPistonTemperatureTest",
+   "source": "report scenario",
+   "why": "R3: the temperature limit is the pass criterion of the test",
+   "scenarios": [
+    "R3"
+   ]
+  },
+  {
+   "kind": "K1",
+   "a": "des.cad:RearBrakeDisc",
+   "b": "sim.simulink:RearBrakeDiscModel",
+   "source": "report scenario",
+   "why": "R1: mass, inertia, heat capacity and venting of the disc are simulation parameters",
+   "scenarios": []
+  },
+  {
+   "kind": "K1",
+   "a": "des.cad:RearBrakePads",
+   "b": "sim.simulink:RearBrakePadModel",
+   "source": "report scenario",
+   "why": "R7: pad geometry is the nominal pad of the brake model",
+   "scenarios": []
+  },
+  {
+   "kind": "K2",
+   "a": "des.cad:RearBrakeDisc",
+   "b": "thermo.thermal:RearBrakeDiscHeatSource",
+   "source": "report scenario",
+   "why": "R1: the vented disc stores less heat and dissipates more",
+   "scenarios": []
+  },
+  {
+   "kind": "K2",
+   "a": "des.cad:RearCaliperPiston",
+   "b": "thermo.thermal:RearCaliperPistonThermalModel",
+   "source": "report scenario",
+   "why": "R3: piston geometry and material feed the thermal model",
+   "scenarios": []
+  },
+  {
+   "kind": "K3",
+   "a": "des.cad:RearCaliperMountingBracket",
+   "b": "elec.electrical:RearCaliperTemperatureSensor",
+   "source": "report scenario",
+   "why": "R2: the temperature sensor is mounted on the caliper bracket",
+   "scenarios": []
+  },
+  {
+   "kind": "K3",
+   "a": "des.cad:RearBrakeDisc",
+   "b": "elec.electrical:RearWheelSpeedSensor",
+   "source": "report scenario",
+   "why": "R2/R6: the wheel speed sensor reads the disc (mounting interface)",
+   "scenarios": []
+  },
+  {
+   "kind": "K9",
+   "a": "des.cad:RearBrakeDisc",
+   "b": "kin.cad:Wheels",
+   "source": "report scenario",
+   "why": "R1 (FT-09): the disc is unsprung rotating mass of the wheel",
+   "scenarios": [
+    "R8"
+   ]
+  },
+  {
+   "kind": "K9",
+   "a": "des.cad:RearBrakeDisc",
+   "b": "aero.cad:WheelAndBrakeFlowRegion",
+   "source": "report scenario",
+   "why": "R1 (FT-08): venting holes change the airflow around wheel and brake",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "des.cad:RearBrakeCaliper",
+   "b": "val.testbench:BrakeAssemblyBuild",
+   "source": "report scenario",
+   "why": "R2: the validation engineer builds the brake assembly from the ordered parts",
+   "scenarios": [
+    "R2",
+    "R3"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "des.cad:RearBrakeDisc",
+   "b": "val.testbench:BrakeDiscSimulationCorrelation",
+   "source": "report scenario",
+   "why": "R1: test bench results are compared with the simulation of the disc",
+   "scenarios": [
+    "R1"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:RearBrakeDisk",
+   "b": "des.cad:RearBrakeDisc",
+   "source": "report scenario",
+   "why": "R1: specification and CAD describe the same disc (ventilated, thickness)",
+   "scenarios": []
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:RearBrakeDisk",
+   "b": "sim.simulink:RearBrakeDiscModel",
+   "source": "report scenario",
+   "why": "R7: worn disc thickness is a simulation parameter",
+   "scenarios": []
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:RearBrakeCaliper",
+   "b": "des.cad:RearBrakeCaliper",
+   "source": "report scenario",
+   "why": "R2: specification type monobloc / two-piece",
+   "scenarios": []
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:RearBrakePads",
+   "b": "des.cad:RearBrakePads",
+   "source": "report scenario",
+   "why": "R7: specified and designed pad",
+   "scenarios": []
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:RearBrakePads",
+   "b": "sim.simulink:RearBrakePadModel",
+   "source": "report scenario",
+   "why": "R7: pad wear (thickness, wear warning) is a simulation parameter",
+   "scenarios": []
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:RearWheelSpeedSensor",
+   "b": "elec.electrical:RearWheelSpeedSensor",
+   "source": "report scenario",
+   "why": "R6: ABS sensor of the specification is the electrical wheel speed sensor",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "thermo.thermal:RearCaliperPistonThermalModel",
+   "b": "val.testbench:CaliperPistonTemperatureTest",
+   "source": "report scenario",
+   "why": "R3: the temperature limit is the pass criterion of the test",
+   "scenarios": [
+    "R3"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:FrontBrakeHose",
+   "b": "des.cad:FrontBrakeHose",
+   "source": "report scenario",
+   "why": "specified and designed brake hose",
+   "scenarios": []
+  },
+  {
+   "kind": "K8",
+   "a": "elec.electrical:ABSControlUnit",
+   "b": "sim.simulink:ABSControl",
+   "source": "report scenario",
+   "why": "R6: ABS signal interfaces are the inputs/outputs of the ABS control block",
+   "scenarios": [
+    "R6"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "elec.electrical:BOTSSwitch",
+   "b": "sim.simulink:BOTSSwitchLogic",
+   "source": "report scenario",
+   "why": "R6/R9: BOTS signal is evaluated by the switch logic",
+   "scenarios": [
+    "R6",
+    "R9"
+   ]
+  },
+  {
+   "kind": "K8",
+   "a": "elec.electrical:BrakeSensors",
+   "b": "sim.simulink:BrakeSystemModel",
+   "source": "report scenario",
+   "why": "R6/R9: new brake devices need a counterpart in the brake model",
+   "scenarios": [
+    "R6",
+    "R9"
+   ]
+  },
+  {
+   "kind": "K3",
+   "a": "elec.electrical:BOTSSwitch",
+   "b": "des.cad:BrakeOverTravelSwitch",
+   "source": "report scenario",
+   "why": "R9: the switch is mounted at the pedal box",
+   "scenarios": [
+    "R6",
+    "R9"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "elec.electrical:BOTSSwitch",
+   "b": "val.testbench:BrakeOverTravelSwitchTest",
+   "source": "report scenario",
+   "why": "R9: the BOTS function is validated",
+   "scenarios": [
+    "R6",
+    "R9"
+   ]
+  },
+  {
+   "kind": "K10",
+   "a": "kin.cad:Wheels",
+   "b": "sim.simulink:TyreModel",
+   "source": "report scenario",
+   "why": "R8: every tyre configuration has a parameter set in the tyre model",
+   "scenarios": [
+    "R8"
+   ]
+  },
+  {
+   "kind": "K10",
+   "a": "kin.cad:DryTyres",
+   "b": "sim.simulink:DryTyreParameterSet",
+   "source": "report scenario",
+   "why": "R8: slick tyre parameters",
+   "scenarios": []
+  },
+  {
+   "kind": "K10",
+   "a": "kin.cad:WetTyres",
+   "b": "sim.simulink:WetTyreParameterSet",
+   "source": "report scenario",
+   "why": "R8: rain tyre parameters",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "des.cad:BrakePedalPart",
+   "b": "val.testbench:BrakePedalMaterialCompliance",
+   "source": "report scenario",
+   "why": "R4: material compliance of the brake pedal",
+   "scenarios": [
+    "R4"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "des.cad:ScatterShield",
+   "b": "val.testbench:ScatterShieldCompliance",
+   "source": "report scenario",
+   "why": "R5: the scatter shield is inspected",
+   "scenarios": [
+    "R5"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:ForwardEdgeRadiusPart",
+   "b": "karaceing.bom:DES-ForwardEdgeRadiusPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:NumberOrientationPart",
+   "b": "karaceing.bom:DES-NumberOrientationPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:UniversityNamePart",
+   "b": "karaceing.bom:DES-UniversityNamePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:SeatPart",
+   "b": "karaceing.bom:DES-SeatPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FloorClosurePart",
+   "b": "karaceing.bom:DES-FloorClosurePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FirewallPart",
+   "b": "karaceing.bom:DES-FirewallPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:HeadRestraintPart",
+   "b": "karaceing.bom:DES-HeadRestraintPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RollHoopPaddingPart",
+   "b": "karaceing.bom:DES-RollHoopPaddingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:LegProtectionPart",
+   "b": "karaceing.bom:DES-LegProtectionPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:BrakePedalPart",
+   "b": "karaceing.bom:DES-BrakePedalPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R4"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:AcceleratorPedalPart",
+   "b": "karaceing.bom:DES-AcceleratorPedalPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:BrakeSealingAndEnvelopePart",
+   "b": "karaceing.bom:DES-BrakeSealingAndEnvelopePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:BrakeByWirePart",
+   "b": "karaceing.bom:DES-BrakeByWirePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:PushPullSwitchPart",
+   "b": "karaceing.bom:DES-PushPullSwitchPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:PushRotateSwitchPart",
+   "b": "karaceing.bom:DES-PushRotateSwitchPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FlipSwitchPart",
+   "b": "karaceing.bom:DES-FlipSwitchPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:NearASMSPart",
+   "b": "karaceing.bom:DES-NearASMSPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:VehicleTopBetweenBulkheadsPart",
+   "b": "karaceing.bom:DES-VehicleTopBetweenBulkheadsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:EmergencyBrakeSystemPart",
+   "b": "karaceing.bom:DES-EmergencyBrakeSystemPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:IntegratedInHydraulicsPart",
+   "b": "karaceing.bom:DES-IntegratedInHydraulicsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:SeparateASBPart",
+   "b": "karaceing.bom:DES-SeparateASBPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:SteelScatterShieldPart",
+   "b": "karaceing.bom:DES-SteelScatterShieldPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:AluminiumScatterShieldPart",
+   "b": "karaceing.bom:DES-AluminiumScatterShieldPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:SplitScatterShieldPart",
+   "b": "karaceing.bom:DES-SplitScatterShieldPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FingerGuardsPart",
+   "b": "karaceing.bom:DES-FingerGuardsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:StarterPart",
+   "b": "karaceing.bom:DES-StarterPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:IntakeMountingMaterialsPart",
+   "b": "karaceing.bom:DES-IntakeMountingMaterialsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:MechanicalThrottlePart",
+   "b": "karaceing.bom:DES-MechanicalThrottlePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:ElectronicThrottleBodyPart",
+   "b": "karaceing.bom:DES-ElectronicThrottleBodyPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:PetrolRestrictorPart",
+   "b": "karaceing.bom:DES-PetrolRestrictorPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:E85RestrictorPart",
+   "b": "karaceing.bom:DES-E85RestrictorPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:MechanicalBoostDrivePart",
+   "b": "karaceing.bom:DES-MechanicalBoostDrivePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:ElectricBoostDrivePart",
+   "b": "karaceing.bom:DES-ElectricBoostDrivePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:TankContactClearancePart",
+   "b": "karaceing.bom:DES-TankContactClearancePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FuelLineDetailingPart",
+   "b": "karaceing.bom:DES-FuelLineDetailingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RubberLineFittingsPart",
+   "b": "karaceing.bom:DES-RubberLineFittingsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:MetalBraidedHosePart",
+   "b": "karaceing.bom:DES-MetalBraidedHosePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:PortInjectionPart",
+   "b": "karaceing.bom:DES-PortInjectionPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:DirectInjectionPart",
+   "b": "karaceing.bom:DES-DirectInjectionPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FuelContactMaterialsPart",
+   "b": "karaceing.bom:DES-FuelContactMaterialsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FillerNeckPart",
+   "b": "karaceing.bom:DES-FillerNeckPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:TractionMotorPart",
+   "b": "karaceing.bom:DES-TractionMotorPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:CompositeContainerPart",
+   "b": "karaceing.bom:DES-CompositeContainerPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:SteelContainerPart",
+   "b": "karaceing.bom:DES-SteelContainerPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:AluminiumContainerPart",
+   "b": "karaceing.bom:DES-AluminiumContainerPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:OnTankDevicePart",
+   "b": "karaceing.bom:DES-OnTankDevicePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:PressureRegulatorPart",
+   "b": "karaceing.bom:DES-PressureRegulatorPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:DoubleFerruleFittingsPart",
+   "b": "karaceing.bom:DES-DoubleFerruleFittingsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:SidePodMountingPart",
+   "b": "karaceing.bom:DES-SidePodMountingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:GasPressureLimitsPart",
+   "b": "karaceing.bom:DES-GasPressureLimitsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:HighPressureHydraulicsPart",
+   "b": "karaceing.bom:DES-HighPressureHydraulicsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:BoltShorteningPart",
+   "b": "karaceing.bom:DES-BoltShorteningPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RetainingRingsPart",
+   "b": "karaceing.bom:DES-RetainingRingsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:AdaptedCylinderHead",
+   "b": "karaceing.bom:DES-AdaptedCylinderHead",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "4.3-A"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:InjectorAdapters",
+   "b": "karaceing.bom:DES-InjectorAdapters",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RelayContacts",
+   "b": "karaceing.bom:DES-RelayContacts",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "6.1-B"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FrontCaliperBody",
+   "b": "karaceing.bom:DES-FrontCaliperBody",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R2"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FrontCaliperMountingBracket",
+   "b": "karaceing.bom:DES-FrontCaliperMountingBracket",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R2"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FrontBrakePads",
+   "b": "karaceing.bom:DES-FrontBrakePads",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R7"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RearCaliperBody",
+   "b": "karaceing.bom:DES-RearCaliperBody",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RearCaliperMountingBracket",
+   "b": "karaceing.bom:DES-RearCaliperMountingBracket",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RearBrakePads",
+   "b": "karaceing.bom:DES-RearBrakePads",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:AsymmetricLaminatePart",
+   "b": "karaceing.bom:CRASH-AsymmetricLaminatePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:MainHoopPart",
+   "b": "karaceing.bom:CRASH-MainHoopPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:FrontHoopAttachmentEquivalencePart",
+   "b": "karaceing.bom:CRASH-FrontHoopAttachmentEquivalencePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:MainHoopBracingPart",
+   "b": "karaceing.bom:CRASH-MainHoopBracingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:FrontHoopBracingPart",
+   "b": "karaceing.bom:CRASH-FrontHoopBracingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:LugJoints",
+   "b": "karaceing.bom:CRASH-LugJoints",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "4.2-B"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:SleeveJoints",
+   "b": "karaceing.bom:CRASH-SleeveJoints",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:FrontBulkheadPart",
+   "b": "karaceing.bom:CRASH-FrontBulkheadPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:FrontBulkheadSupportPart",
+   "b": "karaceing.bom:CRASH-FrontBulkheadSupportPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:OtherImpactStructuresPart",
+   "b": "karaceing.bom:CRASH-OtherImpactStructuresPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:RearImpactClearancePart",
+   "b": "karaceing.bom:CRASH-RearImpactClearancePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:SteelAIPPart",
+   "b": "karaceing.bom:CRASH-SteelAIPPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:AluminiumAIPPart",
+   "b": "karaceing.bom:CRASH-AluminiumAIPPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:AttenuatorHeightAndBondingPart",
+   "b": "karaceing.bom:CRASH-AttenuatorHeightAndBondingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:AdhesiveJointsPart",
+   "b": "karaceing.bom:CRASH-AdhesiveJointsPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:BoltedJointDetailingPart",
+   "b": "karaceing.bom:CRASH-BoltedJointDetailingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:HarnessMountBoltingPart",
+   "b": "karaceing.bom:CRASH-HarnessMountBoltingPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:HarnessBracketDesignPart",
+   "b": "karaceing.bom:CRASH-HarnessBracketDesignPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:LapBeltSeatOpeningPart",
+   "b": "karaceing.bom:CRASH-LapBeltSeatOpeningPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:ShoulderBeltPart",
+   "b": "karaceing.bom:CRASH-ShoulderBeltPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:AntiSubmarineBeltPart",
+   "b": "karaceing.bom:CRASH-AntiSubmarineBeltPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:SixPointHarnessPart",
+   "b": "karaceing.bom:CRASH-SixPointHarnessPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:SevenPointHarnessPart",
+   "b": "karaceing.bom:CRASH-SevenPointHarnessPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "crash.cad:LidarBracket",
+   "b": "karaceing.bom:CRASH-LidarBracket",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "6.1-A"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "kin.cad:SuspensionAdaptationForTankMassPart",
+   "b": "karaceing.bom:KIN-SuspensionAdaptationForTankMassPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "kin.cad:DryTyresPart",
+   "b": "karaceing.bom:KIN-DryTyresPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "kin.cad:WetTyresPart",
+   "b": "karaceing.bom:KIN-WetTyresPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "kin.cad:RearWheelSteeringPart",
+   "b": "karaceing.bom:KIN-RearWheelSteeringPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "aero.cad:AeroDevicesPart",
+   "b": "karaceing.bom:AERO-AeroDevicesPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "aero.cad:PoweredUnderbodyFanBanPart",
+   "b": "karaceing.bom:AERO-PoweredUnderbodyFanBanPart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "aero.cad:ActiveAirDevicePart",
+   "b": "karaceing.bom:AERO-ActiveAirDevicePart",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:HydrogenTank",
+   "b": "karaceing.bom:DES-HydrogenTank",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "1.1-B",
+    "1.2-A",
+    "1.4-A",
+    "3.1-D",
+    "3.4-B"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:CriticalBracingBolts",
+   "b": "karaceing.bom:DES-CriticalBracingBolts",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "4.2-B"
+   ]
+  },
+  {
+   "kind": "K11",
+   "a": "elec.electrical:OldInverter",
+   "b": "karaceing.bom:ELEC-OldInverter",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "6.2-B"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FrontBrakeDisc",
+   "b": "karaceing.bom:DES-FrontBrakeDisc",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R1"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FrontBrakeCaliper",
+   "b": "karaceing.bom:DES-FrontBrakeCaliper",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R2"
+   ]
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FrontCaliperPiston",
+   "b": "karaceing.bom:DES-FrontCaliperPiston",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R3"
+   ]
+  },
+  {
+   "kind": "K11",
+   "a": "elec.electrical:FrontCaliperTemperatureSensor",
+   "b": "karaceing.bom:ELEC-FrontCaliperTemperatureSensor",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R2"
+   ]
+  },
+  {
+   "kind": "K11",
+   "a": "elec.electrical:FrontWheelSpeedSensor",
+   "b": "karaceing.bom:ELEC-FrontWheelSpeedSensor",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RearBrakeDisc",
+   "b": "karaceing.bom:DES-RearBrakeDisc",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RearBrakeCaliper",
+   "b": "karaceing.bom:DES-RearBrakeCaliper",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:RearCaliperPiston",
+   "b": "karaceing.bom:DES-RearCaliperPiston",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K11",
+   "a": "elec.electrical:RearCaliperTemperatureSensor",
+   "b": "karaceing.bom:ELEC-RearCaliperTemperatureSensor",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K11",
+   "a": "elec.electrical:RearWheelSpeedSensor",
+   "b": "karaceing.bom:ELEC-RearWheelSpeedSensor",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K4",
+   "a": "des.cad:FrontBrakeHose",
+   "b": "karaceing.bom:DES-FrontBrakeHose",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": []
+  },
+  {
+   "kind": "K11",
+   "a": "elec.electrical:ABSControlUnit",
+   "b": "karaceing.bom:ELEC-ABSControlUnit",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R6"
+   ]
+  },
+  {
+   "kind": "K11",
+   "a": "elec.electrical:BOTSSwitch",
+   "b": "karaceing.bom:ELEC-BOTSSwitch",
+   "source": "physical part",
+   "why": "the CAD part / electrical component is the BOM item",
+   "scenarios": [
+    "R6",
+    "R9"
+   ]
+  },
+  {
+   "kind": "K6",
+   "a": "karaceing.bom:DES-FrontCaliperPiston",
+   "b": "thermo.thermal:FrontCaliperPistonThermalModel",
+   "source": "report scenario",
+   "why": "R3: supplier and material of the piston determine the material properties of the thermal model",
+   "scenarios": [
+    "R3"
+   ]
+  },
+  {
+   "kind": "K7",
+   "a": "karaceing.bom:DES-FrontCaliperPiston",
+   "b": "val.testbench:BrakeAssemblyBuild",
+   "source": "report scenario",
+   "why": "R3: new pistons must be integrated in the test bench",
+   "scenarios": [
+    "R2",
+    "R3"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "karaceing.bom:DES-FrontBrakeDisc",
+   "b": "des.brakesystem:FrontBrakeDisk",
+   "source": "report scenario",
+   "why": "R1: the ordered disc follows the specification (vented)",
+   "scenarios": [
+    "R1",
+    "R7"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "karaceing.bom:DES-FrontBrakeCaliper",
+   "b": "des.brakesystem:FrontBrakeCaliper",
+   "source": "report scenario",
+   "why": "R2: the ordered caliper follows the specification (two-piece)",
+   "scenarios": [
+    "R2"
+   ]
+  },
+  {
+   "kind": "K6",
+   "a": "karaceing.bom:DES-RearCaliperPiston",
+   "b": "thermo.thermal:RearCaliperPistonThermalModel",
+   "source": "report scenario",
+   "why": "R3: supplier and material of the piston determine the material properties of the thermal model",
+   "scenarios": []
+  },
+  {
+   "kind": "K7",
+   "a": "karaceing.bom:DES-RearCaliperPiston",
+   "b": "val.testbench:BrakeAssemblyBuild",
+   "source": "report scenario",
+   "why": "R3: new pistons must be integrated in the test bench",
+   "scenarios": [
+    "R2",
+    "R3"
+   ]
+  },
+  {
+   "kind": "K5",
+   "a": "karaceing.bom:DES-RearBrakeDisc",
+   "b": "des.brakesystem:RearBrakeDisk",
+   "source": "report scenario",
+   "why": "R1: the ordered disc follows the specification (vented)",
+   "scenarios": []
+  },
+  {
+   "kind": "K5",
+   "a": "karaceing.bom:DES-RearBrakeCaliper",
+   "b": "des.brakesystem:RearBrakeCaliper",
+   "source": "report scenario",
+   "why": "R2: the ordered caliper follows the specification (two-piece)",
+   "scenarios": []
+  },
+  {
+   "kind": "K5",
+   "a": "des.brakesystem:<root>",
+   "b": "des.cad:HydraulicBrakes",
+   "source": "report scenario",
+   "why": "the brake specification describes the hydraulic brakes",
+   "scenarios": [
+    "R1",
+    "R2"
+   ]
+  }
+ ]
+}

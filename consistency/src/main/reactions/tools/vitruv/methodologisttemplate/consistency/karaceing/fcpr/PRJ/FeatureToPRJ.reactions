@@ -1,0 +1,245 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import tools.vitruv.methodologisttemplate.model.requirements.RequirementsPackage;
+import tools.vitruv.methodologisttemplate.model.requirements.RequirementsSpecification;
+import tools.vitruv.methodologisttemplate.model.requirements.Section;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/requirements" as req
+
+// Feature CPR of the stakeholder role PRJ (copy of the pattern in UVL2CAD/FeatureToCAD.reactions):
+// a feature added below the domain root ProjectAndRequirements is mapped to an existing element of the PRJ requirements specification
+// or a new element is created below the element that corresponds to the parent feature.
+
+reactions: featureToPRJ
+in reaction to changes in uvl
+execute actions in req
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"ProjectAndRequirements")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, RequirementsPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the PRJ requirements specification: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature " + feature.name + " to an existing element of the PRJ requirements specification or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, RequirementsPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        }
+
+        var correspondingClass = containedClasses.get(0)
+        if(containedClasses.size() > 1){
+            // Every artefact corresponds to a feature, so the parent feature can be realised by several elements (its
+            // main element and the details inside it): use the outermost one that can contain elements; ask if ambiguous.
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            correspondingClass = KARaceIngUtil.outermost(containedClasses)
+            if(correspondingClass === null){
+                val index = userInteractor.singleSelectionDialogBuilder.message("The parent feature of " + feature.name + " is realised by several elements of the PRJ requirements specification. Below which one should the new feature be realised?").
+                            choices(EMFUtil.getAllNamesOfEObjects(containedClasses)).windowModality(WindowModality.MODAL).startInteraction
+                correspondingClass = containedClasses.get(index)
+            }
+        }
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof RequirementsSpecification && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the RequirementsSpecification for feature " + feature.name)
+            createElementInRequirementsSpecification(feature, correspondingClass as RequirementsSpecification)
+        }
+        else if (correspondingClass instanceof RequirementsSpecification && mapToExistingComponent == 0) {
+            mapToExistingInRequirementsSpecification(feature, correspondingClass as RequirementsSpecification)
+        }
+        else if (correspondingClass instanceof Section && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the Section for feature " + feature.name)
+            createElementInSection(feature, correspondingClass as Section)
+        }
+        else if (correspondingClass instanceof Section && mapToExistingComponent == 0) {
+            mapToExistingInSection(feature, correspondingClass as Section)
+        }
+        else {
+            System.out.println("Corresponding element for parent feature of " + feature.name + " cannot contain new elements: " + correspondingClass)
+            return
+        }
+    }
+}
+
+
+routine mapToExistingInRequirementsSpecification(uvl::Feature feature, req::RequirementsSpecification container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInRequirementsSpecification(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the PRJ requirements specification do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInRequirementsSpecification(uvl::Feature feature, req::RequirementsSpecification container) {
+    match{
+        require absence of req::Section corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the PRJ requirements specification do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Section":
+                createSectionInRequirementsSpecification(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createSectionInRequirementsSpecification(uvl::Feature feature, req::RequirementsSpecification container) {
+    create {
+        val newElement = new req::Section
+    }
+    update {
+        System.out.println("Adding Section for feature " + feature.name + " to the PRJ requirements specification")
+        newElement.name = feature.name
+        container.sections.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInSection(uvl::Feature feature, req::Section container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInSection(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the PRJ requirements specification do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInSection(uvl::Feature feature, req::Section container) {
+    match{
+        require absence of req::Section corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the PRJ requirements specification do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Requirement":
+                createRequirementInSection(feature, container)
+            case "Section":
+                createSectionInSection(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createRequirementInSection(uvl::Feature feature, req::Section container) {
+    create {
+        val newElement = new req::Requirement
+    }
+    update {
+        System.out.println("Adding Requirement for feature " + feature.name + " to the PRJ requirements specification")
+        newElement.name = feature.name
+        container.requirements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createSectionInSection(uvl::Feature feature, req::Section container) {
+    create {
+        val newElement = new req::Section
+    }
+    update {
+        System.out.println("Adding Section for feature " + feature.name + " to the PRJ requirements specification")
+        newElement.name = feature.name
+        container.sections.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}

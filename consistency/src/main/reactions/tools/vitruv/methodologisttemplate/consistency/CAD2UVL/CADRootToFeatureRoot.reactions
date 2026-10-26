@@ -18,6 +18,7 @@ in reaction to changes in cad
 execute actions in uvl
 
 
+
 reaction CADModelInsertedAsRoot{
     after element cad::CAD_Model inserted as root
     call createFeatureForCADModel(newValue)
@@ -60,7 +61,7 @@ routine createRootFM(cad::CAD_Model cadModel) {
     update{
         System.out.println("Adding root feature for CAD model " + cadModel)
         persistProjectRelative(cadModel, uvlModel, new File("").toString() + "brake.uvl")
-        addCorrespondenceBetween(uvlModel, UVLPackage.uvlPackage.Literals.UVL_MODEL)
+        addCorrespondenceBetween(uvlModel, uvlPackage.Literals.UVL_MODEL)
         uvlModel.setTree(featuretree)
         featuretree.setRoot(rootgroup)
         rootFeature.setName("Root")

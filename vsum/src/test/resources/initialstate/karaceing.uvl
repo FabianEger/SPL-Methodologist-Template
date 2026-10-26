@@ -1,0 +1,623 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<uvl:UVLModel xmlns:xmi="http://www.omg.org/XMI" xmlns:uvl="http://vitruv.tools/methodologisttemplate/uvl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmi:version="2.0">
+  <tree>
+    <root xsi:type="uvl:Mandatory">
+      <feature name="KARaceIngSPL" group="//@tree/@root">
+        <children xsi:type="uvl:Mandatory">
+          <feature name="ProjectAndRequirements" group="//@tree/@root/@feature.0/@children.0">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="RuleSet" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0">
+                <children xsi:type="uvl:Alternative">
+                  <feature name="FS2019" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.0/@children.0"/>
+                  <feature name="FS2025" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="HydrogenClassRules" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0"/>
+                    </children>
+                  </feature>
+                </children>
+              </feature>
+              <feature name="CompetitionClasses" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="Powertrain" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0">
+                    <children xsi:type="uvl:Alternative">
+                      <feature name="Electric" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0"/>
+                      <feature name="Petrol" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0"/>
+                      <feature name="Hydrogen" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0">
+                        <children xsi:type="uvl:Alternative">
+                          <feature name="H2Combustion" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                          <feature name="H2Hybrid" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                          <feature name="FuelCell" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                        </children>
+                      </feature>
+                    </children>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="Driverless" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.1"/>
+                  <feature name="Combustion" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.1"/>
+                </children>
+              </feature>
+              <feature name="DevelopmentType" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0">
+                <children xsi:type="uvl:Alternative">
+                  <feature name="NewDevelopment" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                  <feature name="Conversion" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                </children>
+              </feature>
+              <feature name="VehicleConcept" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0"/>
+              <feature name="ProjectGoals" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="MaxVehicleMass" group="//@tree/@root/@feature.0/@children.0/@feature.0/@children.0/@feature.4/@children.0">
+                    <attribute xsi:type="uvl:Integer"/>
+                  </feature>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="DesignEngineering" group="//@tree/@root/@feature.0/@children.1">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="VehicleExterior" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="Bodywork" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="ForwardEdgeRadius" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.0/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="VehicleNumber" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="NumberOrientation" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="UniversityName" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.0/@children.0"/>
+                </children>
+              </feature>
+              <feature name="Cockpit" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="Seat" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="FloorClosure" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="Firewall" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="HeadRestraint" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="RollHoopPadding" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="LegProtection" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="PedalBox" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="BrakePedal" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.6/@children.0"/>
+                      <feature name="AcceleratorPedal" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.6/@children.0"/>
+                    </children>
+                  </feature>
+                </children>
+              </feature>
+              <feature name="BrakeSystem" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="HydraulicBrakes" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="BrakeSealingAndEnvelope" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.0/@feature.0/@children.0"/>
+                      <feature name="BrakeByWire" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="BrakeOverTravelSwitch" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.0">
+                    <children xsi:type="uvl:Alternative">
+                      <feature name="PushPullSwitch" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.0/@feature.1/@children.0"/>
+                      <feature name="PushRotateSwitch" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.0/@feature.1/@children.0"/>
+                      <feature name="FlipSwitch" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.0/@feature.1/@children.0"/>
+                    </children>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="AutonomousBrakeHardware" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.1">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="ASBDeactivation" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.1/@feature.0/@children.0">
+                        <children xsi:type="uvl:Alternative">
+                          <feature name="NearASMS" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.1/@feature.0/@children.0/@feature.0/@children.0"/>
+                          <feature name="VehicleTopBetweenBulkheads" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.1/@feature.0/@children.0/@feature.0/@children.0"/>
+                        </children>
+                      </feature>
+                      <feature name="EmergencyBrakeSystem" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.1/@feature.0/@children.0"/>
+                    </children>
+                    <children xsi:type="uvl:Alternative">
+                      <feature name="IntegratedInHydraulics" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.1/@feature.0/@children.1"/>
+                      <feature name="SeparateASB" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.2/@children.1/@feature.0/@children.1"/>
+                    </children>
+                  </feature>
+                </children>
+              </feature>
+              <feature name="PowertrainIntegration" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="DrivetrainGuards" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="ScatterShield" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0">
+                        <children xsi:type="uvl:Alternative">
+                          <feature name="SteelScatterShield" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0/@feature.0/@children.0"/>
+                          <feature name="AluminiumScatterShield" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0/@feature.0/@children.0"/>
+                        </children>
+                      </feature>
+                      <feature name="MotorScatterShield" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0">
+                        <children xsi:type="uvl:Mandatory">
+                          <feature name="ScatterShieldMinThickness" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0/@feature.1/@children.0">
+                            <attribute xsi:type="uvl:Integer"/>
+                          </feature>
+                        </children>
+                        <children xsi:type="uvl:Optional">
+                          <feature name="SplitScatterShield" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0/@feature.1/@children.1"/>
+                        </children>
+                      </feature>
+                      <feature name="FingerGuards" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="CombustionPowertrain" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="CombustionEngine" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0">
+                        <children xsi:type="uvl:Mandatory">
+                          <feature name="Starter" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0"/>
+                          <feature name="IntakeSystem" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0">
+                            <children xsi:type="uvl:Optional">
+                              <feature name="IntakeMountingMaterials" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0"/>
+                            </children>
+                          </feature>
+                          <feature name="Throttle" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0">
+                            <children xsi:type="uvl:Alternative">
+                              <feature name="MechanicalThrottle" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                              <feature name="ElectronicThrottleBody" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                            </children>
+                          </feature>
+                          <feature name="Restrictor" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0">
+                            <children xsi:type="uvl:Alternative">
+                              <feature name="PetrolRestrictor" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0/@feature.3/@children.0"/>
+                              <feature name="E85Restrictor" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.0/@feature.3/@children.0"/>
+                            </children>
+                          </feature>
+                        </children>
+                        <children xsi:type="uvl:Optional">
+                          <feature name="Boosting" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.1">
+                            <children xsi:type="uvl:Alternative">
+                              <feature name="MechanicalBoostDrive" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.1/@feature.0/@children.0"/>
+                              <feature name="ElectricBoostDrive" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.0/@children.1/@feature.0/@children.0"/>
+                            </children>
+                          </feature>
+                        </children>
+                      </feature>
+                      <feature name="FuelSystem" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0">
+                        <children xsi:type="uvl:Mandatory">
+                          <feature name="FuelTank" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0">
+                            <children xsi:type="uvl:Optional">
+                              <feature name="TankContactClearance" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0"/>
+                            </children>
+                          </feature>
+                          <feature name="LowPressureFuelLines" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0">
+                            <children xsi:type="uvl:Optional">
+                              <feature name="FuelLineDetailing" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.1/@children.0"/>
+                            </children>
+                            <children xsi:type="uvl:Alternative">
+                              <feature name="ReinforcedRubberLine" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.1/@children.1">
+                                <children xsi:type="uvl:Optional">
+                                  <feature name="RubberLineFittings" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.1/@children.1/@feature.0/@children.0"/>
+                                </children>
+                              </feature>
+                              <feature name="MetalBraidedHose" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.1/@children.1"/>
+                            </children>
+                          </feature>
+                          <feature name="Injection" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0">
+                            <children xsi:type="uvl:Alternative">
+                              <feature name="PortInjection" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.2/@children.0"/>
+                              <feature name="DirectInjection" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.0/@feature.2/@children.0"/>
+                            </children>
+                          </feature>
+                        </children>
+                        <children xsi:type="uvl:Optional">
+                          <feature name="FuelContactMaterials" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.1"/>
+                          <feature name="FillerNeck" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.0/@children.0/@feature.1/@children.1"/>
+                        </children>
+                      </feature>
+                    </children>
+                  </feature>
+                  <feature name="ElectricDrive" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="TractionMotor" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.1/@children.0"/>
+                      <feature name="AccumulatorContainer" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.1/@children.0">
+                        <children xsi:type="uvl:Alternative">
+                          <feature name="CompositeContainer" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.1/@children.0/@feature.1/@children.0"/>
+                          <feature name="SteelContainer" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.1/@children.0/@feature.1/@children.0"/>
+                          <feature name="AluminiumContainer" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.1/@children.0/@feature.1/@children.0"/>
+                        </children>
+                      </feature>
+                    </children>
+                  </feature>
+                  <feature name="HydrogenStorageSystem" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="HydrogenTank" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.2/@children.0">
+                        <children xsi:type="uvl:Mandatory">
+                          <feature name="OnTankDevice" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.2/@children.0/@feature.0/@children.0"/>
+                          <feature name="PressureRegulator" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.2/@children.0/@feature.0/@children.0"/>
+                        </children>
+                      </feature>
+                      <feature name="HydrogenLinesAndFittings" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.2/@children.0">
+                        <children xsi:type="uvl:Optional">
+                          <feature name="DoubleFerruleFittings" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.2/@children.0/@feature.1/@children.0"/>
+                        </children>
+                      </feature>
+                    </children>
+                    <children xsi:type="uvl:Optional">
+                      <feature name="SidePodMounting" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.2/@children.1"/>
+                      <feature name="TankSystemIntegration" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.3/@children.1/@feature.2/@children.1"/>
+                    </children>
+                  </feature>
+                </children>
+              </feature>
+              <feature name="PressureSystems" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="CompressedGasSystems" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.4/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="GasPressureLimits" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.4/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="HighPressureHydraulics" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.4/@children.0"/>
+                </children>
+              </feature>
+              <feature name="Fasteners" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0">
+                <children xsi:type="uvl:Optional">
+                  <feature name="BoltShortening" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.5/@children.0"/>
+                  <feature name="RetainingRings" group="//@tree/@root/@feature.0/@children.1/@feature.0/@children.0/@feature.5/@children.0"/>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="CrashStructure" group="//@tree/@root/@feature.0/@children.2">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="PrimaryStructure" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="CompositeStructures" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="AsymmetricLaminate" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="RollHoops" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="MainHoop" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0"/>
+                      <feature name="FrontHoop" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0">
+                        <children xsi:type="uvl:Optional">
+                          <feature name="FrontHoopAttachmentEquivalence" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0/@feature.1/@children.0"/>
+                        </children>
+                      </feature>
+                      <feature name="MainHoopBracing" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0"/>
+                      <feature name="FrontHoopBracing" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0"/>
+                    </children>
+                    <children xsi:type="uvl:Optional">
+                      <feature name="MechanicallyAttachedBracing" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.1"/>
+                    </children>
+                  </feature>
+                  <feature name="FrontBulkhead" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0"/>
+                  <feature name="FrontBulkheadSupport" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0"/>
+                  <feature name="ImpactStructures" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="SideImpactStructure" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.4/@children.0">
+                        <children xsi:type="uvl:Optional">
+                          <feature name="OtherImpactStructures" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.4/@children.0/@feature.0/@children.0"/>
+                        </children>
+                      </feature>
+                    </children>
+                    <children xsi:type="uvl:Optional">
+                      <feature name="RearImpactClearance" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.4/@children.1"/>
+                    </children>
+                  </feature>
+                  <feature name="ImpactAttenuator" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="AntiIntrusionPlate" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.5/@children.0">
+                        <children xsi:type="uvl:Alternative">
+                          <feature name="SteelAIP" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.5/@children.0/@feature.0/@children.0"/>
+                          <feature name="AluminiumAIP" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.5/@children.0/@feature.0/@children.0"/>
+                        </children>
+                      </feature>
+                    </children>
+                    <children xsi:type="uvl:Optional">
+                      <feature name="AttenuatorHeightAndBonding" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.0/@feature.5/@children.1"/>
+                    </children>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="AdhesiveJoints" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="BoltedJointDetailing" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.0/@children.1"/>
+                </children>
+              </feature>
+              <feature name="DriverRestraint" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="HarnessAttachment" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="HarnessMountBolting" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0"/>
+                      <feature name="HarnessBracketDesign" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="LapBelt" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="LapBeltSeatOpening" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.0/@feature.1/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="ShoulderBelt" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="AntiSubmarineBelt" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.0"/>
+                </children>
+                <children xsi:type="uvl:Alternative">
+                  <feature name="SixPointHarness" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.1"/>
+                  <feature name="SevenPointHarness" group="//@tree/@root/@feature.0/@children.2/@feature.0/@children.0/@feature.1/@children.1"/>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="Kinematics" group="//@tree/@root/@feature.0/@children.3">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="Suspension" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="UprightMassReduction" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0/@feature.0/@children.0">
+                    <attribute xsi:type="uvl:Integer"/>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="SuspensionAdaptationForTankMass" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="KinematicsForTyreModel" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0/@feature.0/@children.1"/>
+                </children>
+              </feature>
+              <feature name="Wheels" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="DryTyres" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="WetTyres" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0/@feature.1/@children.0"/>
+                </children>
+              </feature>
+              <feature name="Steering" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0">
+                <children xsi:type="uvl:Optional">
+                  <feature name="RearWheelSteering" group="//@tree/@root/@feature.0/@children.3/@feature.0/@children.0/@feature.2/@children.0"/>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="Aerodynamics" group="//@tree/@root/@feature.0/@children.4">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="AeroDevices" group="//@tree/@root/@feature.0/@children.4/@feature.0/@children.0"/>
+              <feature name="ActiveAirMovement" group="//@tree/@root/@feature.0/@children.4/@feature.0/@children.0">
+                <children xsi:type="uvl:Optional">
+                  <feature name="PoweredUnderbodyFanBan" group="//@tree/@root/@feature.0/@children.4/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="ActiveAirDevice" group="//@tree/@root/@feature.0/@children.4/@feature.0/@children.0/@feature.1/@children.0"/>
+                </children>
+              </feature>
+            </children>
+            <children xsi:type="uvl:Optional">
+              <feature name="FrontWingMountStrength" group="//@tree/@root/@feature.0/@children.4/@feature.0/@children.1">
+                <attribute xsi:type="uvl:Integer"/>
+              </feature>
+              <feature name="AeroBalance" group="//@tree/@root/@feature.0/@children.4/@feature.0/@children.1">
+                <attribute xsi:type="uvl:Integer"/>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="Thermodynamics" group="//@tree/@root/@feature.0/@children.5">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="DriverHeatProtection" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.0"/>
+              <feature name="CoolingAndLubrication" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="CoolingSystem" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.0/@feature.1/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="CoolantCoverShielding" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.0/@feature.1/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="CatchCans" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.0/@feature.1/@children.0"/>
+                  <feature name="MinTemperatureResistance" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.0/@feature.1/@children.0">
+                    <attribute xsi:type="uvl:Integer"/>
+                  </feature>
+                </children>
+              </feature>
+            </children>
+            <children xsi:type="uvl:Optional">
+              <feature name="HydrogenVentilation" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1"/>
+              <feature name="CombustionProcess" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="ChargeAirCooling" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="CrankcaseVentilation" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="ExhaustSystem" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.0"/>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="HydrogenCombustion" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.1">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="WaterInjection" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.1/@feature.0/@children.0"/>
+                      <feature name="EngineConversionToHydrogen" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.1/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="BackfireProtection" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.1"/>
+                </children>
+                <children xsi:type="uvl:Alternative">
+                  <feature name="Gasoline98RON" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.2"/>
+                  <feature name="E85Fuel" group="//@tree/@root/@feature.0/@children.5/@feature.0/@children.1/@feature.1/@children.2"/>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="ElectricalEngineering" group="//@tree/@root/@feature.0/@children.6">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="ShutdownCircuit" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="ShutdownButtons" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.0/@children.0"/>
+                  <feature name="InertiaSwitch" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.0/@children.0"/>
+                  <feature name="BrakeSystemPlausibilityDevice" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="BSPDTractionPowerSensing" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.0/@children.0/@feature.2/@children.0"/>
+                    </children>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="SDCHydrogen" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="SDCCombustion" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="SDCTractionSystem" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.0/@children.1"/>
+                </children>
+              </feature>
+              <feature name="Indicators" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="BrakeLight" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.1/@children.0"/>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="SystemStatusLight" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.1/@children.1"/>
+                </children>
+              </feature>
+              <feature name="LowVoltage" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="LVSystem" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.2/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="LVMaxACVoltage" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.2/@children.0/@feature.0/@children.0">
+                        <attribute xsi:type="uvl:Integer"/>
+                      </feature>
+                    </children>
+                  </feature>
+                  <feature name="LVBattery" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.2/@children.0"/>
+                </children>
+              </feature>
+              <feature name="MasterSwitches" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="LVMasterSwitch" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.3/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="LVSupplyDisconnect" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0"/>
+                      <feature name="LVSupplyAndAlternatorDisconnect" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.3/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="ASMasterSwitch" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.3/@children.1"/>
+                  <feature name="TSMasterSwitch" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.3/@children.1"/>
+                  <feature name="HydrogenMasterSwitch" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.3/@children.1"/>
+                </children>
+              </feature>
+              <feature name="Sensors" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="APPSSensors" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.0/@feature.4/@children.0"/>
+                </children>
+              </feature>
+            </children>
+            <children xsi:type="uvl:Optional">
+              <feature name="AutonomousSystemElectrics" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="RemoteEmergencySystem" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.0/@children.0"/>
+                </children>
+              </feature>
+              <feature name="HighVoltage" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="TSEnclosures" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0">
+                    <children xsi:type="uvl:Alternative">
+                      <feature name="ConductiveEnclosure" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.0/@children.0"/>
+                      <feature name="InsulatingEnclosure" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="Grounding" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="TSLVSeparation" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="HubMotorWiring" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="TSWiring" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="TSMeasuringPoints" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="DischargeCircuit" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="TSActiveLight" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="TSALRedHVIndication" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.7/@children.0"/>
+                      <feature name="TSALGreenSafeIndication" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.7/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="ReadyToDriveSound" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                  <feature name="Accumulator" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="MaintenancePlugs" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0"/>
+                      <feature name="VoltageIndicator" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0"/>
+                      <feature name="IsolationRelays" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0"/>
+                      <feature name="PrechargeCircuit" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0"/>
+                      <feature name="BatteryManagementSystem" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0">
+                        <children xsi:type="uvl:Mandatory">
+                          <feature name="CellVoltageMonitoring" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0/@feature.4/@children.0"/>
+                          <feature name="CurrentMonitoring" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0/@feature.4/@children.0"/>
+                          <feature name="CellTemperatureMonitoring" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0/@feature.9/@children.0/@feature.4/@children.0"/>
+                        </children>
+                      </feature>
+                    </children>
+                  </feature>
+                  <feature name="IsolationMonitoring" group="//@tree/@root/@feature.0/@children.6/@feature.0/@children.1/@feature.1/@children.0"/>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="Simulation" group="//@tree/@root/@feature.0/@children.7">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="ControlFunctions" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="PedalPlausibility" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="ZeroTorqueAtPedalRelease" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.0/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="SafeStateHandling" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.0">
+                    <children xsi:type="uvl:Optional">
+                      <feature name="DigitalSignalLatency" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.0/@feature.1/@children.0"/>
+                    </children>
+                  </feature>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="TractionSystemControl" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.1">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="Regeneration" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.1/@feature.0/@children.0"/>
+                      <feature name="PowerLimitation" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.1/@feature.0/@children.0"/>
+                      <feature name="ReverseDrivePrevention" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.1/@feature.0/@children.0"/>
+                      <feature name="TSActivationAndReadyToDrive" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.1/@feature.0/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="ElectronicThrottleControl" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="VehicleDynamicsControl" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.0/@feature.0/@children.1"/>
+                </children>
+              </feature>
+            </children>
+            <children xsi:type="uvl:Optional">
+              <feature name="AutonomousFunctions" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.1">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="AutonomousSteering" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.1/@feature.0/@children.0"/>
+                  <feature name="ASStateMachine" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.1/@feature.0/@children.0">
+                    <children xsi:type="uvl:Mandatory">
+                      <feature name="StatusIndication" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.1/@feature.0/@children.0/@feature.1/@children.0"/>
+                    </children>
+                  </feature>
+                  <feature name="ASFunctionalSafety" group="//@tree/@root/@feature.0/@children.7/@feature.0/@children.1/@feature.0/@children.0"/>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+        <children xsi:type="uvl:Mandatory">
+          <feature name="Validation" group="//@tree/@root/@feature.0/@children.8">
+            <children xsi:type="uvl:Mandatory">
+              <feature name="TechnicalInspection" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.0">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="DriverEgressTest" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.0/@feature.0/@children.0"/>
+                  <feature name="TiltTest" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.0/@feature.0/@children.0"/>
+                </children>
+                <children xsi:type="uvl:Optional">
+                  <feature name="ETCSafetyDemonstration" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="NoiseTest" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="PositiveLockingDemonstration" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.0/@feature.0/@children.1"/>
+                  <feature name="RainTest" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.0/@feature.0/@children.1"/>
+                </children>
+              </feature>
+            </children>
+            <children xsi:type="uvl:Optional">
+              <feature name="DynamicTests" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.1">
+                <children xsi:type="uvl:Mandatory">
+                  <feature name="EBSBrakingPerformance" group="//@tree/@root/@feature.0/@children.8/@feature.0/@children.1/@feature.0/@children.0"/>
+                </children>
+              </feature>
+            </children>
+          </feature>
+        </children>
+      </feature>
+    </root>
+  </tree>
+</uvl:UVLModel>

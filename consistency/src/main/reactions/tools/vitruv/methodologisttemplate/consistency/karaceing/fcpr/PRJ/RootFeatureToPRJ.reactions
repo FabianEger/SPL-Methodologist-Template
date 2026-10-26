@@ -1,0 +1,35 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/requirements" as req
+
+// Root Feature CPR of the stakeholder role PRJ (copy of UVL2CAD/RootFeatureToCAD.reactions):
+// when the domain root feature ProjectAndRequirements is inserted below the root feature, the PRJ requirements specification is created.
+
+reactions: rootFeatureToPRJ
+in reaction to changes in uvl
+execute actions in req
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "ProjectAndRequirements"
+    call createRequirementsSpecificationForDomainRoot(newValue)
+}
+
+
+routine createRequirementsSpecificationForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of req::RequirementsSpecification corresponding to feature
+    }
+    create{
+        val model = new req::RequirementsSpecification
+    }
+    update{
+        System.out.println("Adding PRJ requirements specification for domain root feature " + feature.name)
+        model.name = "PRJ"
+        persistProjectRelative(feature, model, new File("").toString() + "prj.requirements")
+        addCorrespondenceBetween(feature, model)
+    }
+}

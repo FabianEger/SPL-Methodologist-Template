@@ -1,0 +1,42 @@
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/config" as config
+
+// ConfigCPR for removed features (complementing ConfigCPRs.reactions / feature2config, which adds every new
+// feature as an unselected feature to every configuration): a removed feature, and the features below it,
+// are removed from all configurations. Whether a configuration is still a valid product is not checked
+// here (to be done with VitruvOCL).
+
+reactions: featureEvolutionToConfig
+in reaction to changes in uvl
+execute actions in config
+
+reaction UVLFeatureRemoved{
+    after element uvl::Feature removed from uvl::Group[feature]
+    with oldValue.eContainer() === null
+    call removeConfigFeaturesOfSubtree(oldValue)
+}
+
+
+routine removeConfigFeaturesOfSubtree(uvl::Feature feature) {
+    update{
+        for (removedFeature : KARaceIngUtil.featureAndDescendants(feature)) {
+            removeConfigFeatures(removedFeature)
+        }
+    }
+}
+
+
+routine removeConfigFeatures(uvl::Feature feature) {
+    match{
+        val configFeatures = retrieve many config::Feature corresponding to feature
+    }
+    update{
+        for (configFeature : configFeatures) {
+            System.out.println("Removing feature " + feature.name + " from a configuration")
+            removeCorrespondenceBetween(feature, configFeature)
+            removeObject(configFeature)
+        }
+    }
+}

@@ -14,6 +14,8 @@ import UVLPackage.UVLModel;
 import UVLPackage.uvlFactory;
 import brakesystem.Brakesystem;
 import brakesystem.BrakesystemFactory;
+import configurationPackage.Configuration;
+import configurationPackage.ConfigurationPackageFactory;
 import edu.kit.ipd.sdq.metamodels.cad.BooleanParameter;
 import edu.kit.ipd.sdq.metamodels.cad.CAD_Model;
 import edu.kit.ipd.sdq.metamodels.cad.CadFactory;
@@ -157,6 +159,13 @@ public class TestUtil {
     public static boolean assertView(View view, Function<View, Boolean> viewAssertionFunction) {
 		return viewAssertionFunction.apply(view);
 	}
+
+    public Configuration createDefaultConfig(){
+        Configuration config = ConfigurationPackageFactory.eINSTANCE.createConfiguration();
+        config.setPLVersion(0);
+        return config;
+    }
+
 
 
 }

@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cad:CADDocument xmlns:xmi="http://www.omg.org/XMI" xmlns:cad="http://demonstrator.kit.edu/cad" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="DES" xmi:version="2.0">
+  <materials name="Steel" density="7850.0"/>
+  <materials name="Aluminium" density="2700.0"/>
+  <materials name="CFRP" density="1600.0"/>
+  <materials name="Titanium" density="4500.0"/>
+  <materials name="StainlessSteel" density="8000.0"/>
+  <objects xsi:type="cad:Assembly" name="VehicleExterior" label="VehicleExterior">
+    <children xsi:type="cad:Assembly" name="Bodywork" label="Bodywork">
+      <children xsi:type="cad:Assembly" name="ForwardEdgeRadius" label="ForwardEdgeRadius">
+        <children xsi:type="cad:Box" name="ForwardEdgeRadiusPart" label="ForwardEdgeRadiusPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="VehicleNumber" label="VehicleNumber">
+      <children xsi:type="cad:Assembly" name="NumberOrientation" label="NumberOrientation">
+        <children xsi:type="cad:Box" name="NumberOrientationPart" label="NumberOrientationPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="UniversityName" label="UniversityName">
+      <children xsi:type="cad:Box" name="UniversityNamePart" label="UniversityNamePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="Cockpit" label="Cockpit">
+    <children xsi:type="cad:Assembly" name="Seat" label="Seat">
+      <children xsi:type="cad:Box" name="SeatPart" label="SeatPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="FloorClosure" label="FloorClosure">
+      <children xsi:type="cad:Box" name="FloorClosurePart" label="FloorClosurePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="Firewall" label="Firewall">
+      <children xsi:type="cad:Box" name="FirewallPart" label="FirewallPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="HeadRestraint" label="HeadRestraint">
+      <children xsi:type="cad:Box" name="HeadRestraintPart" label="HeadRestraintPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="RollHoopPadding" label="RollHoopPadding">
+      <children xsi:type="cad:Box" name="RollHoopPaddingPart" label="RollHoopPaddingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="LegProtection" label="LegProtection">
+      <children xsi:type="cad:Box" name="LegProtectionPart" label="LegProtectionPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="PedalBox" label="PedalBox">
+      <children xsi:type="cad:Assembly" name="BrakePedal" label="BrakePedal">
+        <children xsi:type="cad:Box" name="BrakePedalPart" label="BrakePedalPart" length="0.1" width="0.05" height="0.02" material="//@materials.3"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="AcceleratorPedal" label="AcceleratorPedal">
+        <children xsi:type="cad:Box" name="AcceleratorPedalPart" label="AcceleratorPedalPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="BrakeSystem" label="BrakeSystem">
+    <children xsi:type="cad:Assembly" name="HydraulicBrakes" label="HydraulicBrakes">
+      <children xsi:type="cad:Assembly" name="BrakeSealingAndEnvelope" label="BrakeSealingAndEnvelope">
+        <children xsi:type="cad:Box" name="BrakeSealingAndEnvelopePart" label="BrakeSealingAndEnvelopePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="BrakeByWire" label="BrakeByWire">
+        <children xsi:type="cad:Box" name="BrakeByWirePart" label="BrakeByWirePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="FrontBrakeDisc" label="FrontBrakeDisc">
+        <children xsi:type="cad:Cylinder" name="FrontBrakeDiscBody" label="FrontBrakeDiscBody" radius="0.11" height="0.004" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="FrontBrakeCaliper" label="FrontBrakeCaliper">
+        <children xsi:type="cad:Box" name="FrontCaliperBody" label="FrontCaliperBody" length="0.12" width="0.04" height="0.05" material="//@materials.1"/>
+        <children xsi:type="cad:Cylinder" name="FrontCaliperPiston" label="FrontCaliperPiston" radius="0.0125" height="0.02" material="//@materials.3"/>
+        <children xsi:type="cad:Box" name="FrontCaliperMountingBracket" label="FrontCaliperMountingBracket" length="0.08" width="0.03" height="0.008" material="//@materials.1"/>
+        <children xsi:type="cad:Box" name="FrontBrakePads" label="FrontBrakePads" length="0.05" width="0.04" height="0.008" material="//@materials.4"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="RearBrakeDisc" label="RearBrakeDisc">
+        <children xsi:type="cad:Cylinder" name="RearBrakeDiscBody" label="RearBrakeDiscBody" radius="0.1" height="0.004" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="RearBrakeCaliper" label="RearBrakeCaliper">
+        <children xsi:type="cad:Box" name="RearCaliperBody" label="RearCaliperBody" length="0.12" width="0.04" height="0.05" material="//@materials.1"/>
+        <children xsi:type="cad:Cylinder" name="RearCaliperPiston" label="RearCaliperPiston" radius="0.011" height="0.02" material="//@materials.3"/>
+        <children xsi:type="cad:Box" name="RearCaliperMountingBracket" label="RearCaliperMountingBracket" length="0.08" width="0.03" height="0.008" material="//@materials.1"/>
+        <children xsi:type="cad:Box" name="RearBrakePads" label="RearBrakePads" length="0.05" width="0.04" height="0.008" material="//@materials.4"/>
+      </children>
+      <children xsi:type="cad:Cylinder" name="FrontBrakeHose" label="FrontBrakeHose" radius="0.002" height="0.45" material="//@materials.4"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="BrakeOverTravelSwitch" label="BrakeOverTravelSwitch">
+      <children xsi:type="cad:Assembly" name="PushPullSwitch" label="PushPullSwitch">
+        <children xsi:type="cad:Box" name="PushPullSwitchPart" label="PushPullSwitchPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="PushRotateSwitch" label="PushRotateSwitch">
+        <children xsi:type="cad:Box" name="PushRotateSwitchPart" label="PushRotateSwitchPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="FlipSwitch" label="FlipSwitch">
+        <children xsi:type="cad:Box" name="FlipSwitchPart" label="FlipSwitchPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="AutonomousBrakeHardware" label="AutonomousBrakeHardware">
+      <children xsi:type="cad:Assembly" name="ASBDeactivation" label="ASBDeactivation">
+        <children xsi:type="cad:Assembly" name="NearASMS" label="NearASMS">
+          <children xsi:type="cad:Box" name="NearASMSPart" label="NearASMSPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="VehicleTopBetweenBulkheads" label="VehicleTopBetweenBulkheads">
+          <children xsi:type="cad:Box" name="VehicleTopBetweenBulkheadsPart" label="VehicleTopBetweenBulkheadsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="EmergencyBrakeSystem" label="EmergencyBrakeSystem">
+        <children xsi:type="cad:Box" name="EmergencyBrakeSystemPart" label="EmergencyBrakeSystemPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="IntegratedInHydraulics" label="IntegratedInHydraulics">
+        <children xsi:type="cad:Box" name="IntegratedInHydraulicsPart" label="IntegratedInHydraulicsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="SeparateASB" label="SeparateASB">
+        <children xsi:type="cad:Box" name="SeparateASBPart" label="SeparateASBPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="PowertrainIntegration" label="PowertrainIntegration">
+    <children xsi:type="cad:Assembly" name="DrivetrainGuards" label="DrivetrainGuards">
+      <children xsi:type="cad:Assembly" name="ScatterShield" label="ScatterShield">
+        <children xsi:type="cad:Assembly" name="SteelScatterShield" label="SteelScatterShield">
+          <children xsi:type="cad:Box" name="SteelScatterShieldPart" label="SteelScatterShieldPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="AluminiumScatterShield" label="AluminiumScatterShield">
+          <children xsi:type="cad:Box" name="AluminiumScatterShieldPart" label="AluminiumScatterShieldPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="MotorScatterShield" label="MotorScatterShield">
+        <children xsi:type="cad:Sketch" name="ScatterShieldMinThickness" label="ScatterShieldMinThickness (design parameter)">
+          <geometries xsi:type="cad:LineSegment">
+            <start/>
+            <end x="0.1"/>
+          </geometries>
+          <constraints name="ScatterShieldMinThickness" value="2.0" first="//@objects.3/@children.0/@children.1/@children.0/@geometries.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="SplitScatterShield" label="SplitScatterShield">
+          <children xsi:type="cad:Box" name="SplitScatterShieldPart" label="SplitScatterShieldPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="FingerGuards" label="FingerGuards">
+        <children xsi:type="cad:Box" name="FingerGuardsPart" label="FingerGuardsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="CombustionPowertrain" label="CombustionPowertrain">
+      <children xsi:type="cad:Assembly" name="CombustionEngine" label="CombustionEngine">
+        <children xsi:type="cad:Assembly" name="Starter" label="Starter">
+          <children xsi:type="cad:Box" name="StarterPart" label="StarterPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="IntakeSystem" label="IntakeSystem">
+          <children xsi:type="cad:Assembly" name="IntakeMountingMaterials" label="IntakeMountingMaterials">
+            <children xsi:type="cad:Box" name="IntakeMountingMaterialsPart" label="IntakeMountingMaterialsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+          <children xsi:type="cad:Assembly" name="ReliefValveAndFlameArrestor"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="Throttle" label="Throttle">
+          <children xsi:type="cad:Assembly" name="MechanicalThrottle" label="MechanicalThrottle">
+            <children xsi:type="cad:Box" name="MechanicalThrottlePart" label="MechanicalThrottlePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+          <children xsi:type="cad:Assembly" name="ElectronicThrottleBody" label="ElectronicThrottleBody">
+            <children xsi:type="cad:Box" name="ElectronicThrottleBodyPart" label="ElectronicThrottleBodyPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+        </children>
+        <children xsi:type="cad:Assembly" name="Restrictor" label="Restrictor">
+          <children xsi:type="cad:Assembly" name="PetrolRestrictor" label="PetrolRestrictor">
+            <children xsi:type="cad:Box" name="PetrolRestrictorPart" label="PetrolRestrictorPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+          <children xsi:type="cad:Assembly" name="E85Restrictor" label="E85Restrictor">
+            <children xsi:type="cad:Box" name="E85RestrictorPart" label="E85RestrictorPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+        </children>
+        <children xsi:type="cad:Assembly" name="Boosting" label="Boosting">
+          <children xsi:type="cad:Assembly" name="MechanicalBoostDrive" label="MechanicalBoostDrive">
+            <children xsi:type="cad:Box" name="MechanicalBoostDrivePart" label="MechanicalBoostDrivePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+          <children xsi:type="cad:Assembly" name="ElectricBoostDrive" label="ElectricBoostDrive">
+            <children xsi:type="cad:Box" name="ElectricBoostDrivePart" label="ElectricBoostDrivePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+        </children>
+        <children xsi:type="cad:Assembly" name="HydrogenConversionParts">
+          <children xsi:type="cad:Box" name="AdaptedCylinderHead" length="0.05" width="0.05" height="0.01" material="//@materials.0"/>
+          <children xsi:type="cad:Box" name="InjectorAdapters" length="0.05" width="0.05" height="0.01" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="FuelSystem" label="FuelSystem">
+        <children xsi:type="cad:Assembly" name="FuelTank" label="FuelTank">
+          <children xsi:type="cad:Assembly" name="TankContactClearance" label="TankContactClearance">
+            <children xsi:type="cad:Box" name="TankContactClearancePart" label="TankContactClearancePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+        </children>
+        <children xsi:type="cad:Assembly" name="LowPressureFuelLines" label="LowPressureFuelLines">
+          <children xsi:type="cad:Assembly" name="FuelLineDetailing" label="FuelLineDetailing">
+            <children xsi:type="cad:Box" name="FuelLineDetailingPart" label="FuelLineDetailingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+          <children xsi:type="cad:Assembly" name="ReinforcedRubberLine" label="ReinforcedRubberLine">
+            <children xsi:type="cad:Assembly" name="RubberLineFittings" label="RubberLineFittings">
+              <children xsi:type="cad:Box" name="RubberLineFittingsPart" label="RubberLineFittingsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+            </children>
+          </children>
+          <children xsi:type="cad:Assembly" name="MetalBraidedHose" label="MetalBraidedHose">
+            <children xsi:type="cad:Box" name="MetalBraidedHosePart" label="MetalBraidedHosePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+        </children>
+        <children xsi:type="cad:Assembly" name="Injection" label="Injection">
+          <children xsi:type="cad:Assembly" name="PortInjection" label="PortInjection">
+            <children xsi:type="cad:Box" name="PortInjectionPart" label="PortInjectionPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+          <children xsi:type="cad:Assembly" name="DirectInjection" label="DirectInjection">
+            <children xsi:type="cad:Box" name="DirectInjectionPart" label="DirectInjectionPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          </children>
+        </children>
+        <children xsi:type="cad:Assembly" name="FuelContactMaterials" label="FuelContactMaterials">
+          <children xsi:type="cad:Box" name="FuelContactMaterialsPart" label="FuelContactMaterialsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="FillerNeck" label="FillerNeck">
+          <children xsi:type="cad:Box" name="FillerNeckPart" label="FillerNeckPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="ElectricDrive" label="ElectricDrive">
+      <children xsi:type="cad:Assembly" name="TractionMotor" label="TractionMotor">
+        <children xsi:type="cad:Box" name="TractionMotorPart" label="TractionMotorPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="AccumulatorContainer" label="AccumulatorContainer">
+        <children xsi:type="cad:Assembly" name="CompositeContainer" label="CompositeContainer">
+          <children xsi:type="cad:Box" name="CompositeContainerPart" label="CompositeContainerPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="SteelContainer" label="SteelContainer">
+          <children xsi:type="cad:Box" name="SteelContainerPart" label="SteelContainerPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="AluminiumContainer" label="AluminiumContainer">
+          <children xsi:type="cad:Box" name="AluminiumContainerPart" label="AluminiumContainerPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Sketch" name="CellFixationSketch">
+          <geometries xsi:type="cad:LineSegment">
+            <start/>
+            <end x="0.2"/>
+          </geometries>
+          <constraints name="CellFixationSketchLength" value="0.2" first="//@objects.3/@children.2/@children.1/@children.3/@geometries.0"/>
+        </children>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="HydrogenStorageSystem" label="HydrogenStorageSystem">
+      <children xsi:type="cad:Assembly" name="HydrogenTank" label="HydrogenTank">
+        <children xsi:type="cad:Assembly" name="OnTankDevice" label="OnTankDevice">
+          <children xsi:type="cad:Box" name="OnTankDevicePart" label="OnTankDevicePart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+        <children xsi:type="cad:Assembly" name="PressureRegulator" label="PressureRegulator">
+          <children xsi:type="cad:Box" name="PressureRegulatorPart" label="PressureRegulatorPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+          <children xsi:type="cad:Box" name="RelayContacts" length="0.05" width="0.05" height="0.01" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="HydrogenLinesAndFittings" label="HydrogenLinesAndFittings">
+        <children xsi:type="cad:Assembly" name="DoubleFerruleFittings" label="DoubleFerruleFittings">
+          <children xsi:type="cad:Box" name="DoubleFerruleFittingsPart" label="DoubleFerruleFittingsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+        </children>
+      </children>
+      <children xsi:type="cad:Assembly" name="SidePodMounting" label="SidePodMounting">
+        <children xsi:type="cad:Box" name="SidePodMountingPart" label="SidePodMountingPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+      <children xsi:type="cad:Assembly" name="CV1ChassisAdapterFrame" label="CV1ChassisAdapterFrame"/>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="PressureSystems" label="PressureSystems">
+    <children xsi:type="cad:Assembly" name="CompressedGasSystems" label="CompressedGasSystems">
+      <children xsi:type="cad:Assembly" name="GasPressureLimits" label="GasPressureLimits">
+        <children xsi:type="cad:Box" name="GasPressureLimitsPart" label="GasPressureLimitsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+      </children>
+    </children>
+    <children xsi:type="cad:Assembly" name="HighPressureHydraulics" label="HighPressureHydraulics">
+      <children xsi:type="cad:Box" name="HighPressureHydraulicsPart" label="HighPressureHydraulicsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+  </objects>
+  <objects xsi:type="cad:Assembly" name="Fasteners" label="Fasteners">
+    <children xsi:type="cad:Assembly" name="BoltShortening" label="BoltShortening">
+      <children xsi:type="cad:Box" name="BoltShorteningPart" label="BoltShorteningPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="RetainingRings" label="RetainingRings">
+      <children xsi:type="cad:Box" name="RetainingRingsPart" label="RetainingRingsPart" length="0.1" width="0.05" height="0.02" material="//@materials.0"/>
+    </children>
+    <children xsi:type="cad:Assembly" name="CriticalBracingBolts"/>
+  </objects>
+</cad:CADDocument>

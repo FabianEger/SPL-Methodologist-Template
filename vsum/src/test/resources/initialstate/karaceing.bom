@@ -1,0 +1,485 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bom:BOM xmlns:xmi="http://www.omg.org/XMI" xmlns:bom="http://example.org/bom" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="KA-RaceIng BOM" xmi:version="2.0">
+  <itemTypes name="Part" description="manufactured part">
+    <parameterDefinitions name="mass" dataType="EDouble"/>
+    <parameterDefinitions name="material"/>
+    <parameterDefinitions name="supplier"/>
+    <parameterDefinitions name="specification"/>
+    <parameterDefinitions name="partNumber"/>
+  </itemTypes>
+  <itemTypes name="Assembly" description="assembly">
+    <parameterDefinitions name="mass" dataType="EDouble"/>
+    <parameterDefinitions name="material"/>
+    <parameterDefinitions name="supplier"/>
+    <parameterDefinitions name="specification"/>
+    <parameterDefinitions name="partNumber"/>
+  </itemTypes>
+  <itemTypes name="PurchasedPart" description="purchased part">
+    <parameterDefinitions name="mass" dataType="EDouble"/>
+    <parameterDefinitions name="material"/>
+    <parameterDefinitions name="supplier"/>
+    <parameterDefinitions name="specification"/>
+    <parameterDefinitions name="partNumber"/>
+  </itemTypes>
+  <itemTypes name="Fastener" description="standard part">
+    <parameterDefinitions name="mass" dataType="EDouble"/>
+    <parameterDefinitions name="material"/>
+    <parameterDefinitions name="supplier"/>
+    <parameterDefinitions name="specification"/>
+    <parameterDefinitions name="partNumber"/>
+  </itemTypes>
+  <itemTypes name="ElectricalComponent" description="electrical / electronic component">
+    <parameterDefinitions name="mass" dataType="EDouble"/>
+    <parameterDefinitions name="material"/>
+    <parameterDefinitions name="supplier"/>
+    <parameterDefinitions name="specification"/>
+    <parameterDefinitions name="partNumber"/>
+  </itemTypes>
+  <items id="DES-ForwardEdgeRadiusPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-NumberOrientationPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-UniversityNamePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-SeatPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FloorClosurePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FirewallPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-HeadRestraintPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-RollHoopPaddingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-LegProtectionPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-BrakePedalPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.45" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Titanium"/>
+  </items>
+  <items id="DES-AcceleratorPedalPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-BrakeSealingAndEnvelopePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-BrakeByWirePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-PushPullSwitchPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-PushRotateSwitchPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FlipSwitchPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-NearASMSPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-VehicleTopBetweenBulkheadsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-EmergencyBrakeSystemPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-IntegratedInHydraulicsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-SeparateASBPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-SteelScatterShieldPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-AluminiumScatterShieldPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-SplitScatterShieldPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FingerGuardsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-StarterPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-IntakeMountingMaterialsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-MechanicalThrottlePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-ElectronicThrottleBodyPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-PetrolRestrictorPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-E85RestrictorPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-MechanicalBoostDrivePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-ElectricBoostDrivePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-TankContactClearancePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FuelLineDetailingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-RubberLineFittingsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-MetalBraidedHosePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-PortInjectionPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-DirectInjectionPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FuelContactMaterialsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FillerNeckPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-TractionMotorPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-CompositeContainerPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-SteelContainerPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-AluminiumContainerPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-OnTankDevicePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-PressureRegulatorPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-DoubleFerruleFittingsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-SidePodMountingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-GasPressureLimitsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-HighPressureHydraulicsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-BoltShorteningPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-RetainingRingsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-AdaptedCylinderHead" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.196" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-InjectorAdapters" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.196" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-RelayContacts" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.196" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-FrontCaliperBody" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.648" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Aluminium"/>
+  </items>
+  <items id="DES-FrontCaliperMountingBracket" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.052" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Aluminium"/>
+  </items>
+  <items id="DES-FrontBrakePads" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.128" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="StainlessSteel"/>
+  </items>
+  <items id="DES-RearCaliperBody" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.648" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Aluminium"/>
+  </items>
+  <items id="DES-RearCaliperMountingBracket" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.052" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Aluminium"/>
+  </items>
+  <items id="DES-RearBrakePads" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.128" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="StainlessSteel"/>
+  </items>
+  <items id="CRASH-AsymmetricLaminatePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-MainHoopPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-FrontHoopAttachmentEquivalencePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-MainHoopBracingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-FrontHoopBracingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-LugJoints" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-SleeveJoints" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-FrontBulkheadPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-FrontBulkheadSupportPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-OtherImpactStructuresPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-RearImpactClearancePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-SteelAIPPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-AluminiumAIPPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-AttenuatorHeightAndBondingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-AdhesiveJointsPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-BoltedJointDetailingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-HarnessMountBoltingPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-HarnessBracketDesignPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-LapBeltSeatOpeningPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-ShoulderBeltPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-AntiSubmarineBeltPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-SixPointHarnessPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-SevenPointHarnessPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="CRASH-LidarBracket" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.196" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="KIN-SuspensionAdaptationForTankMassPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="KIN-DryTyresPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="KIN-WetTyresPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="KIN-RearWheelSteeringPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="AERO-AeroDevicesPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="AERO-PoweredUnderbodyFanBanPart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="AERO-ActiveAirDevicePart" type="//@itemTypes.0" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.0/@parameterDefinitions.0" value="0.785" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.0/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="DES-HydrogenTank" type="//@itemTypes.2" numberOfItems="1">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.2/@parameterDefinitions.0" value="1.766" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.1" value="CFRP"/>
+  </items>
+  <items id="DES-CriticalBracingBolts" type="//@itemTypes.3" numberOfItems="8">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.3/@parameterDefinitions.1" value="Steel"/>
+  </items>
+  <items id="ELEC-OldInverter" type="//@itemTypes.4" numberOfItems="1">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.1" value="-"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.4" value="INV-600"/>
+  </items>
+  <items id="DES-FrontBrakeDisc" type="//@itemTypes.2" numberOfItems="2">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.2/@parameterDefinitions.0" value="1.194" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.1" value="Steel"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.2" value="DiscSupplier A"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.3" value="solid"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.4" value="BD-F-220S"/>
+  </items>
+  <items id="DES-FrontBrakeCaliper" type="//@itemTypes.1" numberOfItems="2">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.1/@parameterDefinitions.0" value="0.872" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.1/@parameterDefinitions.3" value="monobloc"/>
+  </items>
+  <items id="DES-FrontCaliperPiston" type="//@itemTypes.2" numberOfItems="4">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.2/@parameterDefinitions.0" value="0.044" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.1" value="Titanium"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.2" value="PistonSupplier A"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.4" value="CP-F-25T"/>
+  </items>
+  <items id="ELEC-FrontCaliperTemperatureSensor" type="//@itemTypes.4" numberOfItems="2">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.1" value="-"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.4" value="TS-100"/>
+  </items>
+  <items id="ELEC-FrontWheelSpeedSensor" type="//@itemTypes.4" numberOfItems="2">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.1" value="-"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.4" value="WS-20"/>
+  </items>
+  <items id="DES-RearBrakeDisc" type="//@itemTypes.2" numberOfItems="2">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.2/@parameterDefinitions.0" value="0.986" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.1" value="Steel"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.2" value="DiscSupplier A"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.3" value="solid"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.4" value="BD-R-220S"/>
+  </items>
+  <items id="DES-RearBrakeCaliper" type="//@itemTypes.1" numberOfItems="2">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.1/@parameterDefinitions.0" value="0.862" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.1/@parameterDefinitions.3" value="monobloc"/>
+  </items>
+  <items id="DES-RearCaliperPiston" type="//@itemTypes.2" numberOfItems="4">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.2/@parameterDefinitions.0" value="0.034" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.1" value="Titanium"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.2" value="PistonSupplier A"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.4" value="CP-R-25T"/>
+  </items>
+  <items id="ELEC-RearCaliperTemperatureSensor" type="//@itemTypes.4" numberOfItems="2">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.1" value="-"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.4" value="TS-100"/>
+  </items>
+  <items id="ELEC-RearWheelSpeedSensor" type="//@itemTypes.4" numberOfItems="2">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.1" value="-"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.4" value="WS-20"/>
+  </items>
+  <items id="DES-FrontBrakeHose" type="//@itemTypes.2" numberOfItems="2">
+    <parameterValues xsi:type="bom:DoubleParameterValue" definition="//@itemTypes.2/@parameterDefinitions.0" value="0.045" unit="kg"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.1" value="StainlessSteel"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.2" value="HoseSupplier A"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.2/@parameterDefinitions.4" value="BH-450"/>
+  </items>
+  <items id="ELEC-ABSControlUnit" type="//@itemTypes.4" numberOfItems="1">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.1" value="-"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.4" value="ABS-7"/>
+  </items>
+  <items id="ELEC-BOTSSwitch" type="//@itemTypes.4" numberOfItems="1">
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.1" value="-"/>
+    <parameterValues xsi:type="bom:StringParameterValue" definition="//@itemTypes.4/@parameterDefinitions.4" value="BOTS-1"/>
+  </items>
+</bom:BOM>

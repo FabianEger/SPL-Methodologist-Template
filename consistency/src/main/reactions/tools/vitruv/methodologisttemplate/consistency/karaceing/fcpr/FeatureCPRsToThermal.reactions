@@ -1,0 +1,18 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/thermal" as thermo
+
+// Vitruvius allows only one change propagation specification per pair of metamodels (uvl -> thermal), so the
+// Feature CPRs of all roles whose artefacts are thermal models (THERMO) and the feature removal are combined
+// here, like CombinedUVLToCAD combines feature2cad and featureRoot2cad.
+
+reactions: featureCPRsToThermal
+in reaction to changes in uvl
+execute actions in thermo
+
+
+import featureToTHERMO using qualified names
+
+import rootFeatureToTHERMO using qualified names
+
+import featureRemovalToThermal using qualified names
+

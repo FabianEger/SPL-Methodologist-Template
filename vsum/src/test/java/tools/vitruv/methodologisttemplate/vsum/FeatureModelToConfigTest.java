@@ -44,7 +44,7 @@ public class FeatureModelToConfigTest {
 
         util.modifyView(configview, (CommittableView v) -> {
             ConfigurationModel configModel = (ConfigurationModel) v.getRootObjects(ConfigurationModel.class).iterator().next();
-            configModel.getConfiguration().add(createDefaultConfig());
+            configModel.getConfiguration().add(util.createDefaultConfig());
         });
 
         util.modifyView(view, (CommittableView v) -> {
@@ -64,12 +64,6 @@ public class FeatureModelToConfigTest {
     
    
 
-
-    private Configuration createDefaultConfig(){
-        Configuration config = ConfigurationPackageFactory.eINSTANCE.createConfiguration();
-        config.setPLVersion(0);
-        return config;
-    }
 
 
 

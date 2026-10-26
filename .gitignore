@@ -10,3 +10,6 @@ target/
 META-INF
 build.properties
 plugin.properties
+
+# Python (karaceing-generator)
+__pycache__/

@@ -1,0 +1,18 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/simulink" as sim
+
+// Vitruvius allows only one change propagation specification per pair of metamodels (uvl -> simulink), so the
+// Feature CPRs of all roles whose artefacts are simulink models (SIM) and the feature removal are combined
+// here, like CombinedUVLToCAD combines feature2cad and featureRoot2cad.
+
+reactions: featureCPRsToSimulink
+in reaction to changes in uvl
+execute actions in sim
+
+
+import featureToSIM using qualified names
+
+import rootFeatureToSIM using qualified names
+
+import featureRemovalToSimulink using qualified names
+

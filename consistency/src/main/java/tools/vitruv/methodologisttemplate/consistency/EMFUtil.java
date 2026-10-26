@@ -137,8 +137,24 @@ public class EMFUtil {
 
     public static List<String> getAllNamesOfEObjects(List<EObject> eObjects) {
         return eObjects.stream()
-                .map(obj -> (String) obj.eGet(obj.eClass().getEStructuralFeature("name")))
+                .map(EMFUtil::getNameOf)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a displayable name of an EObject: the value of its "name" attribute, or of "id" /
+     * "instanceName" for metamodels without a name (BOM items, brake components), or the class
+     * name for unnamed elements such as sketch geometries. Never returns null, so that choice
+     * dialogs over arbitrary contained elements do not fail.
+     */
+    public static String getNameOf(EObject obj) {
+        for (String attribute : List.of("name", "id", "instanceName")) {
+            var feature = obj.eClass().getEStructuralFeature(attribute);
+            if (feature != null && obj.eGet(feature) != null) {
+                return String.valueOf(obj.eGet(feature));
+            }
+        }
+        return obj.eClass().getName();
     }
 
     public static List<String> getAllNamesOfEClass(List<EClass> eClasses) {

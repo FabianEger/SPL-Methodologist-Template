@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<electrical:ElectricalDesign xmlns:xmi="http://www.omg.org/XMI" xmlns:electrical="http://vitruv.tools/methodologisttemplate/electrical" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="ELEC" xmi:version="2.0">
+  <elements xsi:type="electrical:Circuit" name="ShutdownCircuit" nominalVoltage="24.0">
+    <elements xsi:type="electrical:Circuit" name="ShutdownButtons" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="ShutdownButtonsUnit" kind="Switch"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="InertiaSwitch" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="InertiaSwitchUnit" kind="Switch"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="BrakeSystemPlausibilityDevice" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Circuit" name="BSPDTractionPowerSensing" nominalVoltage="24.0">
+        <elements xsi:type="electrical:Device" name="BSPDTractionPowerSensingUnit" kind="Sensor"/>
+      </elements>
+      <elements xsi:type="electrical:Device" name="BSPDTestConnector" kind="Connector"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="SDCHydrogen" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="SDCHydrogenUnit"/>
+      <elements xsi:type="electrical:Circuit" name="OverPressureRelayChain">
+        <elements xsi:type="electrical:Device" name="OverPressureRelay1" kind="Relay"/>
+        <elements xsi:type="electrical:Device" name="OverPressureRelay2" kind="Relay"/>
+      </elements>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="SDCCombustion" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="SDCCombustionUnit"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="SDCTractionSystem" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="SDCTractionSystemUnit"/>
+    </elements>
+    <elements xsi:type="electrical:Device" name="BOTSSwitch" kind="Switch" partNumber="BOTS-1" mountingPosition="BrakePedal">
+      <pins name="BOTSState" signal="bots_sdc_open"/>
+    </elements>
+  </elements>
+  <elements xsi:type="electrical:Circuit" name="Indicators" nominalVoltage="24.0">
+    <elements xsi:type="electrical:Circuit" name="BrakeLight" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="BrakeLightUnit" kind="Indicator"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="SystemStatusLight" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="SystemStatusLightUnit" kind="Indicator"/>
+    </elements>
+  </elements>
+  <elements xsi:type="electrical:Circuit" name="LowVoltage" nominalVoltage="24.0">
+    <elements xsi:type="electrical:Circuit" name="LVSystem" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Circuit" name="LVMaxACVoltage" nominalVoltage="24.0">
+        <elements xsi:type="electrical:Device" name="LVMaxACVoltageUnit"/>
+      </elements>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="LVBattery" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="LVBatteryUnit" kind="Battery"/>
+    </elements>
+  </elements>
+  <elements xsi:type="electrical:Circuit" name="MasterSwitches" nominalVoltage="24.0">
+    <elements xsi:type="electrical:Circuit" name="LVMasterSwitch" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Circuit" name="LVSupplyDisconnect" nominalVoltage="24.0">
+        <elements xsi:type="electrical:Device" name="LVSupplyDisconnectUnit" kind="Switch"/>
+      </elements>
+      <elements xsi:type="electrical:Circuit" name="LVSupplyAndAlternatorDisconnect" nominalVoltage="24.0">
+        <elements xsi:type="electrical:Device" name="LVSupplyAndAlternatorDisconnectUnit" kind="Switch"/>
+      </elements>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="ASMasterSwitch" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="ASMasterSwitchUnit" kind="Switch"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="TSMasterSwitch" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="TSMasterSwitchUnit" kind="Switch"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="HydrogenMasterSwitch" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="HydrogenMasterSwitchUnit" kind="Switch"/>
+    </elements>
+  </elements>
+  <elements xsi:type="electrical:Circuit" name="Sensors" nominalVoltage="24.0">
+    <elements xsi:type="electrical:Circuit" name="APPSSensors" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="APPSSensorsUnit" kind="Sensor"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="BrakeSensors" nominalVoltage="12.0">
+      <elements xsi:type="electrical:Device" name="FrontCaliperTemperatureSensor" kind="Sensor" partNumber="TS-100" mountingPosition="FrontCaliperMountingBracket">
+        <pins name="Temperature" signal="front_caliper_temperature"/>
+      </elements>
+      <elements xsi:type="electrical:Device" name="FrontWheelSpeedSensor" kind="Sensor" partNumber="WS-20" mountingPosition="FrontBrakeDisc">
+        <pins name="WheelSpeed" signal="front_wheel_speed"/>
+      </elements>
+      <elements xsi:type="electrical:Device" name="RearCaliperTemperatureSensor" kind="Sensor" partNumber="TS-100" mountingPosition="RearCaliperMountingBracket">
+        <pins name="Temperature" signal="rear_caliper_temperature"/>
+      </elements>
+      <elements xsi:type="electrical:Device" name="RearWheelSpeedSensor" kind="Sensor" partNumber="WS-20" mountingPosition="RearBrakeDisc">
+        <pins name="WheelSpeed" signal="rear_wheel_speed"/>
+      </elements>
+      <elements xsi:type="electrical:Device" name="ABSControlUnit" kind="ControlUnit" partNumber="ABS-7">
+        <pins name="WheelSpeedFront" signal="front_wheel_speed"/>
+        <pins name="WheelSpeedRear" signal="rear_wheel_speed"/>
+        <pins name="ValveCommand" signal="abs_valve_command"/>
+      </elements>
+    </elements>
+  </elements>
+  <elements xsi:type="electrical:Circuit" name="AutonomousSystemElectrics" nominalVoltage="24.0">
+    <elements xsi:type="electrical:Circuit" name="RemoteEmergencySystem" nominalVoltage="24.0">
+      <elements xsi:type="electrical:Device" name="RemoteEmergencySystemUnit"/>
+    </elements>
+    <elements xsi:type="electrical:Device" name="CarPC" kind="ControlUnit"/>
+    <elements xsi:type="electrical:Device" name="ROS1BridgePort" kind="Connector"/>
+  </elements>
+  <elements xsi:type="electrical:Circuit" name="HighVoltage" voltageClass="HV" nominalVoltage="600.0">
+    <elements xsi:type="electrical:Circuit" name="TSEnclosures" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Circuit" name="ConductiveEnclosure" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="ConductiveEnclosureUnit"/>
+      </elements>
+      <elements xsi:type="electrical:Circuit" name="InsulatingEnclosure" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="InsulatingEnclosureUnit"/>
+      </elements>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="Grounding" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="GroundingUnit"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="TSLVSeparation" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="TSLVSeparationUnit"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="HubMotorWiring" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="HubMotorWiringUnit" kind="Connector"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="TSWiring" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="TSWiringUnit" kind="Connector"/>
+      <elements xsi:type="electrical:Circuit" name="PlugDetectionCircuit"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="TSMeasuringPoints" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="TSMeasuringPointsUnit" kind="Connector"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="DischargeCircuit" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="DischargeCircuitUnit"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="TSActiveLight" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Circuit" name="TSALRedHVIndication" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="TSALRedHVIndicationUnit" kind="Indicator"/>
+      </elements>
+      <elements xsi:type="electrical:Circuit" name="TSALGreenSafeIndication" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="TSALGreenSafeIndicationUnit" kind="Indicator"/>
+      </elements>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="ReadyToDriveSound" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="ReadyToDriveSoundUnit" kind="Indicator"/>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="Accumulator" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Circuit" name="MaintenancePlugs" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="MaintenancePlugsUnit" kind="Connector"/>
+      </elements>
+      <elements xsi:type="electrical:Circuit" name="VoltageIndicator" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="VoltageIndicatorUnit" kind="Indicator"/>
+      </elements>
+      <elements xsi:type="electrical:Circuit" name="IsolationRelays" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="IsolationRelaysUnit" kind="Relay"/>
+      </elements>
+      <elements xsi:type="electrical:Circuit" name="PrechargeCircuit" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Device" name="PrechargeCircuitUnit"/>
+      </elements>
+      <elements xsi:type="electrical:Circuit" name="BatteryManagementSystem" voltageClass="HV" nominalVoltage="600.0">
+        <elements xsi:type="electrical:Circuit" name="CellVoltageMonitoring" voltageClass="HV" nominalVoltage="600.0">
+          <elements xsi:type="electrical:Device" name="CellVoltageMonitoringUnit" kind="Sensor"/>
+        </elements>
+        <elements xsi:type="electrical:Circuit" name="CurrentMonitoring" voltageClass="HV" nominalVoltage="600.0">
+          <elements xsi:type="electrical:Device" name="CurrentMonitoringUnit" kind="Sensor"/>
+        </elements>
+        <elements xsi:type="electrical:Circuit" name="CellTemperatureMonitoring" voltageClass="HV" nominalVoltage="600.0">
+          <elements xsi:type="electrical:Device" name="CellTemperatureMonitoringUnit" kind="Sensor"/>
+        </elements>
+      </elements>
+    </elements>
+    <elements xsi:type="electrical:Circuit" name="IsolationMonitoring" voltageClass="HV" nominalVoltage="600.0">
+      <elements xsi:type="electrical:Device" name="IsolationMonitoringUnit" kind="Sensor"/>
+    </elements>
+    <elements xsi:type="electrical:Device" name="OldInverter" kind="Inverter" ratedVoltage="600.0"/>
+  </elements>
+</electrical:ElectricalDesign>

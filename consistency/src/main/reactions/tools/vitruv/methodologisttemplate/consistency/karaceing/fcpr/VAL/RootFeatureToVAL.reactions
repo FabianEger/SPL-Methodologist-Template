@@ -1,0 +1,35 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/testbench" as tb
+
+// Root Feature CPR of the stakeholder role VAL (copy of UVL2CAD/RootFeatureToCAD.reactions):
+// when the domain root feature Validation is inserted below the root feature, the VAL test-bench configuration is created.
+
+reactions: rootFeatureToVAL
+in reaction to changes in uvl
+execute actions in tb
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "Validation"
+    call createTestBenchConfigurationForDomainRoot(newValue)
+}
+
+
+routine createTestBenchConfigurationForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of tb::TestBenchConfiguration corresponding to feature
+    }
+    create{
+        val model = new tb::TestBenchConfiguration
+    }
+    update{
+        System.out.println("Adding VAL test-bench configuration for domain root feature " + feature.name)
+        model.name = "VAL"
+        persistProjectRelative(feature, model, new File("").toString() + "val.testbench")
+        addCorrespondenceBetween(feature, model)
+    }
+}

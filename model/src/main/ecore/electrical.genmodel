@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+    creationIcons="false" modelPluginID="tools.vitruv.methodologisttemplate.model" modelName="Electrical"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" codeFormatting="true"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="17.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>electrical.ecore</foreignModel>
+  <genPackages prefix="Electrical" basePackage="tools.vitruv.methodologisttemplate.model" disposableProviderFactory="true" ecorePackage="electrical.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="electrical.ecore#//VoltageClass">
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//VoltageClass/LV"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//VoltageClass/HV"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="electrical.ecore#//DeviceKind">
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Other"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Switch"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Relay"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Sensor"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Actuator"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Fuse"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Battery"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/ControlUnit"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Indicator"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Connector"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Motor"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Inverter"/>
+      <genEnumLiterals ecoreEnumLiteral="electrical.ecore#//DeviceKind/Valve"/>
+    </genEnums>
+    <genClasses ecoreClass="electrical.ecore#//ElectricalDesign">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//ElectricalDesign/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference electrical.ecore#//ElectricalDesign/elements"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="electrical.ecore#//ElectricalElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//ElectricalElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//ElectricalElement/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//ElectricalElement/partNumber"/>
+    </genClasses>
+    <genClasses ecoreClass="electrical.ecore#//Circuit">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference electrical.ecore#//Circuit/elements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Circuit/nominalVoltage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Circuit/voltageClass"/>
+    </genClasses>
+    <genClasses ecoreClass="electrical.ecore#//Device">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Device/kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Device/ratedVoltage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Device/ratedCurrent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference electrical.ecore#//Device/pins"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Device/mountingPosition"/>
+    </genClasses>
+    <genClasses ecoreClass="electrical.ecore#//Pin">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Pin/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Pin/signal"/>
+    </genClasses>
+    <genClasses ecoreClass="electrical.ecore#//Wire">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference electrical.ecore#//Wire/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference electrical.ecore#//Wire/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Wire/crossSection"/>
+    </genClasses>
+    <genClasses ecoreClass="electrical.ecore#//Bus">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute electrical.ecore#//Bus/protocol"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference electrical.ecore#//Bus/nodes"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

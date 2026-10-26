@@ -1,0 +1,35 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://demonstrator.kit.edu/cad" as cad
+
+// Root Feature CPR of the stakeholder role CRASH (copy of UVL2CAD/RootFeatureToCAD.reactions):
+// when the domain root feature CrashStructure is inserted below the root feature, the CRASH CAD model is created.
+
+reactions: rootFeatureToCRASH
+in reaction to changes in uvl
+execute actions in cad
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "CrashStructure"
+    call createCADDocumentForDomainRoot(newValue)
+}
+
+
+routine createCADDocumentForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of cad::CADDocument corresponding to feature
+    }
+    create{
+        val model = new cad::CADDocument
+    }
+    update{
+        System.out.println("Adding CRASH CAD model for domain root feature " + feature.name)
+        model.name = "CRASH"
+        persistProjectRelative(feature, model, new File("").toString() + "crash.cad")
+        addCorrespondenceBetween(feature, model)
+    }
+}

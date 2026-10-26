@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/tools.vitruv.methodologisttemplate.model/target/generated-sources/ecore"
+    creationIcons="false" modelPluginID="tools.vitruv.methodologisttemplate.model" modelName="Requirements"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" codeFormatting="true"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="17.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>requirements.ecore</foreignModel>
+  <genPackages prefix="Requirements" basePackage="tools.vitruv.methodologisttemplate.model" disposableProviderFactory="true" ecorePackage="requirements.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="requirements.ecore#//RequirementKind">
+      <genEnumLiterals ecoreEnumLiteral="requirements.ecore#//RequirementKind/Requirement"/>
+      <genEnumLiterals ecoreEnumLiteral="requirements.ecore#//RequirementKind/Goal"/>
+      <genEnumLiterals ecoreEnumLiteral="requirements.ecore#//RequirementKind/Function"/>
+    </genEnums>
+    <genClasses ecoreClass="requirements.ecore#//RequirementsSpecification">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//RequirementsSpecification/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//RequirementsSpecification/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements.ecore#//RequirementsSpecification/sections"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements.ecore#//Section">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Section/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Section/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements.ecore#//Section/sections"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements.ecore#//Section/requirements"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements.ecore#//Requirement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/text"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/subteam"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/category"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/unit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/priority"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/role"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference requirements.ecore#//Requirement/carValues"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//Requirement/allowedValues"/>
+    </genClasses>
+    <genClasses ecoreClass="requirements.ecore#//CarValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//CarValue/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute requirements.ecore#//CarValue/value"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

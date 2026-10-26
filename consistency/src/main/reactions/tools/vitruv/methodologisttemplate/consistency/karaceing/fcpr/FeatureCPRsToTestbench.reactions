@@ -1,0 +1,18 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/testbench" as tb
+
+// Vitruvius allows only one change propagation specification per pair of metamodels (uvl -> testbench), so the
+// Feature CPRs of all roles whose artefacts are testbench models (VAL) and the feature removal are combined
+// here, like CombinedUVLToCAD combines feature2cad and featureRoot2cad.
+
+reactions: featureCPRsToTestbench
+in reaction to changes in uvl
+execute actions in tb
+
+
+import featureToVAL using qualified names
+
+import rootFeatureToVAL using qualified names
+
+import featureRemovalToTestbench using qualified names
+

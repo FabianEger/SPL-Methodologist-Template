@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<brakesystem:Brakesystem xmlns:xmi="http://www.omg.org/XMI" xmlns:brakesystem="http://www.example.org/brakesystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" instanceName="BRAKE" specificationType="hydraulic dual circuit" xmi:version="2.0">
+  <BrakeComponents xsi:type="brakesystem:BrakeDisk" id="FrontBrakeDisk" fittingPosition="front" specificationType="KA-RaceIng" OEM_number="BD-F-220S" diameterInMM="220" brakeDiskThicknessInMM="4" minimumThicknessInMM="3"/>
+  <BrakeComponents xsi:type="brakesystem:BrakeCaliper" id="FrontBrakeCaliper" fittingPosition="front" specificationType="monobloc" pistonDiameterInMM="25" brakeDiskThickness="4">
+    <brakePads id="FrontBrakePads" fittingPosition="front" specificationType="sintered" heightInMM="40" widthInMM="50" thicknessInMM="8"/>
+  </BrakeComponents>
+  <BrakeComponents xsi:type="brakesystem:ABSSensor" id="FrontWheelSpeedSensor" fittingPosition="front" specificationType="hall effect" sensorType="hall" numberOfPins="3" lengthInMM="40"/>
+  <BrakeComponents xsi:type="brakesystem:BrakeDisk" id="RearBrakeDisk" fittingPosition="rear" specificationType="KA-RaceIng" OEM_number="BD-R-220S" diameterInMM="200" brakeDiskThicknessInMM="4" minimumThicknessInMM="3"/>
+  <BrakeComponents xsi:type="brakesystem:BrakeCaliper" id="RearBrakeCaliper" fittingPosition="rear" specificationType="monobloc" pistonDiameterInMM="22" brakeDiskThickness="4">
+    <brakePads id="RearBrakePads" fittingPosition="rear" specificationType="sintered" heightInMM="40" widthInMM="50" thicknessInMM="8"/>
+  </BrakeComponents>
+  <BrakeComponents xsi:type="brakesystem:ABSSensor" id="RearWheelSpeedSensor" fittingPosition="rear" specificationType="hall effect" sensorType="hall" numberOfPins="3" lengthInMM="40"/>
+  <BrakeComponents xsi:type="brakesystem:BrakeHose" id="FrontBrakeHose" fittingPosition="front" specificationType="steel braided" threadSize1="M10x1" threadSize2="M10x1" lengthInMM="450"/>
+</brakesystem:Brakesystem>

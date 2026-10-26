@@ -1,0 +1,455 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import tools.vitruv.methodologisttemplate.model.cad.CadPackage;
+import tools.vitruv.methodologisttemplate.model.cad.CADDocument;
+import tools.vitruv.methodologisttemplate.model.cad.Assembly;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://demonstrator.kit.edu/cad" as cad
+
+// Feature CPR of the stakeholder role AERO (copy of the pattern in UVL2CAD/FeatureToCAD.reactions):
+// a feature added below the domain root Aerodynamics is mapped to an existing element of the AERO CAD model
+// or a new element is created below the element that corresponds to the parent feature.
+
+reactions: featureToAERO
+in reaction to changes in uvl
+execute actions in cad
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"Aerodynamics")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, CadPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the AERO CAD model: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature " + feature.name + " to an existing element of the AERO CAD model or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, CadPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        }
+
+        var correspondingClass = containedClasses.get(0)
+        if(containedClasses.size() > 1){
+            // Every artefact corresponds to a feature, so the parent feature can be realised by several elements (its
+            // main element and the details inside it): use the outermost one that can contain elements; ask if ambiguous.
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            correspondingClass = KARaceIngUtil.outermost(containedClasses)
+            if(correspondingClass === null){
+                val index = userInteractor.singleSelectionDialogBuilder.message("The parent feature of " + feature.name + " is realised by several elements of the AERO CAD model. Below which one should the new feature be realised?").
+                            choices(EMFUtil.getAllNamesOfEObjects(containedClasses)).windowModality(WindowModality.MODAL).startInteraction
+                correspondingClass = containedClasses.get(index)
+            }
+        }
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof CADDocument && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the CADDocument for feature " + feature.name)
+            createElementInCADDocument(feature, correspondingClass as CADDocument)
+        }
+        else if (correspondingClass instanceof CADDocument && mapToExistingComponent == 0) {
+            mapToExistingInCADDocument(feature, correspondingClass as CADDocument)
+        }
+        else if (correspondingClass instanceof Assembly && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the Assembly for feature " + feature.name)
+            createElementInAssembly(feature, correspondingClass as Assembly)
+        }
+        else if (correspondingClass instanceof Assembly && mapToExistingComponent == 0) {
+            mapToExistingInAssembly(feature, correspondingClass as Assembly)
+        }
+        else {
+            System.out.println("Corresponding element for parent feature of " + feature.name + " cannot contain new elements: " + correspondingClass)
+            return
+        }
+    }
+}
+
+
+routine mapToExistingInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInCADDocument(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the AERO CAD model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    match{
+        require absence of cad::DocumentObject corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the AERO CAD model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Assembly":
+                createAssemblyInCADDocument(feature, container)
+            case "Sketch":
+                createSketchInCADDocument(feature, container)
+            case "Box":
+                createBoxInCADDocument(feature, container)
+            case "Cylinder":
+                createCylinderInCADDocument(feature, container)
+            case "Cone":
+                createConeInCADDocument(feature, container)
+            case "Sphere":
+                createSphereInCADDocument(feature, container)
+            case "Extrusion":
+                createExtrusionInCADDocument(feature, container)
+            case "Revolution":
+                createRevolutionInCADDocument(feature, container)
+            case "BooleanOperation":
+                createBooleanOperationInCADDocument(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createAssemblyInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Assembly
+    }
+    update {
+        System.out.println("Adding Assembly for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createSketchInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Sketch
+    }
+    update {
+        System.out.println("Adding Sketch for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createBoxInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Box
+    }
+    update {
+        System.out.println("Adding Box for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createCylinderInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Cylinder
+    }
+    update {
+        System.out.println("Adding Cylinder for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createConeInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Cone
+    }
+    update {
+        System.out.println("Adding Cone for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createSphereInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Sphere
+    }
+    update {
+        System.out.println("Adding Sphere for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createExtrusionInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Extrusion
+    }
+    update {
+        System.out.println("Adding Extrusion for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createRevolutionInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::Revolution
+    }
+    update {
+        System.out.println("Adding Revolution for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createBooleanOperationInCADDocument(uvl::Feature feature, cad::CADDocument container) {
+    create {
+        val newElement = new cad::BooleanOperation
+    }
+    update {
+        System.out.println("Adding BooleanOperation for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.objects.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInAssembly(uvl::Feature feature, cad::Assembly container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInAssembly(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the AERO CAD model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInAssembly(uvl::Feature feature, cad::Assembly container) {
+    match{
+        require absence of cad::DocumentObject corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the AERO CAD model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Assembly":
+                createAssemblyInAssembly(feature, container)
+            case "Sketch":
+                createSketchInAssembly(feature, container)
+            case "Box":
+                createBoxInAssembly(feature, container)
+            case "Cylinder":
+                createCylinderInAssembly(feature, container)
+            case "Cone":
+                createConeInAssembly(feature, container)
+            case "Sphere":
+                createSphereInAssembly(feature, container)
+            case "Extrusion":
+                createExtrusionInAssembly(feature, container)
+            case "Revolution":
+                createRevolutionInAssembly(feature, container)
+            case "BooleanOperation":
+                createBooleanOperationInAssembly(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createAssemblyInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Assembly
+    }
+    update {
+        System.out.println("Adding Assembly for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createSketchInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Sketch
+    }
+    update {
+        System.out.println("Adding Sketch for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createBoxInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Box
+    }
+    update {
+        System.out.println("Adding Box for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createCylinderInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Cylinder
+    }
+    update {
+        System.out.println("Adding Cylinder for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createConeInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Cone
+    }
+    update {
+        System.out.println("Adding Cone for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createSphereInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Sphere
+    }
+    update {
+        System.out.println("Adding Sphere for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createExtrusionInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Extrusion
+    }
+    update {
+        System.out.println("Adding Extrusion for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createRevolutionInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::Revolution
+    }
+    update {
+        System.out.println("Adding Revolution for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createBooleanOperationInAssembly(uvl::Feature feature, cad::Assembly container) {
+    create {
+        val newElement = new cad::BooleanOperation
+    }
+    update {
+        System.out.println("Adding BooleanOperation for feature " + feature.name + " to the AERO CAD model")
+        newElement.name = feature.name
+        container.children.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}

@@ -1,0 +1,15 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/config" as config
+
+// Vitruvius allows only one change propagation specification per pair of metamodels (uvl -> config), so the
+// ConfigCPRs of the template (feature2config) and the removal of features from the configurations
+// (featureEvolutionToConfig) are combined here.
+
+reactions: configCPRsKARaceIng
+in reaction to changes in uvl
+execute actions in config
+
+
+import feature2config using qualified names
+
+import featureEvolutionToConfig using qualified names

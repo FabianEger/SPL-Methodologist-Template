@@ -1,0 +1,35 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/thermal" as thermo
+
+// Root Feature CPR of the stakeholder role THERMO (copy of UVL2CAD/RootFeatureToCAD.reactions):
+// when the domain root feature Thermodynamics is inserted below the root feature, the THERMO thermal analysis model is created.
+
+reactions: rootFeatureToTHERMO
+in reaction to changes in uvl
+execute actions in thermo
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "Thermodynamics"
+    call createThermalAnalysisModelForDomainRoot(newValue)
+}
+
+
+routine createThermalAnalysisModelForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of thermo::ThermalAnalysisModel corresponding to feature
+    }
+    create{
+        val model = new thermo::ThermalAnalysisModel
+    }
+    update{
+        System.out.println("Adding THERMO thermal analysis model for domain root feature " + feature.name)
+        model.name = "THERMO"
+        persistProjectRelative(feature, model, new File("").toString() + "thermo.thermal")
+        addCorrespondenceBetween(feature, model)
+    }
+}

@@ -1,0 +1,399 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import tools.vitruv.methodologisttemplate.model.thermal.ThermalPackage;
+import tools.vitruv.methodologisttemplate.model.thermal.ThermalAnalysisModel;
+import tools.vitruv.methodologisttemplate.model.thermal.ThermalSystem;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/thermal" as thermo
+
+// Feature CPR of the stakeholder role THERMO (copy of the pattern in UVL2CAD/FeatureToCAD.reactions):
+// a feature added below the domain root Thermodynamics is mapped to an existing element of the THERMO thermal analysis model
+// or a new element is created below the element that corresponds to the parent feature.
+
+reactions: featureToTHERMO
+in reaction to changes in uvl
+execute actions in thermo
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"Thermodynamics")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, ThermalPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the THERMO thermal analysis model: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature " + feature.name + " to an existing element of the THERMO thermal analysis model or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, ThermalPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        }
+
+        var correspondingClass = containedClasses.get(0)
+        if(containedClasses.size() > 1){
+            // Every artefact corresponds to a feature, so the parent feature can be realised by several elements (its
+            // main element and the details inside it): use the outermost one that can contain elements; ask if ambiguous.
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            correspondingClass = KARaceIngUtil.outermost(containedClasses)
+            if(correspondingClass === null){
+                val index = userInteractor.singleSelectionDialogBuilder.message("The parent feature of " + feature.name + " is realised by several elements of the THERMO thermal analysis model. Below which one should the new feature be realised?").
+                            choices(EMFUtil.getAllNamesOfEObjects(containedClasses)).windowModality(WindowModality.MODAL).startInteraction
+                correspondingClass = containedClasses.get(index)
+            }
+        }
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof ThermalAnalysisModel && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the ThermalAnalysisModel for feature " + feature.name)
+            createElementInThermalAnalysisModel(feature, correspondingClass as ThermalAnalysisModel)
+        }
+        else if (correspondingClass instanceof ThermalAnalysisModel && mapToExistingComponent == 0) {
+            mapToExistingInThermalAnalysisModel(feature, correspondingClass as ThermalAnalysisModel)
+        }
+        else if (correspondingClass instanceof ThermalSystem && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the ThermalSystem for feature " + feature.name)
+            createElementInThermalSystem(feature, correspondingClass as ThermalSystem)
+        }
+        else if (correspondingClass instanceof ThermalSystem && mapToExistingComponent == 0) {
+            mapToExistingInThermalSystem(feature, correspondingClass as ThermalSystem)
+        }
+        else {
+            System.out.println("Corresponding element for parent feature of " + feature.name + " cannot contain new elements: " + correspondingClass)
+            return
+        }
+    }
+}
+
+
+routine mapToExistingInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInThermalAnalysisModel(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the THERMO thermal analysis model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    match{
+        require absence of thermo::ThermalElement corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the THERMO thermal analysis model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "ThermalSystem":
+                createThermalSystemInThermalAnalysisModel(feature, container)
+            case "HeatSource":
+                createHeatSourceInThermalAnalysisModel(feature, container)
+            case "HeatExchanger":
+                createHeatExchangerInThermalAnalysisModel(feature, container)
+            case "FluidLine":
+                createFluidLineInThermalAnalysisModel(feature, container)
+            case "ThermalProtection":
+                createThermalProtectionInThermalAnalysisModel(feature, container)
+            case "ThermalComponent":
+                createThermalComponentInThermalAnalysisModel(feature, container)
+            case "AnalysisCase":
+                createAnalysisCaseInThermalAnalysisModel(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createThermalSystemInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    create {
+        val newElement = new thermo::ThermalSystem
+    }
+    update {
+        System.out.println("Adding ThermalSystem for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createHeatSourceInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    create {
+        val newElement = new thermo::HeatSource
+    }
+    update {
+        System.out.println("Adding HeatSource for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createHeatExchangerInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    create {
+        val newElement = new thermo::HeatExchanger
+    }
+    update {
+        System.out.println("Adding HeatExchanger for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createFluidLineInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    create {
+        val newElement = new thermo::FluidLine
+    }
+    update {
+        System.out.println("Adding FluidLine for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createThermalProtectionInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    create {
+        val newElement = new thermo::ThermalProtection
+    }
+    update {
+        System.out.println("Adding ThermalProtection for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createThermalComponentInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    create {
+        val newElement = new thermo::ThermalComponent
+    }
+    update {
+        System.out.println("Adding ThermalComponent for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createAnalysisCaseInThermalAnalysisModel(uvl::Feature feature, thermo::ThermalAnalysisModel container) {
+    create {
+        val newElement = new thermo::AnalysisCase
+    }
+    update {
+        System.out.println("Adding AnalysisCase for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInThermalSystem(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the THERMO thermal analysis model do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    match{
+        require absence of thermo::ThermalElement corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the THERMO thermal analysis model do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "ThermalSystem":
+                createThermalSystemInThermalSystem(feature, container)
+            case "HeatSource":
+                createHeatSourceInThermalSystem(feature, container)
+            case "HeatExchanger":
+                createHeatExchangerInThermalSystem(feature, container)
+            case "FluidLine":
+                createFluidLineInThermalSystem(feature, container)
+            case "ThermalProtection":
+                createThermalProtectionInThermalSystem(feature, container)
+            case "ThermalComponent":
+                createThermalComponentInThermalSystem(feature, container)
+            case "AnalysisCase":
+                createAnalysisCaseInThermalSystem(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createThermalSystemInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    create {
+        val newElement = new thermo::ThermalSystem
+    }
+    update {
+        System.out.println("Adding ThermalSystem for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createHeatSourceInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    create {
+        val newElement = new thermo::HeatSource
+    }
+    update {
+        System.out.println("Adding HeatSource for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createHeatExchangerInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    create {
+        val newElement = new thermo::HeatExchanger
+    }
+    update {
+        System.out.println("Adding HeatExchanger for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createFluidLineInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    create {
+        val newElement = new thermo::FluidLine
+    }
+    update {
+        System.out.println("Adding FluidLine for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createThermalProtectionInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    create {
+        val newElement = new thermo::ThermalProtection
+    }
+    update {
+        System.out.println("Adding ThermalProtection for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createThermalComponentInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    create {
+        val newElement = new thermo::ThermalComponent
+    }
+    update {
+        System.out.println("Adding ThermalComponent for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createAnalysisCaseInThermalSystem(uvl::Feature feature, thermo::ThermalSystem container) {
+    create {
+        val newElement = new thermo::AnalysisCase
+    }
+    update {
+        System.out.println("Adding AnalysisCase for feature " + feature.name + " to the THERMO thermal analysis model")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}

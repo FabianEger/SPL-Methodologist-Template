@@ -1,0 +1,349 @@
+import java.io.File;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import tools.vitruv.methodologisttemplate.model.testbench.TestbenchPackage;
+import tools.vitruv.methodologisttemplate.model.testbench.TestBenchConfiguration;
+import tools.vitruv.methodologisttemplate.model.testbench.TestSuite;
+import tools.vitruv.methodologisttemplate.model.testbench.TestCase;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/testbench" as tb
+
+// Feature CPR of the stakeholder role VAL (copy of the pattern in UVL2CAD/FeatureToCAD.reactions):
+// a feature added below the domain root Validation is mapped to an existing element of the VAL test-bench configuration
+// or a new element is created below the element that corresponds to the parent feature.
+
+reactions: featureToVAL
+in reaction to changes in uvl
+execute actions in tb
+
+
+// A Feature is added under the domain root
+reaction UVLFeatureInsertedIntoDomainRoot{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isFeatureAddedtoThisDomain(newValue, newValue.eContainer().eContainer(),"Validation")
+    call decisionRoutineForAddedFeature(newValue)
+}
+
+
+// Decide at which level the feature was added by checking what corresponds to the parent feature
+routine decisionRoutineForAddedFeature(uvl::Feature feature){
+    match{
+        val correspondingElements = retrieve many EObject corresponding to feature.eContainer().eContainer()
+        val correspondingElementsToFeature = retrieve many EObject corresponding to feature
+    }
+    update{
+
+        val correspondingElementsToFeatureOfMM = EMFUtil.filterByMetamodel(correspondingElementsToFeature, TestbenchPackage.eINSTANCE)
+        if(!correspondingElementsToFeatureOfMM.isEmpty()){
+            System.out.println("Feature " + feature.name + " already has corresponding element(s) in the VAL test-bench configuration: " + correspondingElementsToFeatureOfMM)
+            return
+        }
+
+
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature " + feature.name + " to an existing element of the VAL test-bench configuration or to a new one?").
+                                    choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
+
+
+        val containedClasses = EMFUtil.filterByMetamodel(correspondingElements, TestbenchPackage.eINSTANCE)
+        System.out.println("Contained classes: " + containedClasses)
+
+        if(containedClasses.isEmpty()){
+            System.out.println("No corresponding EClass for parent feature " + feature.name + "found")
+            return
+        }
+
+        var correspondingClass = containedClasses.get(0)
+        if(containedClasses.size() > 1){
+            // Every artefact corresponds to a feature, so the parent feature can be realised by several elements (its
+            // main element and the details inside it): use the outermost one that can contain elements; ask if ambiguous.
+            System.out.println("Multiple corresponding EClasses for parent feature " + feature.name + " found: " + containedClasses)
+            correspondingClass = KARaceIngUtil.outermost(containedClasses)
+            if(correspondingClass === null){
+                val index = userInteractor.singleSelectionDialogBuilder.message("The parent feature of " + feature.name + " is realised by several elements of the VAL test-bench configuration. Below which one should the new feature be realised?").
+                            choices(EMFUtil.getAllNamesOfEObjects(containedClasses)).windowModality(WindowModality.MODAL).startInteraction
+                correspondingClass = containedClasses.get(index)
+            }
+        }
+
+        System.out.println("Corresponding class for parent feature " + feature.name + ": " + correspondingClass)
+
+        if (correspondingClass instanceof TestBenchConfiguration && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the TestBenchConfiguration for feature " + feature.name)
+            createElementInTestBenchConfiguration(feature, correspondingClass as TestBenchConfiguration)
+        }
+        else if (correspondingClass instanceof TestBenchConfiguration && mapToExistingComponent == 0) {
+            mapToExistingInTestBenchConfiguration(feature, correspondingClass as TestBenchConfiguration)
+        }
+        else if (correspondingClass instanceof TestSuite && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the TestSuite for feature " + feature.name)
+            createElementInTestSuite(feature, correspondingClass as TestSuite)
+        }
+        else if (correspondingClass instanceof TestSuite && mapToExistingComponent == 0) {
+            mapToExistingInTestSuite(feature, correspondingClass as TestSuite)
+        }
+        else if (correspondingClass instanceof TestCase && mapToExistingComponent == 1) {
+            System.out.println("Creating new element below the TestCase for feature " + feature.name)
+            createElementInTestCase(feature, correspondingClass as TestCase)
+        }
+        else if (correspondingClass instanceof TestCase && mapToExistingComponent == 0) {
+            mapToExistingInTestCase(feature, correspondingClass as TestCase)
+        }
+        else {
+            System.out.println("Corresponding element for parent feature of " + feature.name + " cannot contain new elements: " + correspondingClass)
+            return
+        }
+    }
+}
+
+
+routine mapToExistingInTestBenchConfiguration(uvl::Feature feature, tb::TestBenchConfiguration container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInTestBenchConfiguration(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the VAL test-bench configuration do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInTestBenchConfiguration(uvl::Feature feature, tb::TestBenchConfiguration container) {
+    match{
+        require absence of tb::TestElement corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the VAL test-bench configuration do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "Instrument":
+                createInstrumentInTestBenchConfiguration(feature, container)
+            case "TestSuite":
+                createTestSuiteInTestBenchConfiguration(feature, container)
+            case "TestCase":
+                createTestCaseInTestBenchConfiguration(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createInstrumentInTestBenchConfiguration(uvl::Feature feature, tb::TestBenchConfiguration container) {
+    create {
+        val newElement = new tb::Instrument
+    }
+    update {
+        System.out.println("Adding Instrument for feature " + feature.name + " to the VAL test-bench configuration")
+        newElement.name = feature.name
+        container.instruments.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createTestSuiteInTestBenchConfiguration(uvl::Feature feature, tb::TestBenchConfiguration container) {
+    create {
+        val newElement = new tb::TestSuite
+    }
+    update {
+        System.out.println("Adding TestSuite for feature " + feature.name + " to the VAL test-bench configuration")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createTestCaseInTestBenchConfiguration(uvl::Feature feature, tb::TestBenchConfiguration container) {
+    create {
+        val newElement = new tb::TestCase
+    }
+    update {
+        System.out.println("Adding TestCase for feature " + feature.name + " to the VAL test-bench configuration")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInTestSuite(uvl::Feature feature, tb::TestSuite container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInTestSuite(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the VAL test-bench configuration do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInTestSuite(uvl::Feature feature, tb::TestSuite container) {
+    match{
+        require absence of tb::TestElement corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the VAL test-bench configuration do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "TestSuite":
+                createTestSuiteInTestSuite(feature, container)
+            case "TestCase":
+                createTestCaseInTestSuite(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createTestSuiteInTestSuite(uvl::Feature feature, tb::TestSuite container) {
+    create {
+        val newElement = new tb::TestSuite
+    }
+    update {
+        System.out.println("Adding TestSuite for feature " + feature.name + " to the VAL test-bench configuration")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+routine createTestCaseInTestSuite(uvl::Feature feature, tb::TestSuite container) {
+    create {
+        val newElement = new tb::TestCase
+    }
+    update {
+        System.out.println("Adding TestCase for feature " + feature.name + " to the VAL test-bench configuration")
+        newElement.name = feature.name
+        container.elements.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}
+
+
+routine mapToExistingInTestCase(uvl::Feature feature, tb::TestCase container) {
+    update{
+
+        val existingComponents = EMFUtil.getAllContainedEObjects(container)
+
+        System.out.println("Existing components: " + existingComponents)
+
+        if(existingComponents.isEmpty()){
+            System.out.println("No existing elements to map to. Please create a new element.")
+            createElementInTestCase(feature, container)
+            return
+        }
+
+        val componentNames = EMFUtil.getAllNamesOfEObjects(existingComponents)
+
+        val selectedComponentIndex = userInteractor.singleSelectionDialogBuilder.message("To which existing element of the VAL test-bench configuration do you want to map the new feature " + feature.name + "?").
+                                    choices(componentNames).windowModality(WindowModality.MODAL).startInteraction
+
+        if(selectedComponentIndex < 0 || selectedComponentIndex >= existingComponents.size()){
+            System.out.println("Invalid selection. Please try again.")
+            return
+        }
+
+        val selectedComponent = existingComponents.get(selectedComponentIndex)
+        addCorrespondenceBetween(feature, selectedComponent)
+    }
+}
+
+
+
+routine createElementInTestCase(uvl::Feature feature, tb::TestCase container) {
+    match{
+        require absence of tb::TestStep corresponding to feature
+    }
+    update{
+        val containedClasses = EMFUtil.findContainedClasses(container.eClass())
+        System.out.println("Contained classes: " + containedClasses)
+
+
+        val componentType = userInteractor.singleSelectionDialogBuilder.message(
+            "What element of the VAL test-bench configuration do you want to add below " + EMFUtil.getNameOf(container) + " to be correspondent to the feature " + feature.name + "?").choices(
+            EMFUtil.getAllNamesOfEClass(containedClasses)).windowModality(WindowModality.MODAL).
+            startInteraction
+
+        System.out.println("Selected element type index: " + componentType)
+
+        switch (EMFUtil.getAllNamesOfEClass(containedClasses).get(componentType)) {
+            case "TestStep":
+                createTestStepInTestCase(feature, container)
+            default:
+                return // do nothing
+        }
+    }
+}
+
+routine createTestStepInTestCase(uvl::Feature feature, tb::TestCase container) {
+    create {
+        val newElement = new tb::TestStep
+    }
+    update {
+        System.out.println("Adding TestStep for feature " + feature.name + " to the VAL test-bench configuration")
+        newElement.name = feature.name
+        container.steps.add(newElement);
+        addCorrespondenceBetween(feature, newElement);
+    }
+}

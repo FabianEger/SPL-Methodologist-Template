@@ -1,0 +1,35 @@
+import java.io.File;
+import tools.vitruv.methodologisttemplate.consistency.FeatureTreeUtil;
+import UVLPackage.Feature;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://demonstrator.kit.edu/cad" as cad
+
+// Root Feature CPR of the stakeholder role AERO (copy of UVL2CAD/RootFeatureToCAD.reactions):
+// when the domain root feature Aerodynamics is inserted below the root feature, the AERO CAD model is created.
+
+reactions: rootFeatureToAERO
+in reaction to changes in uvl
+execute actions in cad
+
+reaction UVLDomainRootInserted{
+    after element uvl::Feature inserted in uvl::Group[feature]
+    with FeatureTreeUtil.isRootFeature(newValue.eContainer().eContainer()) && newValue.name == "Aerodynamics"
+    call createCADDocumentForDomainRoot(newValue)
+}
+
+
+routine createCADDocumentForDomainRoot(uvl::Feature feature) {
+    match{
+        require absence of cad::CADDocument corresponding to feature
+    }
+    create{
+        val model = new cad::CADDocument
+    }
+    update{
+        System.out.println("Adding AERO CAD model for domain root feature " + feature.name)
+        model.name = "AERO"
+        persistProjectRelative(feature, model, new File("").toString() + "aero.cad")
+        addCorrespondenceBetween(feature, model)
+    }
+}

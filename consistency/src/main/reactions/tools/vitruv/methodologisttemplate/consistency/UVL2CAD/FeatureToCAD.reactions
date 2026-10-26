@@ -23,6 +23,8 @@ in reaction to changes in uvl
 execute actions in cad
 
 
+
+
 // A Feature is added under the domain root
 reaction UVLFeatureInsertedIntoDomainRoot{
     after element uvl::Feature inserted in uvl::Group[feature]
@@ -46,7 +48,7 @@ routine decisionRoutineForAddedFeature(uvl::Feature feature){
         }
 
 
-        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature to an existing brake component or to a new one?").
+        val mapToExistingComponent = userInteractor.singleSelectionDialogBuilder.message("Do you want to map the new feature to an existing cad namespace or to a new one?").
                                     choices(Arrays.asList("Existing","New")).windowModality(WindowModality.MODAL).startInteraction
 
 

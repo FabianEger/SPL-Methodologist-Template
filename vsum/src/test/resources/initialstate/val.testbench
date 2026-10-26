@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testbench:TestBenchConfiguration xmlns:xmi="http://www.omg.org/XMI" xmlns:testbench="http://vitruv.tools/methodologisttemplate/testbench" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="VAL" xmi:version="2.0">
+  <instruments name="Stopwatch" measuredQuantity="time" unit="s"/>
+  <instruments name="TiltPlatform" measuredQuantity="angle" unit="deg"/>
+  <instruments name="SoundLevelMeter" measuredQuantity="sound pressure" unit="dB(A)"/>
+  <instruments name="IsolationTester" measuredQuantity="isolation resistance" unit="MOhm"/>
+  <instruments name="BrakeDeceleration" measuredQuantity="deceleration" unit="m/s2"/>
+  <elements xsi:type="testbench:TestSuite" name="TechnicalInspection">
+    <elements xsi:type="testbench:TestCase" name="DriverEgressTest" procedure="Procedure of DriverEgressTest" passCriterion="according to the rules">
+      <steps name="DriverEgressTestSetup" description="prepare the car"/>
+      <steps name="DriverEgressTestExecution" description="run the test"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="TiltTest" procedure="Procedure of TiltTest" passCriterion="according to the rules">
+      <steps name="TiltTestSetup" description="prepare the car"/>
+      <steps name="TiltTestExecution" description="run the test"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="ETCSafetyDemonstration" procedure="Procedure of ETCSafetyDemonstration" passCriterion="according to the rules">
+      <steps name="ETCSafetyDemonstrationSetup" description="prepare the car"/>
+      <steps name="ETCSafetyDemonstrationExecution" description="run the test"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="NoiseTest" procedure="Procedure of NoiseTest" passCriterion="according to the rules">
+      <steps name="NoiseTestSetup" description="prepare the car"/>
+      <steps name="NoiseTestExecution" description="run the test"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="PositiveLockingDemonstration" procedure="Procedure of PositiveLockingDemonstration" passCriterion="according to the rules">
+      <steps name="PositiveLockingDemonstrationSetup" description="prepare the car"/>
+      <steps name="PositiveLockingDemonstrationExecution" description="run the test"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="RainTest" procedure="Procedure of RainTest" passCriterion="according to the rules">
+      <steps name="RainTestSetup" description="prepare the car"/>
+      <steps name="RainTestExecution" description="run the test"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="BSPDSignalInjectionTest" procedure="inject a test signal into the BSPD and check the SDC opens"/>
+  </elements>
+  <elements xsi:type="testbench:TestSuite" name="DynamicTests">
+    <elements xsi:type="testbench:TestCase" name="EBSBrakingPerformance" procedure="Procedure of EBSBrakingPerformance" passCriterion="according to the rules">
+      <steps name="EBSBrakingPerformanceSetup" description="prepare the car"/>
+      <steps name="EBSBrakingPerformanceExecution" description="run the test"/>
+    </elements>
+  </elements>
+  <elements xsi:type="testbench:TestSuite" name="BrakeValidation">
+    <elements xsi:type="testbench:TestCase" name="BrakeAssemblyBuild" procedure="build the brake assembly from the ordered parts" passCriterion="all parts fit the CAD model" verifiedRequirements="ANF-205">
+      <steps name="BrakeAssemblyBuildCheck" description="compare ordered parts with the CAD model" expectedResult="parts fit"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="CaliperPistonTemperatureTest" procedure="endurance run with thermocouples on the caliper pistons" passCriterion="piston temperature below the limit" verifiedRequirements="EOrderedSet()">
+      <steps name="CaliperPistonTemperatureMeasurement" description="measure the piston temperature" expectedResult="FrontCaliperPistonThermalModel temperature &lt;= 350.0 C"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="BrakeDiscSimulationCorrelation" procedure="brake test on the test bench, compared with the brake model of the simulation" passCriterion="deceleration deviates at most 5 % from the simulation" verifiedRequirements="EOrderedSet()">
+      <steps name="BrakeDiscDecelerationMeasurement" description="measure the deceleration" expectedResult="deviation &lt;= 5 %"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="BrakePedalMaterialCompliance" procedure="check the material certificate of the brake pedal" passCriterion="material in {Steel, Aluminium, Titanium} (ANF-217)" verifiedRequirements="ANF-217">
+      <steps name="BrakePedalMaterialCertificate" description="inspect the certificate" expectedResult="material certified"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="ScatterShieldCompliance" procedure="technical inspection of the scatter shields (T 7.3.2 - T 7.3.4)" passCriterion="scatter shield present and compliant" verifiedRequirements="ANF-259 ANF-260 ANF-261 ANF-262 ANF-263 ANF-264 ANF-265">
+      <steps name="ScatterShieldInspection" description="inspect position, width and fasteners" expectedResult="compliant"/>
+    </elements>
+    <elements xsi:type="testbench:TestCase" name="BrakeOverTravelSwitchTest" procedure="simulate a brake circuit failure and press the pedal beyond its travel" passCriterion="the SDC opens" verifiedRequirements="ANF-221 ANF-222">
+      <steps name="BOTSActuation" description="press the pedal beyond its travel" expectedResult="SDC open"/>
+    </elements>
+  </elements>
+</testbench:TestBenchConfiguration>

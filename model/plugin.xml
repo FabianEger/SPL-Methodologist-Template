@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 
-<!--
--->
-
 <plugin>
-
-   
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated UVL -->
@@ -17,10 +12,18 @@
    </extension>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated cad -->
+      <!-- @generated legacy cad -->
       <package
             uri="http://www.example.org/cad"
             class="edu.kit.ipd.sdq.metamodels.cad.CadPackage"
+            genModel="src/main/ecore/legacycad.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated cad -->
+      <package
+            uri="http://demonstrator.kit.edu/cad"
+            class="tools.vitruv.methodologisttemplate.model.cad.CadPackage"
             genModel="src/main/ecore/cad.genmodel"/>
    </extension>
 
@@ -38,6 +41,54 @@
             uri="http://www.example.org/brakesystem"
             class="brakesystem.BrakesystemPackage"
             genModel="src/main/ecore/brakesystem.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated bom -->
+      <package
+            uri="http://example.org/bom"
+            class="tools.vitruv.methodologisttemplate.model.bom.BomPackage"
+            genModel="src/main/ecore/bom.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated simulink -->
+      <package
+            uri="http://www.example.org/simulink"
+            class="tools.vitruv.methodologisttemplate.model.simulink.SimuLinkPackage"
+            genModel="src/main/ecore/simuLink.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated requirements -->
+      <package
+            uri="http://vitruv.tools/methodologisttemplate/requirements"
+            class="tools.vitruv.methodologisttemplate.model.requirements.RequirementsPackage"
+            genModel="src/main/ecore/requirements.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated thermal -->
+      <package
+            uri="http://vitruv.tools/methodologisttemplate/thermal"
+            class="tools.vitruv.methodologisttemplate.model.thermal.ThermalPackage"
+            genModel="src/main/ecore/thermal.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated testbench -->
+      <package
+            uri="http://vitruv.tools/methodologisttemplate/testbench"
+            class="tools.vitruv.methodologisttemplate.model.testbench.TestbenchPackage"
+            genModel="src/main/ecore/testbench.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated electrical -->
+      <package
+            uri="http://vitruv.tools/methodologisttemplate/electrical"
+            class="tools.vitruv.methodologisttemplate.model.electrical.ElectricalPackage"
+            genModel="src/main/ecore/electrical.genmodel"/>
    </extension>
 
 </plugin>

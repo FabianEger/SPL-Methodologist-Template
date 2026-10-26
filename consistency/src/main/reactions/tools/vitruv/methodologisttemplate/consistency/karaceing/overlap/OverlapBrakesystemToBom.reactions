@@ -1,0 +1,229 @@
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import tools.vitruv.methodologisttemplate.model.bom.BomPackage;
+
+import "http://www.example.org/brakesystem" as brake
+import "http://example.org/bom" as bom
+
+// Consistency between semantically overlapping artefacts (brakesystem -> bom), based on the correspondences
+// tagged "overlap" in the VSUM:
+// * a new element below an artefact that overlaps with bom artefacts gets a counterpart there (created or
+//   linked), or the overlap is ignored;
+// * when an artefact with overlapping bom artefacts is removed, the counterparts are deleted or kept;
+// * trace links (tag "requirement") of removed elements are removed; removing an element traced to requirements
+//   reports the violated requirements (rule AR10);
+// * attribute and structure changes of an artefact (or of an element below it) are propagated to the overlapping
+//   bom artefacts by the rules in KARaceIngOverlapRules (AR1-AR13): derived values are updated, everything that
+//   cannot be resolved automatically is notified to the owner of the counterpart.
+
+reactions: overlapBrakesystemToBom
+in reaction to changes in brake
+execute actions in bom
+
+
+reaction NewElementInBrakesystemBrakeComponents{
+    after element brake::BrakeComponent inserted in brake::Brakesystem[BrakeComponents]
+    call propagateNewElement(newValue)
+}
+
+reaction BrakeComponentRemoved{
+    after element brake::BrakeComponent deleted
+    call propagateRemovedElement(affectedEObject)
+}
+
+reaction StructureAddedInBrakesystemBrakeComponents{
+    after element brake::BrakeComponent inserted in brake::Brakesystem[BrakeComponents]
+    call propagateStructureChange(affectedEObject, newValue, "added")
+}
+
+reaction StructureRemovedFromBrakesystemBrakeComponents{
+    after element brake::BrakeComponent removed from brake::Brakesystem[BrakeComponents]
+    call propagateStructureChange(affectedEObject, oldValue, "removed")
+}
+
+reaction StructureAddedInBrakeCaliperBrakePads{
+    after element brake::BrakePad inserted in brake::BrakeCaliper[brakePads]
+    call propagateStructureChange(affectedEObject, newValue, "added")
+}
+
+reaction StructureRemovedFromBrakeCaliperBrakePads{
+    after element brake::BrakePad removed from brake::BrakeCaliper[brakePads]
+    call propagateStructureChange(affectedEObject, oldValue, "removed")
+}
+
+reaction BrakeDiskVentilatedChanged{
+    after attribute replaced at brake::BrakeDisk[ventilated]
+    call propagateValueChange(affectedEObject, "ventilated", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakeDiskBrakeDiskThicknessInMMChanged{
+    after attribute replaced at brake::BrakeDisk[brakeDiskThicknessInMM]
+    call propagateValueChange(affectedEObject, "brakeDiskThicknessInMM", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakeDiskMinimumThicknessInMMChanged{
+    after attribute replaced at brake::BrakeDisk[minimumThicknessInMM]
+    call propagateValueChange(affectedEObject, "minimumThicknessInMM", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakeDiskDiameterInMMChanged{
+    after attribute replaced at brake::BrakeDisk[diameterInMM]
+    call propagateValueChange(affectedEObject, "diameterInMM", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakeComponentSpecificationTypeChanged{
+    after attribute replaced at brake::BrakeComponent[specificationType]
+    call propagateValueChange(affectedEObject, "specificationType", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakeComponentOEM_numberChanged{
+    after attribute replaced at brake::BrakeComponent[OEM_number]
+    call propagateValueChange(affectedEObject, "OEM_number", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakeCaliperPistonDiameterInMMChanged{
+    after attribute replaced at brake::BrakeCaliper[pistonDiameterInMM]
+    call propagateValueChange(affectedEObject, "pistonDiameterInMM", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakePadThicknessInMMChanged{
+    after attribute replaced at brake::BrakePad[thicknessInMM]
+    call propagateValueChange(affectedEObject, "thicknessInMM", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+reaction BrakePadWearWarningChanged{
+    after attribute replaced at brake::BrakePad[wearWarning]
+    call propagateValueChange(affectedEObject, "wearWarning", String.valueOf(oldValue), String.valueOf(newValue))
+}
+
+
+routine propagateNewElement(EObject changedElement) {
+    match{
+        val ownOverlaps = retrieve many EObject corresponding to changedElement tagged "overlap"
+        val parentOverlaps = retrieve many EObject corresponding to changedElement.eContainer() tagged "overlap"
+    }
+    update{
+        if (!ownOverlaps.isEmpty()) {
+            return // counterpart already exists (e.g. the element itself was created as a counterpart)
+        }
+        val counterparts = KARaceIngUtil.alive(EMFUtil.filterByMetamodel(parentOverlaps, BomPackage.eINSTANCE))
+        for (overlapping : counterparts) {
+            val choice = userInteractor.singleSelectionDialogBuilder.message("[Overlap] " + KARaceIngUtil.nameOf(changedElement) + " was added to " + KARaceIngUtil.nameOf(changedElement.eContainer()) + " (" + KARaceIngUtil.domainOf(changedElement) + "), which overlaps with " + KARaceIngUtil.nameOf(overlapping) + " (" + KARaceIngUtil.domainOf(overlapping) + "). Create a counterpart, link an existing element, or ignore?").
+                            choices(Arrays.asList("Create counterpart", "Link existing element", "Ignore")).windowModality(WindowModality.MODAL).startInteraction
+            if (choice == 0) {
+                val container = KARaceIngUtil.counterpartContainer(overlapping)
+                val classes = KARaceIngUtil.creatableClasses(container)
+                if (!classes.isEmpty()) {
+                    // a selection dialog needs at least two choices; with one possible kind it is used directly
+                    val index = if (classes.size() == 1) 0 else userInteractor.singleSelectionDialogBuilder.message("[Overlap] Which kind of element should the counterpart of " + KARaceIngUtil.nameOf(changedElement) + " below " + KARaceIngUtil.nameOf(container) + " (" + KARaceIngUtil.domainOf(container) + ") be?").
+                                    choices(KARaceIngUtil.classNames(classes)).windowModality(WindowModality.MODAL).startInteraction
+                    if (index >= 0 && index < classes.size()) {
+                        val counterpart = KARaceIngUtil.createChild(container, classes.get(index), KARaceIngUtil.nameOf(changedElement))
+                        System.out.println("Created counterpart " + KARaceIngUtil.nameOf(counterpart) + " in " + KARaceIngUtil.domainOf(counterpart))
+                        addCorrespondenceBetween(changedElement, counterpart, "overlap")
+                        for (message : KARaceIngOverlapRules.counterpartCreated(changedElement, counterpart, overlapping)) {
+                            userInteractor.notificationDialogBuilder.message(message).title(KARaceIngOverlapRules.TITLE).windowModality(WindowModality.MODELESS).startInteraction
+                        }
+                    }
+                }
+            } else if (choice == 1) {
+                val candidates = KARaceIngUtil.namedContents(overlapping)
+                // a selection dialog needs at least two choices; a single candidate is linked directly
+                val index = if (candidates.size() <= 1) candidates.size() - 1 else userInteractor.singleSelectionDialogBuilder.message("[Overlap] Which element of " + KARaceIngUtil.nameOf(overlapping) + " (" + KARaceIngUtil.domainOf(overlapping) + ") corresponds to " + KARaceIngUtil.nameOf(changedElement) + "?").
+                                choices(KARaceIngUtil.nameList(candidates)).windowModality(WindowModality.MODAL).startInteraction
+                if (index >= 0 && index < candidates.size()) {
+                    addCorrespondenceBetween(changedElement, candidates.get(index), "overlap")
+                }
+            }
+        }
+    }
+}
+
+
+routine propagateRemovedElement(EObject changedElement) {
+    match{
+        val overlaps = retrieve many EObject corresponding to changedElement tagged "overlap"
+        val traces = retrieve many EObject corresponding to changedElement tagged "requirement"
+    }
+    update{
+        val tracedHere = EMFUtil.filterByMetamodel(traces, BomPackage.eINSTANCE)
+        for (requirement : tracedHere) {
+            recordTracesOfRequirement(requirement)
+        }
+        for (message : KARaceIngOverlapRules.removedTracedArtefact(changedElement, tracedHere)) {
+            userInteractor.notificationDialogBuilder.message(message).title(KARaceIngOverlapRules.TITLE).windowModality(WindowModality.MODELESS).startInteraction
+        }
+        for (trace : tracedHere) {
+            removeCorrespondenceBetween(changedElement, trace, "requirement")
+        }
+        for (overlapping : EMFUtil.filterByMetamodel(overlaps, BomPackage.eINSTANCE)) {
+            removeCorrespondenceBetween(changedElement, overlapping, "overlap")
+            if (KARaceIngUtil.isAlive(overlapping)) {
+                val choice = userInteractor.singleSelectionDialogBuilder.message("[Overlap] " + KARaceIngUtil.nameOf(changedElement) + " was removed. It overlaps with " + KARaceIngUtil.nameOf(overlapping) + " (" + KARaceIngUtil.domainOf(overlapping) + "). Delete the counterpart or keep it?").
+                                choices(Arrays.asList("Delete counterpart", "Keep counterpart")).windowModality(WindowModality.MODAL).startInteraction
+                if (choice == 0) {
+                    System.out.println("Deleting counterpart " + KARaceIngUtil.nameOf(overlapping))
+                    KARaceIngOverlapRules.counterpartRemoved(overlapping)
+                    removeObject(overlapping)
+                }
+            }
+        }
+    }
+}
+
+
+// ---- attribute and structure level (KARaceIngOverlapRules) ----------------------------------------------
+
+routine recordTracesOfRequirement(EObject requirement) {
+    match{
+        val traced = retrieve many EObject corresponding to requirement tagged "requirement"
+    }
+    update{
+        KARaceIngOverlapRules.recordTraces(requirement, traced)
+    }
+}
+
+
+routine propagateStructureChange(EObject container, EObject child, String how) {
+    update{
+        KARaceIngOverlapRules.rememberContainer(child, container, how)
+        if (how == "added") {
+            propagateValueChange(container, "children", null, KARaceIngUtil.nameOf(child))
+        } else {
+            propagateValueChange(container, "children", KARaceIngUtil.nameOf(child), null)
+        }
+    }
+}
+
+
+routine propagateValueChange(EObject changed, String feature, String oldValue, String newValue) {
+    update{
+        propagateValueChangeFrom(changed, changed, feature, oldValue, newValue)
+    }
+}
+
+
+// The anchor is the changed element or the nearest container with overlaps (or requirement traces) in the
+// bom model.
+routine propagateValueChangeFrom(EObject changed, EObject anchor, String feature, String oldValue, String newValue) {
+    match{
+        val overlaps = retrieve many EObject corresponding to anchor tagged "overlap"
+        val traces = retrieve many EObject corresponding to anchor tagged "requirement"
+    }
+    update{
+        val counterparts = KARaceIngUtil.alive(EMFUtil.filterByMetamodel(overlaps, BomPackage.eINSTANCE))
+        counterparts.addAll(KARaceIngUtil.alive(EMFUtil.filterByMetamodel(traces, BomPackage.eINSTANCE)))
+        if (counterparts.isEmpty()) {
+            if (anchor.eContainer() !== null) {
+                propagateValueChangeFrom(changed, anchor.eContainer(), feature, oldValue, newValue)
+            }
+            return
+        }
+        for (message : KARaceIngOverlapRules.propagate(changed, anchor, feature, oldValue, newValue, counterparts, overlaps, traces)) {
+            userInteractor.notificationDialogBuilder.message(message).title(KARaceIngOverlapRules.TITLE).windowModality(WindowModality.MODELESS).startInteraction
+        }
+    }
+}

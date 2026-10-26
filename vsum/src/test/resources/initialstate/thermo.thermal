@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<thermal:ThermalAnalysisModel xmlns:xmi="http://www.omg.org/XMI" xmlns:thermal="http://vitruv.tools/methodologisttemplate/thermal" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="THERMO" xmi:version="2.0">
+  <elements xsi:type="thermal:ThermalSystem" name="DriverHeatProtection">
+    <elements xsi:type="thermal:ThermalProtection" name="DriverHeatProtectionElement"/>
+  </elements>
+  <elements xsi:type="thermal:ThermalSystem" name="CoolingAndLubrication">
+    <elements xsi:type="thermal:ThermalSystem" name="CoolingSystem">
+      <elements xsi:type="thermal:ThermalSystem" name="CoolantCoverShielding">
+        <elements xsi:type="thermal:ThermalProtection" name="CoolantCoverShieldingElement"/>
+      </elements>
+    </elements>
+    <elements xsi:type="thermal:ThermalSystem" name="CatchCans">
+      <elements xsi:type="thermal:FluidLine" name="CatchCansElement"/>
+    </elements>
+    <elements xsi:type="thermal:ThermalProtection" name="MinTemperatureResistance" material="silicone" temperatureResistance="120.0"/>
+  </elements>
+  <elements xsi:type="thermal:ThermalSystem" name="HydrogenVentilation">
+    <elements xsi:type="thermal:FluidLine" name="HydrogenVentilationElement"/>
+  </elements>
+  <elements xsi:type="thermal:ThermalSystem" name="CombustionProcess">
+    <elements xsi:type="thermal:ThermalSystem" name="ChargeAirCooling">
+      <elements xsi:type="thermal:HeatExchanger" name="ChargeAirCoolingElement"/>
+    </elements>
+    <elements xsi:type="thermal:ThermalSystem" name="CrankcaseVentilation">
+      <elements xsi:type="thermal:FluidLine" name="CrankcaseVentilationElement"/>
+    </elements>
+    <elements xsi:type="thermal:ThermalSystem" name="ExhaustSystem">
+      <elements xsi:type="thermal:HeatSource" name="ExhaustSystemElement"/>
+    </elements>
+    <elements xsi:type="thermal:ThermalSystem" name="HydrogenCombustion">
+      <elements xsi:type="thermal:ThermalSystem" name="WaterInjection">
+        <elements xsi:type="thermal:FluidLine" name="WaterInjectionElement"/>
+      </elements>
+      <elements xsi:type="thermal:ThermalSystem" name="EngineConversionToHydrogen">
+        <elements xsi:type="thermal:AnalysisCase" name="EngineConversionAnalysis" method="0D/1D engine simulation" result="petrol base engine converted to H2 port injection" passed="true"/>
+      </elements>
+    </elements>
+    <elements xsi:type="thermal:ThermalSystem" name="BackfireProtection">
+      <elements xsi:type="thermal:AnalysisCase" name="BackfireReliefAnalysis" method="1D gas dynamics" result="relief valve opens at 3 bar" passed="true"/>
+    </elements>
+    <elements xsi:type="thermal:ThermalSystem" name="Gasoline98RON">
+      <elements xsi:type="thermal:FluidLine" name="Gasoline98RONElement"/>
+    </elements>
+    <elements xsi:type="thermal:ThermalSystem" name="E85Fuel">
+      <elements xsi:type="thermal:FluidLine" name="E85FuelElement"/>
+    </elements>
+  </elements>
+  <elements xsi:type="thermal:ThermalSystem" name="BrakeThermalManagement">
+    <elements xsi:type="thermal:ThermalComponent" name="FrontCaliperPistonThermalModel" material="Titanium" supplier="PistonSupplier A" thermalConductivity="7.0" specificHeatCapacity="520.0" temperatureLimit="350.0"/>
+    <elements xsi:type="thermal:HeatSource" name="FrontBrakeDiscHeatSource" heatLoad="25000.0" maxTemperature="650.0"/>
+    <elements xsi:type="thermal:ThermalComponent" name="RearCaliperPistonThermalModel" material="Titanium" supplier="PistonSupplier A" thermalConductivity="7.0" specificHeatCapacity="520.0" temperatureLimit="350.0"/>
+    <elements xsi:type="thermal:HeatSource" name="RearBrakeDiscHeatSource" heatLoad="25000.0" maxTemperature="650.0"/>
+    <elements xsi:type="thermal:AnalysisCase" name="CaliperPistonTemperatureAnalysis" method="transient FE (endurance)" ambientTemperature="30.0" result="piston temperature 310 C &lt; limit 350 C" passed="true" analysedElements="//@elements.4/@elements.0 //@elements.4/@elements.2"/>
+  </elements>
+</thermal:ThermalAnalysisModel>

@@ -1,0 +1,256 @@
+import tools.vitruv.methodologisttemplate.consistency.EMFUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngUtil;
+import tools.vitruv.methodologisttemplate.consistency.karaceing.KARaceIngOverlapRules;
+import tools.vitruv.change.interaction.UserInteractionOptions.WindowModality
+import java.util.Arrays
+import UVLPackage.Feature;
+import brakesystem.BrakesystemPackage;
+
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://www.example.org/brakesystem" as brake
+
+// Feature CPRs from the solution space (brakesystem models) to the problem space. Rule: every artefact corresponds
+// to a feature, there is no artefact without a feature.
+// * a new artefact is mapped to the feature of its containing element, to the features of an element it
+//   overlaps with, to another existing feature, or it is represented by a new feature below the feature of
+//   its containing element;
+// * a removed artefact loses its feature links; a feature without any remaining realisation in this
+//   domain is removed or kept.
+
+reactions: brakesystemToFeatureModel
+in reaction to changes in brake
+execute actions in uvl
+
+
+reaction ArtefactInsertedInBrakesystemBrakeComponents{
+    after element brake::BrakeComponent inserted in brake::Brakesystem[BrakeComponents]
+    call decisionRoutineForAddedArtefact(newValue)
+}
+
+reaction BrakeComponentDeleted{
+    after element brake::BrakeComponent deleted
+    call handleRemovedArtefact(affectedEObject)
+}
+
+
+routine decisionRoutineForAddedArtefact(EObject artefact) {
+    match{
+        require absence of uvl::Feature corresponding to artefact
+    }
+    update{
+        proposeFeatureForArtefact(artefact, artefact.eContainer())
+    }
+}
+
+
+// Every artefact must correspond to a feature (there is no "keep without feature"). The proposal starts at the
+// feature of the containing element; if the container has no feature yet (e.g. it is new as well), the next
+// container up is used.
+routine proposeFeatureForArtefact(EObject artefact, EObject holder) {
+    match{
+        require absence of uvl::Feature corresponding to artefact
+        val holderFeatures = retrieve many uvl::Feature corresponding to holder
+        val overlapping = retrieve many EObject corresponding to artefact tagged "overlap"
+    }
+    update{
+        val features = KARaceIngUtil.alive(holderFeatures)
+        if (features.isEmpty()) {
+            if (holder.eContainer() !== null) {
+                proposeFeatureForArtefact(artefact, holder.eContainer())
+            } else {
+                System.out.println("No feature found above " + KARaceIngUtil.nameOf(artefact))
+            }
+            return
+        }
+        val containing = features.get(0)
+        val partners = KARaceIngUtil.alive(overlapping)
+        val choices = new java.util.ArrayList<String>
+        choices.add("Feature of the containing element")
+        for (p : partners) {
+            choices.add("Features of the overlapping element " + KARaceIngUtil.nameOf(p) + " (" + KARaceIngUtil.domainOf(p) + ")")
+        }
+        choices.add("Existing feature")
+        choices.add("New feature")
+        val overlapText = if (partners.isEmpty()) "" else " It overlaps with " + KARaceIngUtil.nameList(partners) + "."
+        val choice = userInteractor.singleSelectionDialogBuilder.message("[FCPR] The new " + artefact.eClass().name + " " + KARaceIngUtil.nameOf(artefact) + " in the " + KARaceIngUtil.domainOf(artefact) + " model has no feature." + overlapText + " Every artefact must correspond to a feature: map it to " + containing.name + " (the feature of its containing element " + KARaceIngUtil.nameOf(holder) + "), to the features of an overlapping element, to another existing feature, or to a new feature below " + containing.name + "?").
+                        choices(choices).windowModality(WindowModality.MODAL).startInteraction
+        if (choice == 0) {
+            System.out.println("Mapping " + KARaceIngUtil.nameOf(artefact) + " to the feature of its containing element " + containing.name)
+            linkArtefactToFeature(containing, artefact)
+        } else if (choice <= partners.size()) {
+            mapArtefactToFeaturesOf(artefact, partners.get(choice - 1), containing)
+        } else if (choice == partners.size() + 1) {
+            mapArtefactToExistingFeature(artefact, containing)
+        } else {
+            val groupKind = userInteractor.singleSelectionDialogBuilder.message("[FCPR] In which kind of group below " + containing.name + " should the new feature " + KARaceIngUtil.nameOf(artefact) + " be added?").
+                        choices(Arrays.asList("Optional", "Mandatory", "Alternative", "Or")).windowModality(WindowModality.MODAL).startInteraction
+            switch (groupKind) {
+                case 0: createOptionalFeatureForArtefact(artefact, containing)
+                case 1: createMandatoryFeatureForArtefact(artefact, containing)
+                case 2: createAlternativeFeatureForArtefact(artefact, containing)
+                case 3: createOrFeatureForArtefact(artefact, containing)
+                default: createOptionalFeatureForArtefact(artefact, containing)
+            }
+        }
+    }
+}
+
+
+routine mapArtefactToFeaturesOf(EObject artefact, EObject overlappingElement, uvl::Feature fallback) {
+    match{
+        val partnerFeatures = retrieve many uvl::Feature corresponding to overlappingElement
+    }
+    update{
+        val features = KARaceIngUtil.alive(partnerFeatures)
+        if (features.isEmpty()) {
+            System.out.println(KARaceIngUtil.nameOf(overlappingElement) + " has no feature; mapping " + KARaceIngUtil.nameOf(artefact) + " to " + fallback.name)
+            linkArtefactToFeature(fallback, artefact)
+            return
+        }
+        for (f : features) {
+            System.out.println("Mapping " + KARaceIngUtil.nameOf(artefact) + " to " + f.name + " (feature of the overlapping " + KARaceIngUtil.nameOf(overlappingElement) + ")")
+            linkArtefactToFeature(f, artefact)
+        }
+    }
+}
+
+
+routine mapArtefactToExistingFeature(EObject artefact, uvl::Feature parentFeature) {
+    update{
+        // any feature can be chosen (an artefact may realise a feature of another role, e.g. an electrical BOTS
+        // device realises des.BrakeOverTravelSwitch); the features of the artefact's own role are offered first
+        val candidates = KARaceIngUtil.domainFirst(parentFeature)
+        val index = if (candidates.size() <= 1) candidates.size() - 1 else userInteractor.singleSelectionDialogBuilder.message("[FCPR] To which existing feature should " + KARaceIngUtil.nameOf(artefact) + " (" + KARaceIngUtil.domainOf(artefact) + ") be mapped?").
+                        choices(KARaceIngUtil.featureNames(candidates)).windowModality(WindowModality.MODAL).startInteraction
+        if (index < 0 || index >= candidates.size()) {
+            System.out.println("No feature selected: mapping " + KARaceIngUtil.nameOf(artefact) + " to " + parentFeature.name)
+            linkArtefactToFeature(parentFeature, artefact)
+            return
+        }
+        linkArtefactToFeature(candidates.get(index), artefact)
+    }
+}
+
+
+// Maps the artefact to the feature. Requirement traces: a requirement traces to every artefact of the features it
+// is mapped to, so a new artefact gets the traces of the feature's requirements, and a new requirement traces to
+// all artefacts of the feature (their owners are informed).
+routine linkArtefactToFeature(uvl::Feature feature, EObject artefact) {
+    match{
+        val realisations = retrieve many EObject corresponding to feature
+    }
+    update{
+        addCorrespondenceBetween(feature, artefact)
+        val others = KARaceIngUtil.alive(realisations)
+        for (other : others) {
+            if (other !== artefact) {
+                if (KARaceIngUtil.isRequirement(artefact) && KARaceIngUtil.isTraceableArtefact(other)) {
+                    addCorrespondenceBetween(artefact, other, "requirement")
+                } else if (KARaceIngUtil.isRequirement(other) && KARaceIngUtil.isTraceableArtefact(artefact)) {
+                    addCorrespondenceBetween(other, artefact, "requirement")
+                }
+            }
+        }
+        if (KARaceIngUtil.isRequirement(artefact)) {
+            for (message : KARaceIngOverlapRules.newRequirementTraces(artefact, feature.name, others)) {
+                userInteractor.notificationDialogBuilder.message(message).title(KARaceIngOverlapRules.TITLE).windowModality(WindowModality.MODELESS).startInteraction
+            }
+        }
+    }
+}
+
+
+routine createOptionalFeatureForArtefact(EObject artefact, uvl::Feature parentFeature) {
+    create{
+        val feature = new uvl::Feature
+        val group = new uvl::Optional
+    }
+    update{
+        System.out.println("Adding feature " + KARaceIngUtil.nameOf(artefact) + " below " + parentFeature.name)
+        feature.name = KARaceIngUtil.nameOf(artefact)
+        group.feature.add(feature)
+        feature.group = group
+        parentFeature.children.add(group)
+        addCorrespondenceBetween(feature, artefact)
+    }
+}
+
+routine createMandatoryFeatureForArtefact(EObject artefact, uvl::Feature parentFeature) {
+    create{
+        val feature = new uvl::Feature
+        val group = new uvl::Mandatory
+    }
+    update{
+        System.out.println("Adding feature " + KARaceIngUtil.nameOf(artefact) + " below " + parentFeature.name)
+        feature.name = KARaceIngUtil.nameOf(artefact)
+        group.feature.add(feature)
+        feature.group = group
+        parentFeature.children.add(group)
+        addCorrespondenceBetween(feature, artefact)
+    }
+}
+
+routine createAlternativeFeatureForArtefact(EObject artefact, uvl::Feature parentFeature) {
+    create{
+        val feature = new uvl::Feature
+        val group = new uvl::Alternative
+    }
+    update{
+        System.out.println("Adding feature " + KARaceIngUtil.nameOf(artefact) + " below " + parentFeature.name)
+        feature.name = KARaceIngUtil.nameOf(artefact)
+        group.feature.add(feature)
+        feature.group = group
+        parentFeature.children.add(group)
+        addCorrespondenceBetween(feature, artefact)
+    }
+}
+
+routine createOrFeatureForArtefact(EObject artefact, uvl::Feature parentFeature) {
+    create{
+        val feature = new uvl::Feature
+        val group = new uvl::Or
+    }
+    update{
+        System.out.println("Adding feature " + KARaceIngUtil.nameOf(artefact) + " below " + parentFeature.name)
+        feature.name = KARaceIngUtil.nameOf(artefact)
+        group.feature.add(feature)
+        feature.group = group
+        parentFeature.children.add(group)
+        addCorrespondenceBetween(feature, artefact)
+    }
+}
+
+
+routine handleRemovedArtefact(EObject artefact) {
+    match{
+        val features = retrieve many uvl::Feature corresponding to artefact
+    }
+    update{
+        for (feature : features) {
+            removeCorrespondenceBetween(artefact, feature)
+            if (KARaceIngUtil.isAlive(feature)) {
+                checkFeatureStillRealised(feature)
+            }
+        }
+    }
+}
+
+
+routine checkFeatureStillRealised(uvl::Feature feature) {
+    match{
+        val realisations = retrieve many EObject corresponding to feature
+    }
+    update{
+        val remaining = KARaceIngUtil.alive(EMFUtil.filterByMetamodel(realisations, BrakesystemPackage.eINSTANCE))
+        if (!remaining.isEmpty()) {
+            System.out.println("Feature " + feature.name + " is still realised by " + KARaceIngUtil.nameList(remaining))
+            return
+        }
+        val choice = userInteractor.singleSelectionDialogBuilder.message("[FCPR] The feature " + feature.name + " has no realisation in the brakesystem model any more. Remove the feature or keep it?").
+                        choices(Arrays.asList("Remove feature", "Keep feature")).windowModality(WindowModality.MODAL).startInteraction
+        if (choice == 0) {
+            System.out.println("Removing feature " + feature.name)
+            removeObject(feature)
+        }
+    }
+}

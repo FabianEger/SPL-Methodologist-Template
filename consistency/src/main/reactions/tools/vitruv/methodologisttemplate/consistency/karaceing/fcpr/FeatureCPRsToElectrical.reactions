@@ -1,0 +1,18 @@
+import "http://vitruv.tools/methodologisttemplate/uvl" as uvl
+import "http://vitruv.tools/methodologisttemplate/electrical" as elec
+
+// Vitruvius allows only one change propagation specification per pair of metamodels (uvl -> electrical), so the
+// Feature CPRs of all roles whose artefacts are electrical models (ELEC) and the feature removal are combined
+// here, like CombinedUVLToCAD combines feature2cad and featureRoot2cad.
+
+reactions: featureCPRsToElectrical
+in reaction to changes in uvl
+execute actions in elec
+
+
+import featureToELEC using qualified names
+
+import rootFeatureToELEC using qualified names
+
+import featureRemovalToElectrical using qualified names
+
